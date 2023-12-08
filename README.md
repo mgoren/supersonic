@@ -185,6 +185,12 @@ firebase functions:config:get > functions/.runtimeconfig.json // for testing
 firebase deploy --only functions // to deploy
 ```
 
+**Add error logging for Firebase functions**
+
+Setup logs for Firebase Function (at least the spreadsheet one) to notify on `severity=(ERROR OR INFO)`.
+
+_ADD MORE INFO TO THIS README SECTION._
+
 # Development
 
 Set environment variables in `.env`

@@ -19,6 +19,7 @@ const { PAYMENT_METHODS, EMAIL_CONTACT, NUM_PAGES } = config;
 export default function Checkout({ order, setOrder, setError, setCurrentPage }) {
   const [paying, setPaying] = useState(null);
   const [processing, setProcessing] = useState(null);
+  const [processingMessage, setProcessingMessage] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState(PAYMENT_METHODS[0]);
   const [paypalButtonsLoaded, setPaypalButtonsLoaded] = useState(false);
 
@@ -40,6 +41,8 @@ export default function Checkout({ order, setOrder, setError, setCurrentPage }) 
 
 	const saveOrderToFirebase = (electronicOrder) => {
     // console.log(`paid via ${paymentMethod}`);
+
+    setProcessingMessage('Processing payment...');
 
     let electronicPaymentId = '';
     if (paymentMethod === 'check') {
@@ -85,7 +88,7 @@ export default function Checkout({ order, setOrder, setError, setCurrentPage }) 
     <section>
       <StyledPaper align='center'>
 
-        {processing && <Loading text='Processing payment...' secondaryText={`Do not refresh or navigate away. Contact ${EMAIL_CONTACT} if you do not see a confirmation page!`} />}
+        {processing && <Loading processing={true} text={processingMessage} />}
 
         {!processing &&
           <Title>Amount due: ${total}</Title>

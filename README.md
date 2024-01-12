@@ -36,7 +36,8 @@ git remote rm origin
 ## Set configuration options:
 
 - Update site title in `public/index.html`
-- Update values in `src/config..mjs`
+- Update values in `src/config.js`
+- Update favicon (can use [this site](https://www.favicon-generator.org) to generate them)
 
 ## Login to the Firebase CLI:
 
@@ -47,15 +48,15 @@ firebase login
 ## Create a Firebase project, which will also create a Google Cloud project with the same PROJECT_ID:
 
 ```sh
-firebase projects:create [PROJECT_ID] --display-name "[PROJECT_NAME]"
+firebase projects:create [PROJECT_ID]
 firebase init database --project [PROJECT_ID]
-firebase deploy --only database
+firebase deploy --only database # accept defaults, don't overwrite dataabase rules
 ```
 
 ## Enable billing on Google Cloud account from the [Google Cloud console](https://console.cloud.google.com/billing)
 (Very unlikely to actually owe any money for small scale use, but set a billing alert to be safe.)
 
-7. Setup OAuth consent screen
+7. Setup [OAuth consent screen](https://console.cloud.google.com/apis/credentials/consent)
 
 - user type: internal
 - values for other fields don't really matter
@@ -81,18 +82,13 @@ gcloud beta services api-keys create --flags-file=google-places-api-flags.yaml -
 
 Copy `keyString` value to `REACT_APP_GOOGLE_PLACES_API_KEY` in `.env`.
 
-## Create web app from Firebase console on project overview screen.
+## Create web app from Firebase console on project overview screen
 
 ## Get firebase web app config values and add them to `.env` file:
 
 ```sh
 firebase apps:sdkconfig web
 ```
-
-## Add Firebase database URL to `.env` file:
-
-- Get database name: `firebase database:instances:list`
-- Add database URL to `.env` file in this format: `https://[DATABASE_NAME].firebaseio.com`
 
 ## Setup reCAPTCHA
 
@@ -135,6 +131,17 @@ Update `firebaseServiceAccount` value in ``.github/workflows/firebase-hosting-me
 ```sh
 cd functions && npm install && cd ..
 ```
+
+**Database Update Firebase function:**
+
+```sh
+gcloud iam service-accounts create firebase --project [PROJECT_ID]
+gcloud iam service-accounts keys create tmp.json --iam-account firebase@[PROJECT_ID].iam.gserviceaccount.com
+firebase functions:config:set database.service_account="$(cat tmp.json)"
+rm tmp.json
+firebase functions:config:get > functions/.runtimeconfig.json // for testing
+```
+
 
 **Stripe Firebase function:**
 
@@ -196,6 +203,7 @@ _ADD MORE INFO TO THIS README SECTION._
 Set environment variables in `.env`
 
 ```sh
+npm install
 npm start
 ```
 

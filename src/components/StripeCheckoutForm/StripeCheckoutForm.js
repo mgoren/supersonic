@@ -5,7 +5,7 @@ import { Button } from '@mui/material';
 import config from 'config';
 const { EMAIL_CONTACT } = config;
 
-export default function StripeCheckoutForm({ setError, processing, setProcessing, clientSecretRef, saveOrderToFirebase }) {
+export default function StripeCheckoutForm({ setError, processing, setProcessing, clientSecretRef, saveOrderToFirebase, setOrder }) {
   const [ready, setReady] = useState(false);
   const stripe = useStripe();
   const elements = useElements();
@@ -13,19 +13,22 @@ export default function StripeCheckoutForm({ setError, processing, setProcessing
   useEffect(() => {
     if (stripe && elements) {
       setReady(true);
-      // console.log('ready');
     }
   }, [stripe, elements]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setProcessing(true);
-    setError(null);
-
     if (!stripe || !elements) {
       return;
     }
 
+    const order = await saveOrderToFirebase();
+    if (order) {
+      processPayment(order);
+    }
+  };
+
+  const processPayment = async (order) => {
     const result = await stripe.confirmPayment({
       elements,
       redirect: "if_required",
@@ -39,10 +42,11 @@ export default function StripeCheckoutForm({ setError, processing, setProcessing
       // console.log(result.error.message);
       setProcessing(false);
       setError(`Stripe encountered an error: ${result.error.message}. Please try again or contact ${EMAIL_CONTACT}.`);
+      // if they try again, will result in duplicate db/sheet entry tho! <-- TODO: fix this
     } else if (result.paymentIntent.status === 'succeeded') {
       // console.log('success', result);
       clientSecretRef.current = null;
-      saveOrderToFirebase(result);
+      setOrder({ ...order, electronicPaymentId: result.paymentIntent.id })
     } else {
       // console.log('unexpected Stripe status', result);
       setProcessing(false);

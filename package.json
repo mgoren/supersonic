@@ -19,7 +19,7 @@
     "eslint": "^8.35.0",
     "firebase": "^9.17.2",
     "firebase-admin": "^11.5.0",
-    "firebase-functions": "^4.2.1",
+    "firebase-functions": "^4.6.0",
     "formik": "^2.2.9",
     "googleapis": "^34.0.0",
     "preval.macro": "^5.0.0",

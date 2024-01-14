@@ -1,22 +1,8 @@
 ### This is based very closely on Google's [starter code](https://github.com/firebase/functions-samples/tree/main/email-confirmation).
 
-# Configuration
+# See project's main README for usage
 
-```sh
-firebase init functions --project [PROJECT_ID]
-firebase functions:config:set sendgrid.api_key="SENDGRID_API_KEY"
-firebase functions:config:set email.from='"Example" <example@example.com>' email.subject='Example Contra Dance Registration'
-firebase functions:config:set email.reply_to='example@example.com' // only if needed
-```
-
-
-Everything else should work as-is. This assumes that orders are saved to /orders in Firebase, and that order.receipt contains the HTML you want to send.
-
-# Deployment
-
-`firebase deploy --only functions`
-
-## Functions Code
+# Documentation (this can be ignored)
 
 See file [functions/email-confirmation.js](functions/email-confirmation.js) for the email sending code.
 

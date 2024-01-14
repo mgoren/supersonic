@@ -2,6 +2,7 @@
 // mapOrderToSpreadsheetLines is likely ok as is, but update if needed
 
 const fieldOrder = [
+  'key',
   'first',
   'last',
   'nametag',
@@ -32,19 +33,21 @@ const fieldOrder = [
 
 export const mapOrderToSpreadsheetLines = (order) => {
   const orders = []
-  const createdAt = new Date(order.timestamp).toLocaleDateString();
+  const createdAt = new Date(order.createdAt).toLocaleDateString();
   const purchaser = `${order.people[0].first} ${order.people[0].last}`;
   const owed = order.total - order.deposit;
   const updatedOrder = joinOrderArrays(order);
   const { people, ...orderFields } = updatedOrder
   for (const person of people) {
-    const address = person.apartment ? `${person.address} ${person.apartment}` : person.address;
-    let personFields = { ...person, address, purchaser, createdAt };
-    if (person.index === 0) {
-      personFields = { ...personFields, ...orderFields, owed };
+    if (person.first !== '') { // skip person with no data
+      const address = person.apartment ? `${person.address} ${person.apartment}` : person.address;
+      let personFields = { ...person, address, purchaser, createdAt };
+      if (person.index === 0) {
+        personFields = { ...personFields, ...orderFields, owed, createdAt };
+      }
+      const line = fieldOrder.map(field => personFields[field] || '');
+      orders.push(line);
     }
-    const line = fieldOrder.map(field => personFields[field] || '');
-    orders.push(line);
   }
   return orders;
 };

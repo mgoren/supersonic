@@ -239,7 +239,7 @@ const config = {
     {key: 3, label: 'Payment'},
     {key: 'checkout', label: 'Checkout'}
   ],
-  PAYMENT_METHODS: ['paypal', 'check'], // options are 'stripe', 'paypal', and/or 'check' (first is default)
+  PAYMENT_METHODS: ['stripe', 'check'], // options are 'stripe', 'paypal', and/or 'check' (first is default)
   TITLE: 'Example Contra Weekend 2024 Registation',
   CONFIRMATION_PAYPAL_TITLE: 'Example Dance Weekend Confirmation',
   CONFIRMATION_CHECK_TITLE: 'Example Dance Weekend Registration',
@@ -266,7 +266,6 @@ const config = {
   YES_NO_OPTIONS,
   DANCES,
   CAPTCHA_KEY: process.env.REACT_APP_RECAPTCHA_SITE_KEY,
-  FIREBASE_PROJECT_ID: process.env.REACT_APP_FIREBASE_PROJECT_ID
 }
 
 export default config;

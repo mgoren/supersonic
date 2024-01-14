@@ -2,14 +2,16 @@ import { useState } from 'react';
 import Reaptcha from 'reaptcha';
 import { Typography, Box, Button } from '@mui/material';
 import config from 'config';
-const { CAPTCHA_KEY, CHECK_ADDRESS, CHECK_TO } = config;
+const { CAPTCHA_KEY, CHECK_ADDRESS, CHECK_TO, SANDBOX_MODE } = config;
 
-export default function Check({ saveOrderToFirebase, processing, setProcessing }) {
-  const [verified, setVerified] = useState(false);
+export default function Check({ saveOrderToFirebase, processing, setOrder }) {
+  const [verified, setVerified] = useState(SANDBOX_MODE);
 
   const handleRegister = async () => {
-    setProcessing(true);
-    saveOrderToFirebase('check');
+    const order = await saveOrderToFirebase();
+    if (order) {
+      setOrder({ ...order, electronicPaymentId: 'check' })
+    }
   }
 
   return (
@@ -25,11 +27,13 @@ export default function Check({ saveOrderToFirebase, processing, setProcessing }
           </Typography>
 
           <Box sx={{ my: 3 }}>
-            <Reaptcha
-              sitekey={CAPTCHA_KEY}
-              onVerify={() => setVerified(true)}
-              onExpire={() => setVerified(false)}
-            />
+            {!SANDBOX_MODE &&
+              <Reaptcha
+                sitekey={CAPTCHA_KEY}
+                onVerify={() => setVerified(true)}
+                onExpire={() => setVerified(false)}
+              />
+            }
           </Box>
 
           <Button variant='contained' color='success' disabled={!verified} onClick={handleRegister} sx={{ mb: 2 }}>

@@ -5,7 +5,7 @@ import { Typography, Box } from "@mui/material";
 import config from 'config';
 const { SANDBOX_MODE, EMAIL_CONTACT } = config;
 
-const PaypalCheckoutButton = ({ paypalButtonsLoaded, setPaypalButtonsLoaded, total, setError, setPaying, processing, setProcessing, saveOrderToFirebase }) => {
+const PaypalCheckoutButton = ({ paypalButtonsLoaded, setPaypalButtonsLoaded, total, setError, setPaying, processing, saveOrderToFirebase, setOrder }) => {
 	const [, isResolved] = usePayPalScriptReducer();
 
 	// this feels hella hacky, but sometimes the buttons don't render despite isResolved
@@ -45,10 +45,11 @@ const PaypalCheckoutButton = ({ paypalButtonsLoaded, setPaypalButtonsLoaded, tot
 	};
 
 	const onApprove = async (data, actions) => {
-		setError(null);
-		setProcessing(true);
-		const paypalOrder = await actions.order.capture();
-		saveOrderToFirebase(paypalOrder);
+		const order = await saveOrderToFirebase();
+		if (order) {
+			const paypalOrder = await actions.order.capture();
+			setOrder({ ...order, electronicPaymentId: paypalOrder.payer.email_address })
+		}
 	};
 
 	const onError = (err) => {

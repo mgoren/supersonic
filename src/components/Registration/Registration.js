@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import 'firebase.js'; // initializes firebase
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import MainForm from "components/MainForm";
 import Checkout from "components/Checkout";
@@ -47,7 +48,6 @@ const RealRegistration = () => {
   const [error, setError] = useState(null);
   const CONFIRMATION_TITLE = order.electronicPaymentId === 'check' ? CONFIRMATION_CHECK_TITLE : CONFIRMATION_PAYPAL_TITLE;
 
-  // useEffect(() => { logBuildDate() }, []);
   useEffect(() => { cache('order', order) }, [order]);
   useEffect(() => { cache('currentPage', currentPage) }, [currentPage]);
 

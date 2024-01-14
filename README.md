@@ -53,8 +53,14 @@ firebase init database --project [PROJECT_ID]
 firebase deploy --only database # accept defaults, don't overwrite dataabase rules
 ```
 
+# Create a token for pseudo-auth to onCall Firebase functions
+
+- generate a long random string as your token (avoid symbols)
+- add value to `.env`
+- firebase functions:config:set shared.token="INSERT_TOKEN_HERE"
+
 ## Enable billing on Google Cloud account from the [Google Cloud console](https://console.cloud.google.com/billing)
-(Very unlikely to actually owe any money for small scale use, but set a billing alert to be safe.)
+(Unlikely to actually owe any money for small scale use, but set a billing alert to be safe.)
 
 7. Setup [OAuth consent screen](https://console.cloud.google.com/apis/credentials/consent)
 
@@ -132,27 +138,11 @@ Update `firebaseServiceAccount` value in ``.github/workflows/firebase-hosting-me
 cd functions && npm install && cd ..
 ```
 
-**Database Update Firebase function:**
-
-```sh
-gcloud iam service-accounts create firebase --project [PROJECT_ID]
-gcloud iam service-accounts keys create tmp.json --iam-account firebase@[PROJECT_ID].iam.gserviceaccount.com
-firebase functions:config:set database.service_account="$(cat tmp.json)"
-rm tmp.json
-firebase functions:config:get > functions/.runtimeconfig.json // for testing
-```
-
-
 **Stripe Firebase function:**
-
-_Note: Comment out the lines pertaining to Stripe in `functions/index.js` if not using Stripe_
 
 ```sh
 firebase functions:config:set stripe.secret_key="YOUR_STRIPE_SECRET_KEY"
-firebase functions:config:set stripe.site_url="https://[PROJECT_ID].web.app" // replace with actual front-end site URL
-firebase functions:config:get > functions/.runtimeconfig.json // for testing
-firebase emulators:start --only functions // for testing
-firebase deploy --only functions // to deploy
+firebase deploy --only functions
 ```
 
 **Google Sheets Firebase function:**
@@ -176,8 +166,7 @@ _Note: Update fields/columns as needed in `functions/fields.js` and in spreadshe
 
 ```sh
 firebase functions:config:set googleapi.sheet_id="YOUR_SPREADSHEET_ID"
-firebase functions:config:get > functions/.runtimeconfig.json // for testing
-firebase deploy --only functions // to deploy
+firebase deploy --only functions
 ```
 
 **Email Confirmation Firebase function:**
@@ -188,8 +177,7 @@ Configure with Sendgrid API key and from/reply/subject settings:
 firebase functions:config:set sendgrid.api_key="SENDGRID_API_KEY"
 firebase functions:config:set email.from='"Example" <example@example.com>' email.subject='Example Contra Dance Registration'
 firebase functions:config:set email.reply_to='example@example.com' // only if needed
-firebase functions:config:get > functions/.runtimeconfig.json // for testing
-firebase deploy --only functions // to deploy
+firebase deploy --only functions
 ```
 
 **Add error logging for Firebase functions**

@@ -43,7 +43,11 @@ export default function MainForm({ order, setOrder, currentPage, setCurrentPage 
 }
 
 function updateCountry(person) {
-  const region = person.state.toLowerCase().replace(/\s/g, '').trim();
-  const country = countryMapping[region] || person.country;
-  return { ...person, country };
+  if (person.state) {
+    const region = person.state.toLowerCase().replace(/\s/g, '').trim();
+    const country = countryMapping[region] || person.country;
+    return { ...person, country };
+  } else {
+    return person;
+  }
 }

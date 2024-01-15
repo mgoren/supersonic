@@ -11,9 +11,11 @@ export default function Header({ titleText = TITLE, currentPage, children }) {
         {titleText}
       </Typography>
 
-      <Hidden smDown>
-        <MyStepper currentPage={currentPage} />
-      </Hidden>
+      {currentPage !== 'confirmation' &&
+        <Hidden smDown>
+          <MyStepper currentPage={currentPage} />
+        </Hidden>
+      }
 
       <Divider component="hr" sx={{borderBottomWidth: 4, mb: 2 }}/>
       {children}

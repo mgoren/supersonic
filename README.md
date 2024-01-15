@@ -38,6 +38,7 @@ git remote rm origin
 - Update site title in `public/index.html`
 - Update values in `src/config.js`
 - Update favicon (can use [this site](https://www.favicon-generator.org) to generate them)
+- Copy desired logo to `public` folder and set to desired height (80px or less likely)
 
 ## Login to the Firebase CLI:
 
@@ -49,8 +50,8 @@ firebase login
 
 ```sh
 firebase projects:create [PROJECT_ID]
-firebase init database --project [PROJECT_ID]
-firebase deploy --only database # accept defaults, don't overwrite dataabase rules
+firebase init database --project [PROJECT_ID] # accept defaults, don't overwrite dataabase rules
+firebase deploy --only database
 ```
 
 # Create a token for pseudo-auth to onCall Firebase functions
@@ -140,6 +141,8 @@ cd functions && npm install && cd ..
 
 **Stripe Firebase function:**
 
+_If not using Stripe, comment out the loading of this from `functions/index.js`_
+
 ```sh
 firebase functions:config:set stripe.secret_key="YOUR_STRIPE_SECRET_KEY"
 firebase deploy --only functions
@@ -171,7 +174,7 @@ firebase deploy --only functions
 
 **Email Confirmation Firebase function:**
 
-Configure with Sendgrid API key and from/reply/subject settings:
+Create a Sendgrid API key, configure firebase functions with that and from/reply/subject settings:
 
 ```sh
 firebase functions:config:set sendgrid.api_key="SENDGRID_API_KEY"

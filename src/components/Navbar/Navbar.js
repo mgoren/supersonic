@@ -3,6 +3,8 @@ import { AppBar, Toolbar, Typography, Container, ListItem, Box, IconButton, Menu
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link as RouterLink } from 'react-router-dom';
 import ColorModeToggle from 'components/ColorModeToggle';
+import config from 'config';
+const { TITLE, REGISTRATION_ONLY } = config;
 
 const pages = [
   { title: 'Home', path: '/' },
@@ -68,13 +70,13 @@ export default function Navbar({ toggleColorMode }) {
       {/* brand icon */}
       <Box sx={{ display: { xs: 'none', md: 'inline' } }}>
         <Link component={RouterLink} to='/'>
-          <img src={process.env.PUBLIC_URL + '/supersonic/sslogo-sidetext240x82.png'} alt="Supersonic logo" style={{ margin: '10px 10px 10px 0px' }}/>
+          <img src={process.env.PUBLIC_URL + '/logo.png'} alt="" style={{ margin: '10px 10px 10px 0px' }}/>
         </Link>
       </Box>
 
       <Box sx={{ display: { xs: 'inline', sm: 'inline', md: 'none' } }}>
         <Link component={RouterLink} to='/'>
-          <img src={process.env.PUBLIC_URL + '/supersonic/sslogo-bitmap150x137.png'} alt="Supersonic logo" style={{ margin: '10px 10px 10px 0px', height: '80px' }}/>
+          <img src={process.env.PUBLIC_URL + '/logo.png'} alt="" style={{ margin: '10px 10px 10px 0px', height: '80px' }}/>
         </Link>
       </Box>
 
@@ -95,13 +97,19 @@ export default function Navbar({ toggleColorMode }) {
     </>
   );
 
-  // const contentRegistrationOnly = (
-  //   <>
-  //     <ListItem sx={{ my: 2, color: 'inherit', display: 'block' }}>
-  //       <Typography textAlign="center">Corvallis Contra Weekend 2024 Registation</Typography>
-  //     </ListItem>
-  //   </>
-  // );
+  const contentRegistrationOnly = (
+    <>
+      <Box sx={{ display: { xs: 'none', sm: 'inline' } }}>
+        <img src={process.env.PUBLIC_URL + '/logo.png'} alt="" style={{ margin: '10px 10px 10px 0px' }}/>
+      </Box>
+      <ListItem sx={{ display: {xs: 'none', sm: 'block' }, my: 2, color: 'inherit' }}>
+        <Typography variant="h4" textAlign="center">{TITLE}</Typography>
+      </ListItem>
+      <ListItem sx={{ display: {xs: 'block', sm: 'none' }, my: 2, color: 'inherit' }}>
+        <Typography variant="h5" textAlign="center">{TITLE}</Typography>
+      </ListItem>
+    </>
+  );
 
   return (
     // <AppBar position="relative" color="default" sx={{ height: '100px' }}>
@@ -109,7 +117,7 @@ export default function Navbar({ toggleColorMode }) {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
 
-          {contentMultiline}
+          { REGISTRATION_ONLY ? contentRegistrationOnly : contentMultiline }
 
           {/* color mode toggle always goes to the right */}
           <ColorModeToggle toggleColorMode={toggleColorMode} />

@@ -81,10 +81,9 @@ export default function Checkout({ order, setOrder, setError, setCurrentPage }) 
     const receipt = renderToStaticMarkup(<Receipt order={initialOrder} currentPage='confirmation' />);
     const additionalPersonReceipt = renderToStaticMarkup(<AdditionalPersonReceipt order={initialOrder} />);
     const initialOrderWithReceipt = { ...initialOrder, receipt, additionalPersonReceipt };
-    setOrder(initialOrderWithReceipt);
 
     try {
-      const { data } = await createOrder({ token: process.env.REACT_APP_TOKEN, order });
+      const { data } = await createOrder({ token: process.env.REACT_APP_TOKEN, order: initialOrderWithReceipt });
       const orderWithId = { ...initialOrderWithReceipt, id: data.id };
       setOrder(orderWithId);
       setProcessingMessage('Processing payment...');

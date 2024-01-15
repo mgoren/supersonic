@@ -34,6 +34,21 @@ export const createStripePaymentIntent = functions.https.onCall(async (data) => 
   }
 });
 
+export const updateStripePaymentIntent = functions.https.onCall(async (data) => {
+  const { token, clientSecret, amount } = data;
+  if (token.trim() !== functions.config().shared.token.trim()) {
+    throw new functions.https.HttpsError('permission-denied', 'The function must be called with a valid token.');
+  }
+  try {
+    await stripe.paymentIntents.update(clientSecret, {
+      amount: amount * 100 // amount in cents
+    });
+    return { result: 'Stripe Payment Intent updated successfully' };
+  } catch (error) {
+    throw new functions.https.HttpsError('internal', 'Server error', error);
+  }
+});
+
 export const cancelStripePaymentIntent = functions.https.onCall(async (data) => {
   const { token, paymentIntentId } = data;
   if (token.trim() !== functions.config().shared.token.trim()) {

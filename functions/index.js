@@ -3,7 +3,11 @@ import admin from 'firebase-admin';
 import { sendEmailConfirmation } from './email-confirmation.js';
 import { createOrder, updateOrder } from './database.js';
 import { appendrecordtospreadsheet, updaterecordinspreadsheet } from './google-sheet-sync.js';
-import { createStripePaymentIntent as createStripePaymentIntentOriginal, cancelStripePaymentIntent as cancelStripePaymentIntentOriginal } from './stripe.js';
+import {
+  createStripePaymentIntent as createStripePaymentIntentOriginal,
+  updateStripePaymentIntent as updateStripePaymentIntentOriginal,
+  cancelStripePaymentIntent as cancelStripePaymentIntentOriginal
+} from './stripe.js';
 
 if (admin.apps.length === 0) {
   admin.initializeApp();
@@ -11,9 +15,10 @@ if (admin.apps.length === 0) {
 
 export { sendEmailConfirmation, createOrder, updateOrder, appendrecordtospreadsheet, updaterecordinspreadsheet };
 
-let createStripePaymentIntent, cancelStripePaymentIntent;
+let createStripePaymentIntent, updateStripePaymentIntent, cancelStripePaymentIntent;
 if (functions.config().stripe?.secret_key) {
   createStripePaymentIntent = createStripePaymentIntentOriginal;
+  updateStripePaymentIntent = updateStripePaymentIntentOriginal;
   cancelStripePaymentIntent = cancelStripePaymentIntentOriginal;
 }
-export { createStripePaymentIntent, cancelStripePaymentIntent };
+export { createStripePaymentIntent, updateStripePaymentIntent, cancelStripePaymentIntent };

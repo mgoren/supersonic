@@ -10,7 +10,7 @@ if (admin.apps.length === 0) {
 
 export const createStripePaymentIntent = functions.https.onCall(async (data) => {
   const { token, amount, name, email } = data;
-  if (token !== functions.config().shared.token) {
+  if (token.trim() !== functions.config().shared.token.trim()) {
     throw new functions.https.HttpsError('permission-denied', 'The function must be called with a valid token.');
   }
   let customer;
@@ -36,7 +36,7 @@ export const createStripePaymentIntent = functions.https.onCall(async (data) => 
 
 export const cancelStripePaymentIntent = functions.https.onCall(async (data) => {
   const { token, paymentIntentId } = data;
-  if (token !== functions.config().shared.token) {
+  if (token.trim() !== functions.config().shared.token.trim()) {
     throw new functions.https.HttpsError('permission-denied', 'The function must be called with a valid token.');
   }
   try {

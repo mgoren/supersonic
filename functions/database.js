@@ -7,7 +7,7 @@ if (admin.apps.length === 0) {
 
 export const createOrder = functions.https.onCall(async (data) => {
   const { token, order } = data;
-  if (token !== functions.config().shared.token) {
+  if (token.trim() !== functions.config().shared.token.trim()) {
     throw new functions.https.HttpsError('permission-denied', 'The function must be called with a valid token.');
   }
   const updatedOrder = { ...order, createdAt: admin.database.ServerValue.TIMESTAMP };
@@ -22,7 +22,7 @@ export const createOrder = functions.https.onCall(async (data) => {
 
 export const updateOrder = functions.https.onCall(async (data) => {
   const { token, id, updates } = data;
-  if (token !== functions.config().shared.token) {
+  if (token.trim() !== functions.config().shared.token.trim()) {
     throw new functions.https.HttpsError('permission-denied', 'The function must be called with a valid token.');
   }
   const filteredUpdates = { electronicPaymentId: updates.electronicPaymentId };

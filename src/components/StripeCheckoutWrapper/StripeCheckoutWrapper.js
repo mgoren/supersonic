@@ -10,7 +10,7 @@ const { SANDBOX_MODE, PAYMENT_METHODS } = config;
 const functions = getFunctions();
 const createStripePaymentIntent = httpsCallable(functions, 'createStripePaymentIntent');
 const cancelStripePaymentIntent = httpsCallable(functions, 'cancelStripePaymentIntent');
-const stripePromise = PAYMENT_METHODS.includes('stripe') ? loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY) : null;
+const stripePromise = PAYMENT_METHODS.includes('stripe') ? await loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY) : null;
 
 export default function StripeCheckoutWrapper({ total, name, email, processing, setProcessing, setError, saveOrderToFirebase, setOrder }) {
   const [clientSecret, setClientSecret] = useState(null);

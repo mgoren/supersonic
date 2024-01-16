@@ -78,7 +78,7 @@ export default function Checkout({ order, setOrder, setError, setCurrentPage }) 
       total,
       deposit: paymentMethod === 'check' ? 0 : total,
     };
-    const receipt = renderToStaticMarkup(<Receipt order={initialOrder} currentPage='confirmation' />);
+    const receipt = renderToStaticMarkup(<Receipt order={initialOrder} currentPage='confirmation' checkPayment={paymentMethod === 'check'} />);
     const additionalPersonReceipt = renderToStaticMarkup(<AdditionalPersonReceipt order={initialOrder} />);
     const initialOrderWithReceipt = { ...initialOrder, receipt, additionalPersonReceipt };
 

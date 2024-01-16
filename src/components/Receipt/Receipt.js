@@ -4,19 +4,20 @@ import OrderSummary from 'components/OrderSummary';
 import { Divider, Typography } from '@mui/material';
 import { StyledLink } from 'components/Layout/SharedStyles';
 import config from 'config';
-const { COVID_POLICY_URL, CHECK_TO, CHECK_ADDRESS } = config;
+const { COVID_POLICY_URL, CHECK_TO, CHECK_ADDRESS, EVENT_TITLE } = config;
 
-export default function Receipt({ order }) {
+export default function Receipt({ order, checkPayment }) {
+  checkPayment ??= order.electronicPaymentId === 'check'
   useEffect(() => { scrollToTop() },[]);
   return(
     <>
       <p>Thanks, {order.people[0].first}!</p>
-      {order.electronicPaymentId === 'check' ? <CheckReceipt order={order}/> : <PaypalReceipt order={order }/>}
+      {checkPayment ? <CheckPaymentReceipt order={order}/> : <ElectronicPaymentReceipt order={order }/>}
     </>
   );
 }
 
-function CheckReceipt({ order }) {
+function CheckPaymentReceipt({ order }) {
   return (
     <>
       <Typography component='p' color='error'>
@@ -46,11 +47,11 @@ function CheckReceipt({ order }) {
   );
 }
 
-function PaypalReceipt({ order }) {
+function ElectronicPaymentReceipt({ order }) {
   return (
     <>
       <Typography component='p' sx={{ mt: 2 }}>
-        Thank you for registering for Corvallis Contra Weekend 2024!<br />
+        Thank you for registering for the {EVENT_TITLE}!<br />
         Your payment for ${order.total} has been successfully processed.<br />
       </Typography>
 
@@ -67,7 +68,7 @@ export function AdditionalPersonReceipt({ order }) {
   return (
     <>
       <Typography component='p' sx={{ mt: 2 }}>
-        Thank you for registering for the 2024 Contra Corvallis Dance Weekend. 
+        Thank you for registering for the {EVENT_TITLE}.
       </Typography>
 
       <SharedReceipt />
@@ -79,24 +80,17 @@ export function SharedReceipt() {
   return (
     <>
       <Typography component='p' sx={{ mt: 2 }}>
-        <strong>We will send an acceptance or wait-list notification before Christmas.</strong><br />
-        If you have not heard from us by December 23rd, please let us know.<br />
-        If you need early acceptance to finalize your travel arrangements, be<br />
-        sure to let us know: We love dancing with folks from other communities!
-      </Typography>
-
-      <Typography component='p' sx={{ mt: 2 }}>
         Masking will be required.<br />
         See <StyledLink to={websiteLink(COVID_POLICY_URL)}>here</StyledLink> for the full Covid policy.<br />
       </Typography>
 
       <Typography component='p' sx={{ mt: 2 }}>
-        Corvallis Contra Dance Weekend is a fragrance-free event.<br />
+        {EVENT_TITLE} is a fragrance-free event.<br />
         Please use only fragrance-free products.
       </Typography>
 
       <Typography component='p' sx={{ mt: 2 }}>
-        Hope to dance with you soon at the 2024 Corvallis Contra Weekend!
+        Hope to dance with you soon at the {EVENT_TITLE}!
       </Typography>
     </>
   );

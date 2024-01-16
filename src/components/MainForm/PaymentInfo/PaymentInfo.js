@@ -4,7 +4,7 @@ import { RightAlignedInput } from '../Input';
 import { StyledPaper, Title, Paragraph } from 'components/Layout/SharedStyles';
 import { InputAdornment, Typography } from '@mui/material';
 import { useFormikContext } from 'formik';
-// import PaymentExplanation from 'components/PaymentExplanation';
+// import PaymentExplanation from 'components/static/PaymentExplanation';
 import config from 'config';
 const { ADMISSION_COST_RANGE, DONATION_OPTION, DONATION_RANGE } = config;
 

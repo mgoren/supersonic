@@ -8,7 +8,7 @@ import Schedule from 'components/Static/Schedule';
 import Registration from 'components/Registration';
 import MaterialLayout from 'components/Layout/';
 import Error from 'components/Error';
-import PaymentExplanation from 'components/PaymentExplanation';
+import PaymentExplanation from 'components/Static/PaymentExplanation';
 import ScrollToAnchor from 'components/ScrollToAnchor';
 import config from 'config';
 const { EMAIL_CONTACT } = config;

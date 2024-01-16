@@ -240,6 +240,7 @@ const config = {
     {key: 'checkout', label: 'Checkout'}
   ],
   PAYMENT_METHODS: ['stripe', 'check'], // options are 'stripe', 'paypal', and/or 'check' (first is default)
+  EVENT_TITLE: 'Example Contra Weekend 2024',
   TITLE: 'Example Contra Weekend 2024 Registation',
   CONFIRMATION_PAYPAL_TITLE: 'Example Dance Weekend Confirmation',
   CONFIRMATION_CHECK_TITLE: 'Example Dance Weekend Registration',

@@ -13,11 +13,11 @@ export default function About() {
       </PageTitle>
 
       <Box mt={-5} mb={4}>
-        <img src={process.env.PUBLIC_URL + '/supersonic/hands.jpg'} alt='' style={{ width: "100%", height: "auto" }} />
+        <img src={process.env.PUBLIC_URL + '/some_event/hands.jpg'} alt='' style={{ width: "100%", height: "auto" }} />
       </Box>
 
       <Header>
-        Seven Characteristics of Supersonic Dancers
+        Seven Characteristics of some_event Dancers
       </Header>
 
       <List>
@@ -27,14 +27,14 @@ export default function About() {
         <ListItem>Swap roles or engage in other play when it is done with the utmost regard for the integrity of the dance and the line and with partner consent.</ListItem>
         <ListItem>Take time and effort to appreciate the talent of the callers and the bands.</ListItem>
         <ListItem>Avoid pre-booking and enjoy the spontaneity of seeking a new partner for each dance for a variety of experiences.</ListItem>
-        <ListItem>Ensure our clothes and selves are 100% fragrance-free when attending Supersonic.</ListItem>
+        <ListItem>Ensure our clothes and selves are 100% fragrance-free when attending some_event.</ListItem>
       </List>
 
       <Header id='covid'>
         Covid Policy for attendees
       </Header>
       <Paragraph sx={{ mb: 2 }}>
-        Supersonic Contra Dance Weekend will follow the mask guidelines of the weekly Seattle contra dances.
+        some_event Contra Dance Weekend will follow the mask guidelines of the weekly Seattle contra dances.
         As of November 1, well-fitting face masks are required. 
         Masks will be provided for those who don't have one. 
         No proof of vaccination or testing will be required.
@@ -48,7 +48,7 @@ export default function About() {
         Waiver
       </Header>
       <Paragraph>
-        You will need to sign a <StyledLink to={process.env.PUBLIC_URL + '/supersonic/supersonic-waiver.pdf'}>waiver</StyledLink> and email it to <StyledLink to={mailtoLink(EMAIL_CONTACT)}>{EMAIL_CONTACT}</StyledLink>.<br />
+        You will need to sign a <StyledLink to={process.env.PUBLIC_URL + '/some_event/some_event-waiver.pdf'}>waiver</StyledLink> and email it to <StyledLink to={mailtoLink(EMAIL_CONTACT)}>{EMAIL_CONTACT}</StyledLink>.<br />
       </Paragraph>
 
       <Header id='refund'>
@@ -70,8 +70,8 @@ export default function About() {
         Housing Accomodations
       </Header>
       <Paragraph>This dance weekend is in Seattle. We will do our best to find housing for out-of-town guests. Please remember that we are all volunteers, so adjust expectations accordingly. If you have attended other dance weekends in Seattle, you are strongly encouraged to make your own arrangements with friends you have stayed with before.</Paragraph>
-      <Paragraph>Do you need housing or can you offer housing to visiting dancers? Please be sure to include this as a part of your Supersonic registration.</Paragraph>
-      <Paragraph>If you have any other questions about housing or hosting guests, please email Kristin at housing@supersoniccontra.com</Paragraph>
+      <Paragraph>Do you need housing or can you offer housing to visiting dancers? Please be sure to include this as a part of your some_event registration.</Paragraph>
+      <Paragraph>If you have any other questions about housing or hosting guests, please email Kristin at housing@some_eventcontra.com</Paragraph>
     </StyledPaper>
   );
 }

@@ -2,20 +2,20 @@ import { Typography, Box, } from '@mui/material';
 import { StyledLink, StyledPaper, PageTitle, SectionDivider, Paragraph } from 'components/Layout/SharedStyles';
 import { mailtoLink} from 'utils';
 import config from 'config';
-const { EMAIL_CONTACT } = config;
+const { EMAIL_CONTACT, EVENT_TITLE, EVENT_LOCATION, EVENT_DATE } = config;
 
 export default function Home() {
 
   return (
     <StyledPaper extraStyles={{ maxWidth: 750 }} align="center">
       <PageTitle>
-        Supersonic Contra Dance<br />
-        Leif Erikson Hall, Seattle<br />
-        2024 February 2 - 4
+        {EVENT_TITLE}<br />
+        {EVENT_LOCATION}<br />
+        {EVENT_DATE}
       </PageTitle>
 
       <Box mt={-5} mb={4}>
-        <img src={process.env.PUBLIC_URL + '/supersonic/dancer.jpg'} alt='' style={{ width: "100%", height: "auto" }} />
+        <img src={process.env.PUBLIC_URL + '/some_event/dancer.jpg'} alt='' style={{ width: "100%", height: "auto" }} />
       </Box>
 
       <Typography variant="h6" sx={{ mb: 2 }}>
@@ -36,18 +36,18 @@ export default function Home() {
       </Paragraph>
 
       <Paragraph sx={{ mb: 2 }}>
-        Supersonic will follow mask guidelines of the weekly Seattle contras.<br />
+        some_event will follow mask guidelines of the weekly Seattle contras.<br />
         As of November 1, well-fitting face masks are required.<br />
         Please do not attend if you are feeling unwell.<br />
         See <StyledLink internal={true} to='/about#covid'>here</StyledLink> for the full Covid policy.<br />
       </Paragraph>
 
       <Paragraph>
-        You will need to sign a <StyledLink to={process.env.PUBLIC_URL + '/supersonic/supersonic-waiver.pdf'}>waiver</StyledLink> and email it to <StyledLink to={mailtoLink(EMAIL_CONTACT)}>{EMAIL_CONTACT}</StyledLink>.<br />
+        You will need to sign a <StyledLink to={process.env.PUBLIC_URL + '/some_event/waiver.pdf'}>waiver</StyledLink> and email it to <StyledLink to={mailtoLink(EMAIL_CONTACT)}>{EMAIL_CONTACT}</StyledLink>.<br />
       </Paragraph>
 
       <Paragraph>
-        Supersonic is a fragrance-free event. Please use only fragrance-free products.
+        some_event is a fragrance-free event. Please use only fragrance-free products.
       </Paragraph>
 
       <SectionDivider/>
@@ -58,7 +58,7 @@ export default function Home() {
       </Paragraph>
 
       <Paragraph>
-        Supersonic Contra Dance Weekend gives experienced dancers the opportunity to explore ways in which to challenge themselves and improve their skills as dance partners while experiencing complex dances and immense joy.
+        some_event Contra Dance Weekend gives experienced dancers the opportunity to explore ways in which to challenge themselves and improve their skills as dance partners while experiencing complex dances and immense joy.
       </Paragraph>
 
       <Paragraph>

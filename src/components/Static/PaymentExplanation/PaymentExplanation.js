@@ -9,7 +9,7 @@ export default function PaymentExplanation() {
     <StyledPaper>
       <Title>Where does my money go?</Title>
       <Box sx={{ mb: 2 }}>
-        <img src={process.env.PUBLIC_URL + '/supersonic/piechart.png'} alt="" style={{ maxWidth: '100%' }} />
+        <img src={process.env.PUBLIC_URL + '/some_event/piechart.png'} alt="" style={{ maxWidth: '100%' }} />
       </Box>
       <Typography><strong>Talent & Staff (stipend/travel/accomodations):</strong> 60% of the budget &mdash; we believe in compensating our people at the higher end of the going rate.</Typography>
       <Typography><strong>Hall Rental/Equipment:</strong> 25% of the budget</Typography>
@@ -17,7 +17,7 @@ export default function PaymentExplanation() {
       <Typography><strong>Administrative Costs:</strong> 5% of the budget</Typography>
 
       <Title sx={{mt: 4}}>Sliding Scale Pay-What-You-Can</Title>
-      <Typography>Supersonic is committed to giving dancers the opportunity to experience our flight regardless of financial situation. However, Supersonic is not affiliated with an organization and has no source for funding except from you, our dancers, with your registration fee. The break-even cost per dancer is $180.</Typography>
+      <Typography>some_event is committed to giving dancers the opportunity to experience our flight regardless of financial situation. However, some_event is not affiliated with an organization and has no source for funding except from you, our dancers, with your registration fee. The break-even cost per dancer is $180.</Typography>
 
       <Title sx={{mt: 4}}>Work-Trade</Title>
       <Typography>A limited number of work-trade opportunities exist for $80 or full registration. Note that these positions will require missing dance time, time off on Friday, or advance work. For details, please contact Karen at <StyledLink to={mailtoLink(EMAIL_CONTACT)}>{EMAIL_CONTACT}</StyledLink>.</Typography>

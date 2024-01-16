@@ -9,11 +9,11 @@ import Header from 'components/Header';
 import IntroHeader from 'components/Header/IntroHeader';
 import OrderSummary from "components/OrderSummary";
 import Receipt from "components/Receipt";
-import { cache, cached } from 'utils';
+import { cache, cached, websiteLink } from 'utils';
 import { Box, Checkbox } from "@mui/material";
 import { StyledPaper, StyledLink, Paragraph } from 'components/Layout/SharedStyles';
 import config from 'config';
-const { PAYMENT_METHODS, PAYPAL_OPTIONS, ORDER_DEFAULTS, TITLE, CONFIRMATION_CHECK_TITLE, CONFIRMATION_PAYPAL_TITLE, SANDBOX_MODE, SHOW_PRE_REGISTRATION } = config;
+const { PAYMENT_METHODS, PAYPAL_OPTIONS, ORDER_DEFAULTS, TITLE, EVENT_TITLE, CONFIRMATION_CHECK_TITLE, CONFIRMATION_PAYPAL_TITLE, SANDBOX_MODE, SHOW_PRE_REGISTRATION, COVID_POLICY_URL, SAFETY_POLICY_URL } = config;
 
 export default function Registration() {
   const [registering, setRegistering] = useState(false);
@@ -27,14 +27,14 @@ export default function Registration() {
 const PreRegistration = ({ setRegistering }) => {
   return(
     <StyledPaper>
-      <p>Please read the Covid Policy and Safety Policy for the 2024 Corvallis Contra Dance Weekend:</p>
+      <p>Please read the Covid Policy and Safety Policy for the {EVENT_TITLE}:</p>
       <ul>
-        <li><StyledLink to='https://corvallisfolklore.org/home/ccw-faq/#Covid'>Covid Policy</StyledLink> (will open in a new tab)</li>
-        <li><StyledLink to='https://corvallisfolklore.org/home/dance-safety-policy/'>Safety Policy</StyledLink> (will open in a new tab)</li>
+        <li><StyledLink to={websiteLink(COVID_POLICY_URL)}>Covid Policy</StyledLink> (will open in a new tab)</li>
+        <li><StyledLink to={websiteLink(SAFETY_POLICY_URL)}>Safety Policy</StyledLink> (will open in a new tab)</li>
       </ul>
 
       <Paragraph sx={{ lineHeight: 2, mt: 4 }}>
-        I acknowledge that I have read and agree to follow both the Covid Policy and the Safety Policy for the 2024 Corvallis Contra Dance Weekend. 
+        I acknowledge that I have read and agree to follow both the Covid Policy and the Safety Policy for the {EVENT_TITLE}. 
         If I am registering two people, I acknowledge that both have read and agreed to these policies.
         <Checkbox onChange={() => setRegistering(true)} />
       </Paragraph>

@@ -3,7 +3,7 @@ import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 import Loading from 'components/Loading';
 import { Typography, Box } from "@mui/material";
 import config from 'config';
-const { SANDBOX_MODE, EMAIL_CONTACT } = config;
+const { SANDBOX_MODE, EMAIL_CONTACT, EVENT_TITLE } = config;
 
 const PaypalCheckoutButton = ({ paypalButtonsLoaded, setPaypalButtonsLoaded, total, setError, setPaying, processing, saveOrderToFirebase, setOrder }) => {
 	const [, isResolved] = usePayPalScriptReducer();
@@ -32,7 +32,7 @@ const PaypalCheckoutButton = ({ paypalButtonsLoaded, setPaypalButtonsLoaded, tot
 		return actions.order.create({
 			purchase_units: [
 				{
-					description: 'Corvallis Contra Wekeend 2024',
+					description: {EVENT_TITLE},
 					amount: {
 						value: total.toString() // must be a string
 					}

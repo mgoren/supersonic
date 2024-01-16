@@ -240,12 +240,16 @@ const config = {
     {key: 'checkout', label: 'Checkout'}
   ],
   PAYMENT_METHODS: ['stripe', 'check'], // options are 'stripe', 'paypal', and/or 'check' (first is default)
-  EVENT_TITLE: 'Example Contra Weekend 2024',
+  EVENT_TITLE: 'Example Contra Weekend',
+  EVENT_LOCATION: 'Someplace, Somewhere',
+  EVENT_LOCATION_2: 'Some address',
+  EVENT_DATE: 'Some dates',
   TITLE: 'Example Contra Weekend 2024 Registation',
   CONFIRMATION_PAYPAL_TITLE: 'Example Dance Weekend Confirmation',
   CONFIRMATION_CHECK_TITLE: 'Example Dance Weekend Registration',
   EMAIL_CONTACT: 'contact@example.com',
   COVID_POLICY_URL: 'example.com/covid',
+  SAFETY_POLICY_URL: 'example.com/safety',
   // DETAILS_URL: 'example.com',
   // WAIVER_URL: 'example.com/waiver',
   // PAYPAL_ME_URL: 'paypal.me/example',

@@ -10,14 +10,14 @@ export default function Schedule() {
       </PageTitle>
 
       <Box mt={-5} mb={4}>
-        <img src={process.env.PUBLIC_URL + '/supersonic/instruments.jpg'} alt='' style={{ width: "100%", height: "auto" }} />
+        <img src={process.env.PUBLIC_URL + '/some_event/instruments.jpg'} alt='' style={{ width: "100%", height: "auto" }} />
       </Box>
 
       <Header>
-        Supersonic Contra Dance Wekeend Itinerary
+        some_event Contra Dance Wekeend Itinerary
       </Header>
       <List>
-        <ListItem>2024 &mdash; <StyledLink to={process.env.PUBLIC_URL + '/supersonic/supersonic-schedule-2024.pdf'}>Supersonic Contra Dance Weekend Schedule</StyledLink></ListItem>
+        <ListItem>2024 &mdash; <StyledLink to={process.env.PUBLIC_URL + '/some_event/some_event-schedule-2024.pdf'}>some_event Contra Dance Weekend Schedule</StyledLink></ListItem>
       </List>
 
       <Header>

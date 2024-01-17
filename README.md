@@ -1,36 +1,30 @@
 # Registration site
 
 Simple registration / admissions sales site for contra dance events.
-React app that uses Firebase for database / serverless functions back-end / hosting.
+React app that uses Firebase for database, hosting, and serverless functions back-end.
 
 # Configuration
 
-prerequisites:
-- node
-- firebase account
-- github account
+## Setup accounts and CLI tools:
 
----
-
-## Install CLI tools:
-
+- Create Firebase account if needed
+- Create GitHub account if needed
+- Install node if needed
 - Install [GitHub CLI](https://cli.github.com/)
 - Install [Firebase CLI](https://firebase.google.com/docs/cli)
 - Install [Google Cloud CLI](https://cloud.google.com/sdk/docs/install-sdk)
 - Install Google Cloud CLI beta components: `gcloud components install beta`
+- Login to the Firebase CLI: `firebase login`
 
-## Fork template project and git clone it.
+## Copy template project
+
+- ME: `cp -R [TEMPLATE_DIR] [DESTINATION_DIR] && cd [DESTINATION_DIR] && gh repo create [NAME] --private --source=. --remote=upstream`
+- ANYONE ELSE: Fork [template project](https://github.com/mgoren/registration-template) and clone it to a local directory
 
 ## Erase settings from old project:
 
 ```sh
-rm .env
-rm .firebaserc
-rm -rf .firebase
-rm -rf node_modules
-rm -rf functions/node_modules
-cp .env.example .env
-git remote rm origin
+bash clear-old-settings.sh
 ```
 
 ## Set configuration options:
@@ -38,13 +32,7 @@ git remote rm origin
 - Update site title in `public/index.html`
 - Update values in `src/config.js`
 - Update favicon (can use [this site](https://www.favicon-generator.org) to generate them)
-- Copy desired logo to `public` folder and set to desired height (80px or less likely)
-
-## Login to the Firebase CLI:
-
-```sh
-firebase login
-```
+- Copy desired logo to `public/logo.png` and set to desired height (likely <= 80px)
 
 ## Create a Firebase project, which will also create a Google Cloud project with the same PROJECT_ID:
 
@@ -53,12 +41,6 @@ firebase projects:create [PROJECT_ID]
 firebase init database --project [PROJECT_ID] # accept defaults, don't overwrite dataabase rules
 firebase deploy --only database
 ```
-
-# Create a token for pseudo-auth to onCall Firebase functions
-
-- generate a long random string as your token (avoid symbols)
-- add value to `.env`
-- firebase functions:config:set shared.token="INSERT_TOKEN_HERE"
 
 ## Enable billing on Google Cloud account from the [Google Cloud console](https://console.cloud.google.com/billing)
 (Unlikely to actually owe any money for small scale use, but set a billing alert to be safe.)
@@ -76,28 +58,48 @@ gcloud billing accounts list
 gcloud billing projects link [PROJECT_ID] --billing-account [BILLING_ACCOUNT_ID]
 ```
 
-## Enable Google Cloud APIs & create API key:
+## Create Firebase web app and add config to `.env`
 
-Update allowed-referrers list in `google-places-api-flags.yaml` file.
-
-```sh
-gcloud services enable sheets.googleapis.com --project [PROJECT_ID]
-gcloud services enable places-backend.googleapis.com --project [PROJECT_ID]
-gcloud services enable maps-backend.googleapis.com --project [PROJECT_ID]
-gcloud beta services api-keys create --flags-file=google-places-api-flags.yaml --project [PROJECT_ID]
-```
-
-Copy `keyString` value to `REACT_APP_GOOGLE_PLACES_API_KEY` in `.env`.
-
-## Create web app from Firebase console on project overview screen
-
-## Get firebase web app config values and add them to `.env` file:
+- From Firebase console, click "Add app" and choose the web one
+- Get Firebase web app config values
 
 ```sh
 firebase apps:sdkconfig web
 ```
 
-## Setup reCAPTCHA
+- Add those values to `.env` file
+
+## Create a token for pseudo-auth to onCall Firebase functions
+
+- generate a long random string as your token (avoid symbols)
+- set your token as the value for REACT_APP_TOKEN in `.env`
+- firebase functions:config:set shared.token="INSERT_TOKEN_HERE"
+
+## Setup Stripe or PayPal:
+
+Stripe configuration:
+- On Stripe console, disable all payment methods except Cards, Apple Pay, Google Pay
+- Copy the _publishable key_ to the `.env` file. (Use test key until ready to launch.)
+- firebase functions:config:set stripe.secret_key="YOUR_STRIPE_SECRET_KEY"
+
+PayPal configuration:
+- Don't want to accept Venmo? Comment out the venmo line in `config.js`.
+- Copy the _client ID_ to the `.env` file. Ignore the secret key. (Use sandbox mode key until ready to launch.)
+- Comment out the lines related to Stripe in `functions/index.js`
+
+## IF COLLECTING ADDRESSES: setup Google Places API for address autocomplete
+
+- Update allowed-referrers list in `google-places-api-flags.yaml` file.
+
+```sh
+gcloud services enable places-backend.googleapis.com --project [PROJECT_ID]
+gcloud services enable maps-backend.googleapis.com --project [PROJECT_ID]
+gcloud beta services api-keys create --flags-file=google-places-api-flags.yaml --project [PROJECT_ID]
+```
+
+- Copy `keyString` value to `REACT_APP_GOOGLE_PLACES_API_KEY` in `.env`.
+
+## IF ALLOWING CHECK PAYMENT: setup reCAPTCHA
 
 - [Register site with recaptcha](https://www.google.com/recaptcha/admin/create)
 - label: [doesn't really matter]
@@ -105,16 +107,6 @@ firebase apps:sdkconfig web
 - Domains: localhost, [PROJECT_ID].web.app, EXAMPLE.COM (obviously replace with actual domain)
 - Google Cloud Platform: associate with this google cloud project
 - Copy site key value to `REACT_APP_RECAPTCHA_SITE_KEY` in `.env`.
-
-## Setup Stripe or PayPal:
-
-Stripe configuration:
-- On Stripe console, disable all payment methods except Cards, Apple Pay, Google Pay
-- Copy the publishable key to the `.env` file. (Use test key until ready to launch.)
-
-PayPal configuration:
-- Don't want to accept Venmo? Comment out the venmo line in `config.js`.
-- Copy the client ID to the `.env` file. Ignore the secret key. (Use sandbox mode key until ready to launch.)
 
 ## Copy `.env` file values over to GitHub Secrets for workflow use:
 
@@ -124,35 +116,19 @@ bash update-github-secrets.sh
 
 ## Add Firebase Service Account as GitHub Secret:
 
-Note: answer no to the yes/no questions; this stuff is already configured.
-
 ```sh
-firebase init hosting:github
+firebase init hosting:github # answer no to questions, as this is already configured
 rm .github/workflows/firebase-hosting-pull-request.yml
 ```
 
-Update `firebaseServiceAccount` value in ``.github/workflows/firebase-hosting-merge.yml`` to name of GitHub secret set by previous step.
+- Update `firebaseServiceAccount` value in ``.github/workflows/firebase-hosting-merge.yml`` to name of GitHub secret set by previous step.
 
-## Setup, test and deploy Firebase Functions
+## Setup Google Sheets integration:
 
-```sh
-cd functions && npm install && cd ..
-```
-
-**Stripe Firebase function:**
-
-_If not using Stripe, comment out the loading of this from `functions/index.js`_
+Enable Sheets API, create Google Cloud service account, save keys to firebase function config:
 
 ```sh
-firebase functions:config:set stripe.secret_key="YOUR_STRIPE_SECRET_KEY"
-firebase deploy --only functions
-```
-
-**Google Sheets Firebase function:**
-
-Create Google Cloud service account on project, save keys to firebase function config:
-
-```sh
+gcloud services enable sheets.googleapis.com --project [PROJECT_ID]
 gcloud iam service-accounts create sheets --project [PROJECT_ID]
 gcloud iam service-accounts keys create tmp.json --iam-account sheets@[PROJECT_ID].iam.gserviceaccount.com
 firebase functions:config:set googleapi.service_account="$(cat tmp.json)"
@@ -169,43 +145,49 @@ _Note: Update fields/columns as needed in `functions/fields.js` and in spreadshe
 
 ```sh
 firebase functions:config:set googleapi.sheet_id="YOUR_SPREADSHEET_ID"
-firebase deploy --only functions
 ```
 
-**Email Confirmation Firebase function:**
+## Setup Email Confirmation:
 
 Create a Sendgrid API key, configure firebase functions with that and from/reply/subject settings:
 
 ```sh
 firebase functions:config:set sendgrid.api_key="SENDGRID_API_KEY"
 firebase functions:config:set email.from='"Example" <example@example.com>' email.subject='Example Contra Dance Registration'
-firebase functions:config:set email.reply_to='example@example.com' // only if needed
+firebase functions:config:set email.reply_to='example@example.com' # only if needed
+```
+
+## Deploy Firebase Functions:
+
+```sh
+cd functions && npm install && cd ..
 firebase deploy --only functions
 ```
 
-**Add error logging for Firebase functions**
+## Add error logging for Firebase functions:
 
-Setup logs for Firebase Function (at least the spreadsheet one) to notify on `severity=(ERROR OR INFO)`.
+Setup logs for appendrecordtospreadsheet Firebase function to notify on `severity=(ERROR OR INFO)`:
 
-_ADD MORE INFO TO THIS README SECTION._
+- Do this two-line query:
 
-# Development
+```
+(resource.type="cloud_function" resource.labels.function_name=("appendrecordtospreadsheet") resource.labels.region="us-central1") OR (resource.type="cloud_run_revision" resource.labels.service_name=("appendrecordtospreadsheet") resource.labels.location="us-central1")
+severity=(ERROR OR INFO)
+```
 
-Set environment variables in `.env`
+- then click on "Create alert"
+
+# Development 
+
+- Ensure `.env` is filled in with environment variables
 
 ```sh
 npm install
 npm start
 ```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
 # Deployment via GitHub workflow and Firebase hosting
 
-- Set environment variables as [secrets](https://github.com/[GITHUB_USER]/[GITHUB_REPO]/settings/secrets/actions) on the repo
-- Update `.github/workflows/firebase-hosting-merge.yml`
-- Deploy again after updating github secrets!
+- Ensure all environment variables are set as repo [secrets](https://github.com/[GITHUB_USER]/[GITHUB_REPO]/settings/secrets/actions)
+- Ensure all environment variables are listed in `.github/workflows/firebase-hosting-merge.yml`, including firebaseServiceAccount
+- If update Github secrets, must redeploy

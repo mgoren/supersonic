@@ -25,7 +25,7 @@ export const updateOrder = functions.https.onCall(async (data) => {
   if (token.trim() !== functions.config().shared.token.trim()) {
     throw new functions.https.HttpsError('permission-denied', 'The function must be called with a valid token.');
   }
-  const filteredUpdates = { electronicPaymentId: updates.electronicPaymentId };
+  const filteredUpdates = { paymentId: updates.paymentId };
   if (!id || id === '') {
     throw new functions.https.HttpsError('invalid-argument', 'The function must be called with a valid order ID.')
   }

@@ -10,7 +10,7 @@ export default function Check({ saveOrderToFirebase, processing, setOrder }) {
   const handleRegister = async () => {
     const order = await saveOrderToFirebase();
     if (order) {
-      setOrder({ ...order, electronicPaymentId: 'check' })
+      setOrder({ ...order, paymentId: 'check' })
     }
   }
 

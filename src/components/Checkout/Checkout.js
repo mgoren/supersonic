@@ -35,12 +35,12 @@ export default function Checkout({ order, setOrder, setError, setCurrentPage }) 
   }, []);
 
   const updateOrderInFirebase = useCallback(async () => {
-    setProcessingMessage(order.electronicPaymentId === 'check' ? 'Updating registration...' : 'Payment successful. Updating registration...');
+    setProcessingMessage(order.paymentId === 'check' ? 'Updating registration...' : 'Payment successful. Updating registration...');
     try {
       await updateOrder({
         token: process.env.REACT_APP_TOKEN,
         id: order.id,
-        updates: { electronicPaymentId: order.electronicPaymentId }
+        updates: { paymentId: order.paymentId }
       });
     } catch (err) {
       console.error(`error updating firebase record`, err);
@@ -55,7 +55,7 @@ export default function Checkout({ order, setOrder, setError, setCurrentPage }) 
   }, [order, setError, setCurrentPage, setPaying, setProcessing, setProcessingMessage]);
 
   useEffect(() => {
-    if (order.id && order.electronicPaymentId) {
+    if (order.id && order.paymentId) {
       updateOrderInFirebase();
     }
   }, [order, updateOrderInFirebase]);

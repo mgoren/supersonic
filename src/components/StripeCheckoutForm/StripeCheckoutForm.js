@@ -46,7 +46,7 @@ export default function StripeCheckoutForm({ setError, processing, setProcessing
     } else if (result.paymentIntent.status === 'succeeded') {
       // console.log('success', result);
       clientSecretRef.current = null;
-      setOrder({ ...order, electronicPaymentId: result.paymentIntent.id })
+      setOrder({ ...order, paymentId: result.paymentIntent.id })
     } else {
       // console.log('unexpected Stripe status', result);
       setProcessing(false);

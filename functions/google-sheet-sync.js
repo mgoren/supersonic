@@ -9,7 +9,7 @@ const SERVICE_ACCOUNT_KEYS = functions.config().sheets.googleapi_service_account
 const SHEET_ID = functions.config().sheets.sheet_id;
 const DATA_PATH = '/orders';
 const RANGE = 'A:AP';
-const ELECTRONIC_PAYMENT_ID_COLUMN = functions.config().sheets.payment_id_column;
+const PAYMENT_ID_COLUMN = functions.config().sheets.payment_id_column;
 
 if (admin.apps.length === 0) {
   admin.initializeApp();
@@ -49,13 +49,13 @@ export const updaterecordinspreadsheet = functions.database.ref(`${DATA_PATH}/{I
     try {
       const key = change.after.key;
       const record = change.after.val();
-      const electronicPaymentId = record.electronicPaymentId;
+      const paymentId = record.paymentId;
       const rowToUpdate = await findRowByKey({ key });
       if (rowToUpdate) {
-        await updateSpreadsheetRow({ row: rowToUpdate, value: electronicPaymentId });
+        await updateSpreadsheetRow({ row: rowToUpdate, value: paymentId });
       }
     } catch (err) {
-      handleError(`Error updating electronicPaymentId for key ${key}`, err);
+      handleError(`Error updating paymentId for key ${key}`, err);
     }
   }
 );
@@ -85,7 +85,7 @@ async function updateSpreadsheetRow({ row, value }) {
     await googleSheetsOperation({ 
       operation: 'update',
       params: {
-        range: `${ELECTRONIC_PAYMENT_ID_COLUMN}${row}`,
+        range: `${PAYMENT_ID_COLUMN}${row}`,
         valueInputOption: 'USER_ENTERED',
         resource: { values: [[value]] }
       }

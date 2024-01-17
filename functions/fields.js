@@ -27,5 +27,5 @@ export const fieldOrder = [
   'owed',
   'purchaser',
   'createdAt',
-  'electronicPaymentId'
+  'paymentId'
 ];

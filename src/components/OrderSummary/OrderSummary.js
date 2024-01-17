@@ -42,7 +42,7 @@ export default function OrderSummary({ order, currentPage }) {
       {isNaN(currentPage) &&
         <Box sx={{ mt: 5 }}>
           <Typography variant="body" gutterBottom sx={{ fontWeight: 'bold' }}>
-            {currentPage === 'confirmation' && order.electronicPaymentId !== 'check' ? 'Amount paid' : 'Amount due'}
+            {currentPage === 'confirmation' && order.paymentId !== 'check' ? 'Amount paid' : 'Amount due'}
           </Typography>
           <p>
             Admissions: {order.admissionQuantity} x ${order.admissionCost} = ${order.admissionQuantity * order.admissionCost}<br />

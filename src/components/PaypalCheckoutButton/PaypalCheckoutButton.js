@@ -48,7 +48,7 @@ const PaypalCheckoutButton = ({ paypalButtonsLoaded, setPaypalButtonsLoaded, tot
 		const order = await saveOrderToFirebase();
 		if (order) {
 			const paypalOrder = await actions.order.capture();
-			setOrder({ ...order, electronicPaymentId: paypalOrder.payer.email_address })
+			setOrder({ ...order, paymentId: paypalOrder.payer.email_address })
 		}
 	};
 

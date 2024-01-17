@@ -7,7 +7,7 @@ import config from 'config';
 const { COVID_POLICY_URL, CHECK_TO, CHECK_ADDRESS, EVENT_TITLE } = config;
 
 export default function Receipt({ order, checkPayment }) {
-  checkPayment ??= order.electronicPaymentId === 'check'
+  checkPayment ??= order.paymentId === 'check'
   useEffect(() => { scrollToTop() },[]);
   return(
     <>

@@ -3,13 +3,13 @@
 import * as functions from 'firebase-functions';
 import { google } from 'googleapis';
 import admin from 'firebase-admin';
-import { mapOrderToSpreadsheetLines } from './fields.js';
+import { fieldOrder } from './fields.js';
 
-const SERVICE_ACCOUNT_KEYS = functions.config().googleapi.service_account;
-const SHEET_ID = functions.config().googleapi.sheet_id;
+const SERVICE_ACCOUNT_KEYS = functions.config().sheets.googleapi_service_account;
+const SHEET_ID = functions.config().sheets.sheet_id;
 const DATA_PATH = '/orders';
 const RANGE = 'A:AP';
-const ELECTRONIC_PAYMENT_ID_COLUMN = 'AA';
+const ELECTRONIC_PAYMENT_ID_COLUMN = functions.config().sheets.payment_id_column;
 
 if (admin.apps.length === 0) {
   admin.initializeApp();
@@ -120,6 +120,37 @@ async function googleSheetsOperation({ operation, params }) {
     handleError(`Google Sheets API operation (${operation}) failed`, err);
   }
 }
+
+const mapOrderToSpreadsheetLines = (order) => {
+  const orders = []
+  const createdAt = new Date(order.createdAt).toLocaleDateString();
+  const purchaser = `${order.people[0].first} ${order.people[0].last}`;
+  const owed = order.total - order.deposit;
+  const updatedOrder = joinOrderArrays(order);
+  const { people, ...orderFields } = updatedOrder
+  for (const person of people) {
+    if (person.first !== '') { // skip person with no data
+      const address = person.apartment ? `${person.address} ${person.apartment}` : person.address;
+      let personFields = { ...person, address, purchaser, createdAt };
+      if (person.index === 0) {
+        personFields = { ...personFields, ...orderFields, owed, createdAt };
+      }
+      const line = fieldOrder.map(field => personFields[field] || '');
+      orders.push(line);
+    }
+  }
+  return orders;
+};
+
+const joinOrderArrays = (order) => {
+  // technically this also modifies original order object, but that's ok in this case
+  for (let key in order) {
+    if (key !== 'people' && Array.isArray(order[key])) {
+      order[key] = order[key].join(', ');
+    }
+  }
+  return order;
+};
 
 function handleError(message, err) {
   functions.logger.error(message, err);

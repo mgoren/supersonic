@@ -43,7 +43,7 @@ const mailTransport = nodemailer.createTransport({
   port: 587,
   auth: {
       user: "apikey",
-      pass: functions.config().sendgrid.api_key
+      pass: functions.config().email.sendgrid_api_key
   }
 })
 

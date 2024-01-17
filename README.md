@@ -125,34 +125,32 @@ rm .github/workflows/firebase-hosting-pull-request.yml
 
 ## Setup Google Sheets integration:
 
+Setup spreadsheet for recording orders:
+
+- Make a copy of the [template spreadsheet](https://docs.google.com/spreadsheets/d/1gQ9l8wBTgNmiI0KmpECsDzCqePSPMnZFaecuj0VO_cU/edit?usp=sharing).
+- Update fields/columns as needed in spreadsheet _and_ in `functions/fields.js`.
+- Determine your spreadsheet ID - the long string of characters (likely between `/d/` and `/edit`)
+
 Enable Sheets API, create Google Cloud service account, save keys to firebase function config:
 
 ```sh
 gcloud services enable sheets.googleapis.com --project [PROJECT_ID]
 gcloud iam service-accounts create sheets --project [PROJECT_ID]
 gcloud iam service-accounts keys create tmp.json --iam-account sheets@[PROJECT_ID].iam.gserviceaccount.com
-firebase functions:config:set googleapi.service_account="$(cat tmp.json)"
+firebase functions:config:set sheets.googleapi_service_account="$(cat tmp.json)"
+firebase functions:config:set sheets.payment_id_column="[PAYMENT_ID_COLUMN_LETTER]" # e.g. AA
+firebase functions:config:set sheets.sheet_id="YOUR_SPREADSHEET_ID"
 rm tmp.json
 ```
 
-Setup spreadsheet for recording orders:
-
-_Note: Update fields/columns as needed in `functions/fields.js` and in spreadsheet._
-
-- Make a copy of the [template spreadsheet](https://docs.google.com/spreadsheets/d/1gQ9l8wBTgNmiI0KmpECsDzCqePSPMnZFaecuj0VO_cU/edit?usp=sharing).
 - Give spreadsheet edit permissions to the service account email: `sheets@[PROJECT_ID].iam.gserviceaccount.com`
-- Determine your spreadsheet ID - the long string of characters (likely between `/d/` and `/edit`)
-
-```sh
-firebase functions:config:set googleapi.sheet_id="YOUR_SPREADSHEET_ID"
-```
 
 ## Setup Email Confirmation:
 
 Create a Sendgrid API key, configure firebase functions with that and from/reply/subject settings:
 
 ```sh
-firebase functions:config:set sendgrid.api_key="SENDGRID_API_KEY"
+firebase functions:config:set email.sendgrid_api_key="SENDGRID_API_KEY"
 firebase functions:config:set email.from='"Example" <example@example.com>' email.subject='Example Contra Dance Registration'
 firebase functions:config:set email.reply_to='example@example.com' # only if needed
 ```

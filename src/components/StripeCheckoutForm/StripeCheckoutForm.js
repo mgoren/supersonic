@@ -38,17 +38,14 @@ export default function StripeCheckoutForm({ setError, processing, setProcessing
     });
 
     if (result.error) {
-      // Show error to your customer (for example, payment details incomplete)
-      // console.log(result.error.message);
+      // e.g. payment details incomplete
       setProcessing(false);
-      setError(`Stripe encountered an error: ${result.error.message}. Please try again or contact ${EMAIL_CONTACT}.`);
-      // if they try again, will result in duplicate db/sheet entry tho! <-- TODO: fix this
+      setError(`Your payment could not be completed: ${result.error.message}. Please try again or contact ${EMAIL_CONTACT}.`);
+      // if they try again, will result in dupe db & spreadsheet entry, but failed one will show pending as paymentId
     } else if (result.paymentIntent.status === 'succeeded') {
-      // console.log('success', result);
       clientSecretRef.current = null;
       setOrder({ ...order, paymentId: result.paymentIntent.id })
     } else {
-      // console.log('unexpected Stripe status', result);
       setProcessing(false);
       setError(`Stripe encountered an unexpected error: ${result.error.message}. Please contact ${EMAIL_CONTACT}.`);
       // will also likely redirect to return_url, which is just an error page in this case

@@ -55,7 +55,7 @@ export default function Checkout({ order, setOrder, setError, setCurrentPage }) 
   }, [order, setError, setCurrentPage, setPaying, setProcessing, setProcessingMessage]);
 
   useEffect(() => {
-    if (order.id && order.paymentId) {
+    if (order.id && order.paymentId && order.paymentId !== 'PENDING') {
       updateOrderInFirebase();
     }
   }, [order, updateOrderInFirebase]);

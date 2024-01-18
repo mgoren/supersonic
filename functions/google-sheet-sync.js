@@ -10,6 +10,8 @@ const SHEET_ID = functions.config().sheets.sheet_id;
 const DATA_PATH = '/orders';
 const RANGE = 'A:AP';
 const PAYMENT_ID_COLUMN = functions.config().sheets.payment_id_column;
+const MAX_RETRIES = 3;
+const RETRY_DELAY = 500; // ms
 
 if (admin.apps.length === 0) {
   admin.initializeApp();
@@ -31,17 +33,27 @@ export const appendrecordtospreadsheet = functions.database.ref(`${DATA_PATH}/{I
   }
 );
 
-async function appendPromise(orderLine) {
-  return googleSheetsOperation({
-    operation: 'append',
-    params: {
-      valueInputOption: 'USER_ENTERED',
-      insertDataOption: 'INSERT_ROWS',
-      resource: {
-        values: [orderLine]
+async function appendPromise(orderLine, attempt = 0) {
+  try {
+    return await googleSheetsOperation({
+      operation: 'append',
+      params: {
+        valueInputOption: 'USER_ENTERED',
+        insertDataOption: 'INSERT_ROWS',
+        resource: {
+          values: [orderLine]
+        }
       }
+    });
+  } catch (err) {
+    if (attempt < MAX_RETRIES) {
+      const delay = RETRY_DELAY * Math.pow(2, attempt);
+      await new Promise(resolve => setTimeout(resolve, delay));
+      return appendPromise(orderLine, attempt + 1);
+    } else {
+      handleError(`Error appending orderLine ${orderLine} to spreadsheet`, err);
     }
-  });
+  }
 }
 
 export const updaterecordinspreadsheet = functions.database.ref(`${DATA_PATH}/{ITEM}`).onUpdate(

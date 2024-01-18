@@ -108,6 +108,10 @@ gcloud beta services api-keys create --flags-file=google-places-api-flags.yaml -
 - Google Cloud Platform: associate with this google cloud project
 - Copy site key value to `REACT_APP_RECAPTCHA_SITE_KEY` in `.env`.
 
+## If desired, add verifier spreadsheet for double-checking
+
+- Create new IFTTT applet with webhook and add webhook URL to `.env`
+
 ## Copy `.env` file values over to GitHub Secrets for workflow use:
 
 ```sh

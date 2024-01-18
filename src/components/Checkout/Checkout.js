@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { scrollToTop, warnBeforeUserLeavesSite, fullName } from 'utils';
+import { sendWebhook, scrollToTop, warnBeforeUserLeavesSite, fullName } from 'utils';
 import PaypalCheckoutButton from 'components/PaypalCheckoutButton';
 import Check from "components/Check";
 import Loading from 'components/Loading';
@@ -85,6 +85,14 @@ export default function Checkout({ order, setOrder, setError, setCurrentPage }) 
     try {
       const { data } = await createOrder({ token: process.env.REACT_APP_TOKEN, order: initialOrderWithReceipt });
       const orderWithId = { ...initialOrderWithReceipt, id: data.id };
+
+
+      // send webhook to IFTTT to add to verifier spreadsheet for double-checking
+      // generates cors errors from localhost
+      if (process.env.REACT_APP_WEBHOOK && window.location.hostname !== 'localhost') {
+        sendWebhook({ email: order.emailConfirmation });
+      }
+
       setOrder(orderWithId);
       setProcessingMessage('Processing payment...');
       return orderWithId;

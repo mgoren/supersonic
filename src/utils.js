@@ -78,19 +78,3 @@ const emailConfirmationIsFirstInvalidField = (errors) => {
 };
 
 export const fullName = (person) => `${person.first} ${person.last}`;
-
-export const sendWebhook = async (body) => {
-  if (window.location.hostname !== 'localhost') {
-    try {
-      const response = await fetch(process.env.REACT_APP_WEBHOOK, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ body }),
-      });
-      const data = await response.json();
-      console.log('Webhook sent successfully:', data);
-    } catch (error) {
-      console.error('Error sending webhook:', error);
-    }
-  }
-};

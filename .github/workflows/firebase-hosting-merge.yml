@@ -22,7 +22,6 @@ jobs:
       REACT_APP_FIREBASE_APP_ID: ${{ secrets.REACT_APP_FIREBASE_APP_ID }}
       REACT_APP_FIREBASE_DATABASE_URL: ${{ secrets.REACT_APP_FIREBASE_DATABASE_URL }}
       REACT_APP_TOKEN: ${{ secrets.REACT_APP_TOKEN }}
-      REACT_APP_WEBHOOK: ${{ secrets.REACT_APP_WEBHOOK }}
     steps:
       - uses: actions/checkout@v3
       - name: npm install

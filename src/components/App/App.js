@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Home from 'components/Static/Home';
 import About from 'components/Static/About';
 import Staff from 'components/Static/Staff';
@@ -29,6 +29,7 @@ export default function App() {
             <Route exact path="/paymentinfo" element=<PaymentExplanation /> />
             <Route exact path="/registration" element=<Registration /> />
             <Route exact path="/error-contact-support" element=<Error error={`Unexpected payment processing error. Please email ${EMAIL_CONTACT}`} /> />
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </MaterialLayout>
       </Router>

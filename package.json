@@ -22,6 +22,7 @@
     "firebase-functions": "^4.6.0",
     "formik": "^2.2.9",
     "googleapis": "^34.0.0",
+    "pluralize": "^8.0.0",
     "preval.macro": "^5.0.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.2",

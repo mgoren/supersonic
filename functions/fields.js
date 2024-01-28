@@ -1,5 +1,4 @@
 // field names must be in same order as spreadsheet columns
-
 export const fieldOrder = [
   'key',
   'first',
@@ -29,3 +28,13 @@ export const fieldOrder = [
   'createdAt',
   'paymentId'
 ];
+
+export const otherFields = [
+  'people', // key for people array itself
+  'index', // required for people array
+  'receipt',
+  'additionalPersonReceipt',
+  'emailConfirmation',
+];
+
+export const validFields = [...fieldOrder, ...otherFields];

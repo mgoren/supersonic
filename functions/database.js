@@ -1,5 +1,6 @@
 import * as functions from "firebase-functions";
 import admin from 'firebase-admin';
+import { validFields } from './fields.js';
 
 if (admin.apps.length === 0) {
   admin.initializeApp();
@@ -10,7 +11,8 @@ export const createOrder = functions.https.onCall(async (data) => {
   if (token.trim() !== functions.config().shared.token.trim()) {
     throw new functions.https.HttpsError('permission-denied', 'The function must be called with a valid token.');
   }
-  const updatedOrder = { ...order, createdAt: admin.database.ServerValue.TIMESTAMP };
+  const filteredOrder = filterObject(order, validFields);
+  const updatedOrder = { ...filteredOrder, createdAt: admin.database.ServerValue.TIMESTAMP };
   try {
     const newOrderRef = admin.database().ref('orders/').push();
     await newOrderRef.set(updatedOrder);
@@ -37,3 +39,18 @@ export const updateOrder = functions.https.onCall(async (data) => {
     throw new functions.https.HttpsError('unknown', 'An error occurred while updating the order', error);
   }
 });
+
+// helper function to filter out any fields that aren't in the validFields array
+const filterObject = (originalObj, validFields) => validFields.reduce((newObj, key) => {
+  if (key in originalObj) {
+    const value = originalObj[key];
+    if (Array.isArray(value)) {
+      newObj[key] = value.map(item => (item && typeof item === 'object') ? filterObject(item, validFields) : item);
+    } else if (value && typeof value === 'object') {
+      newObj[key] = filterObject(value, validFields);
+    } else {
+      newObj[key] = value;
+    }
+  }
+  return newObj;
+}, {});

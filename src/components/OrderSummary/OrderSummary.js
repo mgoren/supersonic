@@ -16,7 +16,7 @@ export default function OrderSummary({ order, currentPage }) {
         {order.people.slice(0, order.admissionQuantity).map((person, index) => (
           <p key={index}>
             {person.first} {person.last}<br />
-            Nametag: {person.nametag ? <>{person.nametag}</> : <>{person.first} {person.last}</>} {person.pronouns && <>({person.pronouns})</>}<br />
+            Nametag: {person.nametag ? <>{person.nametag}</> : <>{person.first}</>} {person.pronouns && <>({person.pronouns})</>}<br />
             {person.email && <>{person.email}<br /></>}
             {person.phone && <>{person.phone}<br /></>}
             {person.address && <>{displayAddress(person.address, person.apartment)}<br /></>}

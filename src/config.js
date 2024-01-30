@@ -171,7 +171,6 @@ const ORDER_DEFAULTS = {
   carpool: [],
   share: ['name', 'email', 'phone', 'location'],
   comments: '',
-  workTrade: '',
 }
 
 const VOLUNTEER_OPTIONS = [

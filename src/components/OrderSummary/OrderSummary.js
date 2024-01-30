@@ -1,11 +1,11 @@
 import { Box, Typography } from '@mui/material';
 import config from 'config';
-const { HOSPITALITY_OPTIONS } = config;
+const { SCHOLARSHIP_OPTIONS } = config;
 
 export default function OrderSummary({ order, currentPage }) {
   const total = order.admissionCost * order.admissionQuantity + order.donation;
 
-  let hospitalityTitles = getCheckboxTitles({ property: order.hospitality, options: HOSPITALITY_OPTIONS });
+  let scholarshipTitles = getCheckboxTitles({ property: order.scholarship, options: SCHOLARSHIP_OPTIONS });
 
   return (
     <>
@@ -17,10 +17,10 @@ export default function OrderSummary({ order, currentPage }) {
           <p key={index}>
             {person.first} {person.last}<br />
             Nametag: {person.nametag ? <>{person.nametag}</> : <>{person.first} {person.last}</>} {person.pronouns && <>({person.pronouns})</>}<br />
-            {person.email}<br />
-            {person.phone}<br />
+            {person.email && <>{person.email}<br /></>}
+            {person.phone && <>{person.phone}<br /></>}
             {person.address && <>{displayAddress(person.address, person.apartment)}<br /></>}
-            {person.city}, {person.state} {person.zip}<br />
+            {person.city && <>{person.city}, {person.state} {person.zip}<br /></>}
             {person.country !== 'USA' && <>{person.country}</>}
           </p>
         ))}
@@ -32,8 +32,10 @@ export default function OrderSummary({ order, currentPage }) {
             Miscellanea
           </Typography>
           <p>
-            Housing: {!!order.hospitality.length ? hospitalityTitles.join(', ') : ' not signed up'}<br />
             Include on roster: {!!order.share.length ? order.share.join(', ') : 'do not share'}<br />
+            Include on carpool list: {!!order.carpool.length ? order.carpool.join(', ') : 'no'}<br />
+            Volunteering: {!!order.volunteer.length ? order.volunteer.join(', ') : 'not signed up'}<br />
+            Scholarship: {!!order.scholarship.length ? scholarshipTitles.join(', ').toLowerCase() : 'not requesting'}<br />
             {order.comments && <>Comments: {order.comments}<br /></>}
           </p>
         </Box>

@@ -161,6 +161,9 @@ const joinOrderArrays = (order) => {
       order[key] = order[key].join(', ');
     }
   }
+  if (!order.share) {
+    order['share'] = 'do not share';
+  }
   return order;
 };
 

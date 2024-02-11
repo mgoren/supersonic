@@ -13,7 +13,6 @@ export const fieldOrder = [
   'zip',
   'country',
   'volunteer',
-  'hospitality',
   'scholarship',
   'share',
   'carpool',
@@ -29,12 +28,10 @@ export const fieldOrder = [
   'paymentId'
 ];
 
-export const otherFields = [
-  'people', // key for people array itself
-  'index', // required for people array
+export const validFields = [
+  ...fieldOrder,
+  'people',
   'receipt',
   'additionalPersonReceipt',
-  'emailConfirmation',
+  'emailConfirmation'
 ];
-
-export const validFields = [...fieldOrder, ...otherFields];

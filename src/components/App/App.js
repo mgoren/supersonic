@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Home from 'components/Static/Home';
+// import Home from 'components/Static/Home';
 import About from 'components/Static/About';
 import Staff from 'components/Static/Staff';
 import Seattle from 'components/Static/Seattle';

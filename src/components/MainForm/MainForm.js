@@ -18,7 +18,7 @@ export default function MainForm({ order, setOrder, currentPage, setCurrentPage 
 
   // it doesn't get here until all validations are passing
   function submitForm(values, actions) {
-    console.log('submitForm function');
+    // console.log('submitForm function');
     const submittedOrder = Object.assign({}, values);
     const sanitizedOrder = sanitizeObject(submittedOrder);
     const orderWithCountry = { ...sanitizedOrder, people: sanitizedOrder.people.map(updateCountry) };

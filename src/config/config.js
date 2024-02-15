@@ -41,7 +41,7 @@ const config = {
   SHOW_PRE_REGISTRATION: false,
   NUM_PAGES: 2,
   STEPS: [
-    {key: 1, label: 'Contact'},
+    {key: 1, label: 'Info'},
     {key: 2, label: 'Payment'},
     {key: 'checkout', label: 'Checkout'}
   ],

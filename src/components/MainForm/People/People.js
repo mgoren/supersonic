@@ -47,7 +47,7 @@ export default function People({ order, setOrder, resetForm, saveForm }) {
 
   return (
     <>
-      {(order.people.length > 1 || editIndex === null) &&
+      {(order.people.length > 1 || order.people[0].email || editIndex === null) &&
         <StyledPaper>
           {order.people.map((person, index) => (
             <Box key={index}>

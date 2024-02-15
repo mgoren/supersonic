@@ -69,6 +69,8 @@ export function AdditionalPersonReceipt({ order }) {
     <>
       <Typography component='p' sx={{ mt: 2 }}>
         Thank you for registering for the {EVENT_TITLE}.
+        --- if check payment, say "Your spot in camp will be confirmed once we receive payment for your registration."
+        --- if paid depsit, say "Your spot in camp is reserved. The balance of your registration fee is due by ___."
       </Typography>
 
       <SharedReceipt />

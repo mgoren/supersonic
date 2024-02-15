@@ -8,8 +8,10 @@ import config from 'config';
 const { SCHOLARSHIP_OPTIONS } = config;
 
 export default function OrderSummary({ order, currentPage }) {
-  const admissionsTotal = order.people.length * order.admissionCost;
+  const admissions = order.people.map(person => person.admissionCost);
+  const admissionsTotal = admissions.reduce((total, admission) => total + admission, 0);
   const total = admissionsTotal + order.donation;
+  const splitPayment = order.people.some(person => person.admissionCost * order.people.length !== admissionsTotal);
 
   return (
     <>
@@ -29,9 +31,25 @@ export default function OrderSummary({ order, currentPage }) {
             {currentPage === 'confirmation' && order.paymentId !== 'check' ? 'Amount paid' : 'Amount due'}
           </Typography>
           <p>
-            Admissions: {order.people.length} x ${order.admissionCost} = ${admissionsTotal}<br />
+            {splitPayment ?
+              <>
+                Admissions:&nbsp;
+                {admissions.map((cost, index) => (
+                  <span key={index}>
+                    ${cost} {index < admissions.length - 1 ? '+ ' : '= '}
+                  </span>
+                ))}
+                ${admissionsTotal}
+              </>
+              :
+              <>
+                Admissions: {order.people.length} x ${order.people[0].admissionCost} = ${admissionsTotal}
+              </>
+            }
+
             {order.donation > 0 &&
               <>
+                <br />
                 Additional donation: ${order.donation}<br />
                 Total: ${total}
               </>

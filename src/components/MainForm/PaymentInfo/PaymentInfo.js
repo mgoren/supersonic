@@ -1,17 +1,35 @@
-import { useEffect } from 'react';
-import { scrollToTop } from 'utils';
+import { useState, useEffect } from 'react';
+import { scrollToTop, clamp } from 'utils';
 import { RightAlignedInput } from '../Input';
 import { StyledPaper, Title, Paragraph } from 'components/Layout/SharedStyles';
-import { InputAdornment, Typography } from '@mui/material';
+import { InputAdornment, Typography, Link } from '@mui/material';
 import { useFormikContext } from 'formik';
 // import PaymentExplanation from 'components/static/PaymentExplanation';
 import config from 'config';
 const { ADMISSION_COST_RANGE, DONATION_OPTION, DONATION_RANGE } = config;
 
 export default function PaymentInfo({ order, donate, setDonate, clampValue }) {
-  const { values } = useFormikContext();
+  const admissionsTotal = order.people.reduce((total, person) => total + person.admissionCost, 0);
+  const [splitPayment, setSplitPayment] = useState(order.people.some(person => person.admissionCost * order.people.length !== admissionsTotal));
+  const { values, setFieldValue, handleBlur } = useFormikContext();
 
   useEffect(() => { scrollToTop(); },[])
+
+  function showSplitPayments(e) {
+    e.preventDefault();
+    setSplitPayment(true);
+  }
+
+  function updateAdmissionCostValues(event) {
+    const clampedValue = clamp(
+      parseInt(event.target.value) || ADMISSION_COST_RANGE[0],
+      ADMISSION_COST_RANGE
+    );
+    order.people.forEach((_, index) => {
+      setFieldValue(`people[${index}].admissionCost`, clampedValue);
+    });
+    handleBlur(event); // bubble up to formik
+  }
 
   return (
     <section className='PaymentInfo'>
@@ -20,24 +38,8 @@ export default function PaymentInfo({ order, donate, setDonate, clampValue }) {
 
       <div className='admissions-section'>
         <StyledPaper className='admissions-cost'>
-            {ADMISSION_COST_RANGE[0] < ADMISSION_COST_RANGE[1] ?
-              <>
-                <Title>Sliding scale</Title>
-                <RightAlignedInput
-                  sx={{ width: '5em' }}
-                  label={`How much are you able to pay${order.people.length > 1 ? ' *per person*' : ''}? ($${ADMISSION_COST_RANGE[0]}-${ADMISSION_COST_RANGE[1]})`}
-                  name="admissionCost"
-                  pattern='###'
-                  range={ADMISSION_COST_RANGE}
-                  onBlur={(event) => clampValue({ event: event, range: ADMISSION_COST_RANGE})}
-                  InputProps={{ startAdornment: <InputAdornment position='start'>$</InputAdornment> }}
-                />
-                <Typography>$100 (standard fee)</Typography>
-                <Typography>$120 (a nice donation)</Typography>
-                <Typography>$150 (a generous donation)</Typography>
-                <Paragraph>If you requested a scholarship, just leave it at $100, select "pay by check" at checkout, and we will be in touch with you.</Paragraph>
-              </>
-            :
+
+        {ADMISSION_COST_RANGE[0] === ADMISSION_COST_RANGE[1] &&
               <>
               <Title>Admission cost</Title>
                 <p>
@@ -49,6 +51,54 @@ export default function PaymentInfo({ order, donate, setDonate, clampValue }) {
                 </p>
               </>
             }
+
+            { ADMISSION_COST_RANGE[0] < ADMISSION_COST_RANGE[1] &&
+              <>
+                <Title>Sliding scale</Title>
+
+                {splitPayment ?
+                  <>
+                    <Paragraph>Specify the amount each person will pay:</Paragraph>
+                    <Typography>$100 (standard fee)</Typography>
+                    <Typography>$120 (a nice donation)</Typography>
+                    <Typography>$150 (a generous donation)</Typography>
+
+                    {order.people.map((person, index) =>
+                      <RightAlignedInput
+                        key={index}
+                        sx={{ width: '5em', mb: 1 }}
+                        label={`${person.first} ${person.last}`}
+                        name={`people[${index}].admissionCost`}
+                        pattern='###'
+                        range={ADMISSION_COST_RANGE}
+                        onBlur={(event) => clampValue({ event: event, range: ADMISSION_COST_RANGE})}
+                        InputProps={{ startAdornment: <InputAdornment position='start'>$</InputAdornment> }}
+                      />
+                    )}
+                  </>
+                  :
+                  <>
+                    <RightAlignedInput
+                      sx={{ width: '5em' }}
+                      label={`How much are you able to pay${order.people.length > 1 ? ' *per person*' : ''}? ($${ADMISSION_COST_RANGE[0]}-${ADMISSION_COST_RANGE[1]})`}
+                      name='people[0].admissionCost'
+                      pattern='###'
+                      range={ADMISSION_COST_RANGE}
+                      onBlur={(event) => updateAdmissionCostValues(event)}
+                      InputProps={{ startAdornment: <InputAdornment position='start'>$</InputAdornment> }}
+                    />
+                    <Typography>$100 (standard fee)</Typography>
+                    <Typography>$120 (a nice donation)</Typography>
+                    <Typography>$150 (a generous donation)</Typography>
+                  </>
+                }
+
+                {!splitPayment && order.people.length > 1 &&
+                  <Typography variant="body2" sx={{ mt: 2 }}>(or click <Link component='span' sx={{cursor: 'pointer'}} onClick={showSplitPayments}>here</Link> to specify different amounts per person)</Typography>
+                }
+              </>
+            }
+
         </StyledPaper>
 
         {DONATION_OPTION &&

@@ -6,20 +6,13 @@
 import { PAYPAL_OPTIONS } from './configPaypal';
 import { FIELD_CONFIG, PERSON_INPUT_LABELS } from './configFields';
 import { VOLUNTEER_OPTIONS, SCHOLARSHIP_OPTIONS, SHARE_OPTIONS, YES_NO_OPTIONS, DANCES } from './configContent';
-
-// update these as needed
-const ADMISSION_COST_RANGE = [100, 150];
-const ADMISSION_COST_DEFAULT = 100;
-const ADMISSION_QUANTITY_MAX = 4;
-const DONATION_OPTION = true;
-const DONATION_RANGE = [0, 999];
+import { ADMISSION_COST_RANGE, ADMISSION_COST_DEFAULT, ADMISSION_QUANTITY_MAX, DONATION_OPTION, DONATION_RANGE } from './configBasics';
 
 // config for this particular registration instance; update this as needed!
 const PERSON_CONTACT_FIELDS = ['first', 'last', 'nametag', 'pronouns', 'email', 'phone', 'address', 'apartment', 'city', 'state', 'zip', 'country'];
-const PERSON_MISC_FIELDS = ['share', 'carpool', 'volunteer', 'scholarship', 'comments'];
+const PERSON_MISC_FIELDS = ['share', 'carpool', 'volunteer', 'scholarship', 'comments', 'admissionCost'];
 const ORDER_MISC_DEFAULTS = {
   emailConfirmation: '',
-  admissionCost: ADMISSION_COST_DEFAULT,
   donation: DONATION_RANGE[0]
 };
 

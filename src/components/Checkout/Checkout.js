@@ -60,7 +60,7 @@ export default function Checkout({ order, setOrder, setError, setCurrentPage }) 
     }
   }, [order, updateOrderInFirebase]);
 
-  const admissionsTotal = order.people.reduce((total, person) => total + person.admissionCost, 0);
+  const admissionsTotal = order.people.reduce((total, person) => total + parseInt(person.admissionCost), 0);
   const total = admissionsTotal + order.donation;
 
   const handleClickBackButton = () => {
@@ -76,8 +76,7 @@ export default function Checkout({ order, setOrder, setError, setCurrentPage }) 
     const initialOrder = {
       ...order,
       people: order.people.map(updateApartment),
-      total,
-      deposit: paymentMethod === 'check' ? 0 : total,
+      paymentMethod,
       paymentId: 'PENDING'
     };
     const receipt = renderToStaticMarkup(<Receipt order={initialOrder} currentPage='confirmation' checkPayment={paymentMethod === 'check'} />);

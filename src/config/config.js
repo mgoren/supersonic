@@ -6,7 +6,7 @@
 import { PAYPAL_OPTIONS } from './configPaypal';
 import { FIELD_CONFIG, PERSON_INPUT_LABELS } from './configFields';
 import { VOLUNTEER_OPTIONS, SCHOLARSHIP_OPTIONS, SHARE_OPTIONS, YES_NO_OPTIONS, DANCES } from './configContent';
-import { ADMISSION_COST_RANGE, ADMISSION_COST_DEFAULT, ADMISSION_QUANTITY_MAX, DONATION_OPTION, DONATION_RANGE } from './configBasics';
+import { DEPOSIT_MIN, ADMISSION_COST_RANGE, ADMISSION_COST_DEFAULT, ADMISSION_QUANTITY_MAX, DONATION_OPTION, DONATION_RANGE } from './configBasics';
 
 // config for this particular registration instance; update this as needed!
 const PERSON_CONTACT_FIELDS = ['first', 'last', 'nametag', 'pronouns', 'email', 'phone', 'address', 'apartment', 'city', 'state', 'zip', 'country'];
@@ -51,6 +51,7 @@ const config = {
   SAFETY_POLICY_URL: 'example.com/safety',
   CHECK_TO: 'Check To Example',
   CHECK_ADDRESS: "Address line 1<br />Address line 2<br />Address line 3<br />Address line 4",
+  DEPOSIT_MIN,
   ADMISSION_COST_RANGE,
   ADMISSION_COST_DEFAULT,
   ADMISSION_QUANTITY_MAX,

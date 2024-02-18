@@ -5,6 +5,7 @@ import { google } from 'googleapis';
 import admin from 'firebase-admin';
 import { fieldOrder } from './fields.js';
 
+const ADMISSION_MINIMUM = parseInt(functions.config().shared.admission_min);
 const SERVICE_ACCOUNT_KEYS = functions.config().sheets.googleapi_service_account;
 const SHEET_ID = functions.config().sheets.sheet_id;
 const PAYMENT_ID_COLUMN = functions.config().sheets.payment_id_column;
@@ -36,18 +37,37 @@ export const appendrecordtospreadsheet = functions.database.ref(`${DATA_PATH}/{I
 const mapOrderToSpreadsheetLines = (order) => {
   const orders = []
   const createdAt = new Date(order.createdAt).toLocaleDateString();
-  const purchaser = `${order.people[0].first} ${order.people[0].last}`;
-  const admissionQuantity = order.people.length;
-  const owed = order.total - order.deposit;
   const updatedOrder = joinArrays(order);
   const { people, ...orderFields } = updatedOrder
   let isPurchaser = true;
   for (const person of people) {
-    if (person.email === '') continue; // this should never trigger, but skip empty person objects just in case
+    const admissionCost = parseInt(person.admissionCost);
+    const admission = admissionCost >= ADMISSION_MINIMUM ? admissionCost : '';
+    const deposit = admissionCost < ADMISSION_MINIMUM ? admissionCost : '';
+    const total = isPurchaser ? admissionCost + order.donation : admissionCost;
+    const paid = order.paymentMethod === 'check' ? 0 : total;
+    let status = '';
+    if (order.paymentMethod === 'check') {
+      status = 'awaiting check';
+    } else if (admissionCost < ADMISSION_MINIMUM) {
+      status = 'deposit';
+    } else {
+      status = 'paid';
+    }
     const address = person.apartment ? `${person.address} ${person.apartment}` : person.address;
     const updatedPerson = person.share ? joinArrays(person) : { ...joinArrays(person), share: 'do not share' };
-    const personFieldsBuilder = isPurchaser ? { ...updatedPerson, ...orderFields, owed, admissionQuantity } : updatedPerson;
-    const personFields = { ...personFieldsBuilder, address, purchaser, createdAt };
+    const personFieldsBuilder = {
+      ...updatedPerson,
+      createdAt,
+      address,
+      admissionCost: admission,
+      deposit,
+      total,
+      paid,
+      status,
+      purchaser: isPurchaser ? order.people.length : `${order.people[0].first} ${order.people[0].last}`
+    };
+    const personFields = isPurchaser ? { ...orderFields, ...personFieldsBuilder } : personFieldsBuilder;
     const line = fieldOrder.map(field => personFields[field] || '');
     orders.push(line);
     isPurchaser = false;

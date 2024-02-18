@@ -6,12 +6,15 @@ import { InputAdornment, Typography, Link } from '@mui/material';
 import { useFormikContext } from 'formik';
 // import PaymentExplanation from 'components/static/PaymentExplanation';
 import config from 'config';
-const { ADMISSION_COST_RANGE, DONATION_OPTION, DONATION_RANGE } = config;
+const { DEPOSIT_MIN, ADMISSION_COST_RANGE, DONATION_OPTION, DONATION_RANGE } = config;
 
 export default function PaymentInfo({ order, donate, setDonate, clampValue }) {
-  const admissionsTotal = order.people.reduce((total, person) => total + person.admissionCost, 0);
-  const [splitPayment, setSplitPayment] = useState(order.people.some(person => person.admissionCost * order.people.length !== admissionsTotal));
+  const admissionsTotal = order.people.reduce((total, person) => total + parseInt(person.admissionCost), 0);
+  const priceRange = [DEPOSIT_MIN, ADMISSION_COST_RANGE[1]];
+  const [splitPayment, setSplitPayment] = useState(order.people.some(person => parseInt(person.admissionCost) * order.people.length !== admissionsTotal));
   const { values, setFieldValue, handleBlur } = useFormikContext();
+
+  // console.log('PaymentInfo admissionCost type', typeof order.people[0].admissionCost);
 
   useEffect(() => { scrollToTop(); },[])
 
@@ -22,8 +25,8 @@ export default function PaymentInfo({ order, donate, setDonate, clampValue }) {
 
   function updateAdmissionCostValues(event) {
     const clampedValue = clamp(
-      parseInt(event.target.value) || ADMISSION_COST_RANGE[0],
-      ADMISSION_COST_RANGE
+      parseInt(event.target.value) || DEPOSIT_MIN,
+      priceRange
     );
     order.people.forEach((_, index) => {
       setFieldValue(`people[${index}].admissionCost`, clampedValue);
@@ -39,7 +42,7 @@ export default function PaymentInfo({ order, donate, setDonate, clampValue }) {
       <div className='admissions-section'>
         <StyledPaper className='admissions-cost'>
 
-        {ADMISSION_COST_RANGE[0] === ADMISSION_COST_RANGE[1] &&
+        {DEPOSIT_MIN === ADMISSION_COST_RANGE[1] &&
               <>
               <Title>Admission cost</Title>
                 <p>
@@ -52,9 +55,12 @@ export default function PaymentInfo({ order, donate, setDonate, clampValue }) {
               </>
             }
 
-            { ADMISSION_COST_RANGE[0] < ADMISSION_COST_RANGE[1] &&
+            { DEPOSIT_MIN < ADMISSION_COST_RANGE[1] &&
               <>
                 <Title>Sliding scale</Title>
+                {DEPOSIT_MIN < ADMISSION_COST_RANGE[0] &&
+                  <Paragraph>Deposit minimum: ${DEPOSIT_MIN}</Paragraph>
+                }
 
                 {splitPayment ?
                   <>
@@ -70,8 +76,8 @@ export default function PaymentInfo({ order, donate, setDonate, clampValue }) {
                         label={`${person.first} ${person.last}`}
                         name={`people[${index}].admissionCost`}
                         pattern='###'
-                        range={ADMISSION_COST_RANGE}
-                        onBlur={(event) => clampValue({ event: event, range: ADMISSION_COST_RANGE})}
+                        range={priceRange}
+                        onBlur={(event) => clampValue({ event: event, range: priceRange})}
                         InputProps={{ startAdornment: <InputAdornment position='start'>$</InputAdornment> }}
                       />
                     )}
@@ -83,13 +89,13 @@ export default function PaymentInfo({ order, donate, setDonate, clampValue }) {
                       label={`How much are you able to pay${order.people.length > 1 ? ' *per person*' : ''}? ($${ADMISSION_COST_RANGE[0]}-${ADMISSION_COST_RANGE[1]})`}
                       name='people[0].admissionCost'
                       pattern='###'
-                      range={ADMISSION_COST_RANGE}
+                      range={priceRange}
                       onBlur={(event) => updateAdmissionCostValues(event)}
                       InputProps={{ startAdornment: <InputAdornment position='start'>$</InputAdornment> }}
                     />
                     <Typography>$100 (standard fee)</Typography>
-                    <Typography>$120 (a nice donation)</Typography>
-                    <Typography>$150 (a generous donation)</Typography>
+                    <Typography>$120 (nice)</Typography>
+                    <Typography>$150 (real nice)</Typography>
                   </>
                 }
 

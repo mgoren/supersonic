@@ -8,10 +8,11 @@ import config from 'config';
 const { SCHOLARSHIP_OPTIONS } = config;
 
 export default function OrderSummary({ order, currentPage }) {
-  const admissions = order.people.map(person => person.admissionCost);
+  const admissions = order.people.map(person => parseInt(person.admissionCost));
   const admissionsTotal = admissions.reduce((total, admission) => total + admission, 0);
+  // console.log('typoeof admissionsTotal', typeof admissionsTotal);
   const total = admissionsTotal + order.donation;
-  const splitPayment = order.people.some(person => person.admissionCost * order.people.length !== admissionsTotal);
+  const splitPayment = order.people.some(person => parseInt(person.admissionCost) * order.people.length !== admissionsTotal);
 
   return (
     <>

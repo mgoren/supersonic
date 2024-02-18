@@ -141,6 +141,7 @@ gcloud iam service-accounts keys create tmp.json --iam-account sheets@[PROJECT_I
 firebase functions:config:set sheets.googleapi_service_account="$(cat tmp.json)"
 firebase functions:config:set sheets.payment_id_column="[PAYMENT_ID_COLUMN_LETTER]" # e.g. AA
 firebase functions:config:set sheets.sheet_id="YOUR_SPREADSHEET_ID"
+firebase functions:config:set shared.admission_min=YOUR_ADMISSION_MINIMUM_NUMBER
 rm tmp.json
 ```
 

@@ -17,12 +17,12 @@ export const fieldOrder = [
   'share',
   'carpool',
   'comments',
-  'admissionQuantity',
   'admissionCost',
+  'deposit',
   'donation',
   'total',
-  'deposit',
-  'owed',
+  'paid',
+  'status',
   'purchaser',
   'createdAt',
   'paymentId'
@@ -31,6 +31,7 @@ export const fieldOrder = [
 export const validFields = [
   ...fieldOrder,
   'people',
+  'paymentMethod',
   'receipt',
   'additionalPersonReceipt',
   'emailConfirmation'

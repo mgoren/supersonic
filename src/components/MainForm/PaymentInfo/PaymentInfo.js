@@ -8,14 +8,13 @@ import { useFormikContext } from 'formik';
 import config from 'config';
 const { DEPOSIT_MIN, ADMISSION_COST_RANGE, DONATION_OPTION, DONATION_RANGE } = config;
 
-export default function PaymentInfo({ order, donate, setDonate, clampValue }) {
+export default function PaymentInfo({ order, donate, setDonate }) {
   const admissionsTotal = order.people.reduce((total, person) => total + parseInt(person.admissionCost), 0);
   const priceRange = [DEPOSIT_MIN, ADMISSION_COST_RANGE[1]];
   const [splitPayment, setSplitPayment] = useState(order.people.some(person => parseInt(person.admissionCost) * order.people.length !== admissionsTotal));
+  const [payingDeposit, setPayingDeposit] = useState(order.people.some(person => parseInt(person.admissionCost) < ADMISSION_COST_RANGE[0]));
+  const [payingMax, setPayingMax] = useState(order.people[0].admissionCost === ADMISSION_COST_RANGE[1]);
   const { values, setFieldValue, handleBlur } = useFormikContext();
-
-  const hasEnteredDonation = values['donation'] !== 0;
-  const hasEnteredMaxAdmissionCost = parseInt(values['people'][0]['admissionCost']) === ADMISSION_COST_RANGE[1];
 
   useEffect(() => { scrollToTop(); },[])
 
@@ -24,14 +23,28 @@ export default function PaymentInfo({ order, donate, setDonate, clampValue }) {
     setSplitPayment(true);
   }
 
+  function clampValue({ event, range }) {
+    const [field, value] = [event.target.name, parseInt(event.target.value) || range[0]];
+    const clampedValue = clamp(value, range);
+    setFieldValue(field, clampedValue);
+    handleBlur(event); // bubble up to formik
+  };
+
+  function updateAdmissionCostValue(event) {
+    clampValue({ event: event, range: priceRange})
+    setPayingDeposit(values['people'].some(person => clamp(person.admissionCost, priceRange) < ADMISSION_COST_RANGE[0]) ? true : false)
+    setPayingMax(clamp(values['people'][0]['admissionCost'], priceRange) === ADMISSION_COST_RANGE[1] ? true : false)
+    handleBlur(event); // bubble up to formik
+  }
+
   function updateAdmissionCostValues(event) {
-    const clampedValue = clamp(
-      parseInt(event.target.value) || DEPOSIT_MIN,
-      priceRange
-    );
+    const value = parseInt(event.target.value) || priceRange[0];
+    const clampedValue = clamp(value, priceRange);
     order.people.forEach((_, index) => {
       setFieldValue(`people[${index}].admissionCost`, clampedValue);
     });
+    setPayingDeposit(clampedValue < ADMISSION_COST_RANGE[0] ? true : false);
+    setPayingMax(clampedValue === ADMISSION_COST_RANGE[1] ? true : false)
     handleBlur(event); // bubble up to formik
   }
 
@@ -78,7 +91,7 @@ export default function PaymentInfo({ order, donate, setDonate, clampValue }) {
                         name={`people[${index}].admissionCost`}
                         pattern='###'
                         range={priceRange}
-                        onBlur={(event) => clampValue({ event: event, range: priceRange})}
+                        onBlur={(event) => updateAdmissionCostValue(event)}
                         InputProps={{ startAdornment: <InputAdornment position='start'>$</InputAdornment> }}
                       />
                     )}
@@ -103,12 +116,16 @@ export default function PaymentInfo({ order, donate, setDonate, clampValue }) {
                 {!splitPayment && order.people.length > 1 &&
                   <Typography variant="body2" sx={{ mt: 2 }}>(or click <Link component='span' sx={{cursor: 'pointer'}} onClick={showSplitPayments}>here</Link> to specify different amounts per person)</Typography>
                 }
+
+                {payingDeposit &&
+                  <Paragraph sx={{ my: 2, color: 'orange', fontWeight: 'bold' }}>You will need to send the remainder of your payment later.</Paragraph>
+                }
               </>
             }
 
         </StyledPaper>
 
-        {DONATION_OPTION && (hasEnteredDonation || hasEnteredMaxAdmissionCost) &&
+        {DONATION_OPTION && (payingMax || values['donation'] > 0) &&
           <StyledPaper className='donation-section'>
             <Title>Additional contribution</Title>
             {!donate && 

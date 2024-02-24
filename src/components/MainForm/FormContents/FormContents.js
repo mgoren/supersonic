@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Form, useFormikContext } from 'formik';
-import { clamp, cache, getFirstInvalidFieldName, sanitizeObject } from 'utils';
+import { cache, getFirstInvalidFieldName, sanitizeObject } from 'utils';
 import People from '../People';
 import PaymentInfo from '../PaymentInfo';
 import ButtonRow from 'components/ButtonRow';
@@ -39,13 +39,6 @@ export default function FormContents({ currentPage, setCurrentPage, order, setOr
     formik.resetForm({ values: order });
   }
 
-  function clampValue({ event, range }) {
-    const [field, value] = [event.target.name, parseInt(event.target.value) || range[0]];
-    const clampedValue = clamp(value, range);
-    formik.setFieldValue(field, clampedValue);
-    formik.handleBlur(event); // bubble up to formik
-  };
-
   function handleClickBackButton() {
     const orderInProgress = Object.assign({}, values);
     cache('order', orderInProgress);
@@ -66,7 +59,6 @@ export default function FormContents({ currentPage, setCurrentPage, order, setOr
         <PaymentInfo
           order={order}
           donate={donate} setDonate={setDonate}
-          clampValue={clampValue}
         />
       }
       <Hidden smDown>

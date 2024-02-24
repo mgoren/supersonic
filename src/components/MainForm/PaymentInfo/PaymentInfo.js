@@ -14,7 +14,8 @@ export default function PaymentInfo({ order, donate, setDonate, clampValue }) {
   const [splitPayment, setSplitPayment] = useState(order.people.some(person => parseInt(person.admissionCost) * order.people.length !== admissionsTotal));
   const { values, setFieldValue, handleBlur } = useFormikContext();
 
-  // console.log('PaymentInfo admissionCost type', typeof order.people[0].admissionCost);
+  const hasEnteredDonation = values['donation'] !== 0;
+  const hasEnteredMaxAdmissionCost = parseInt(values['people'][0]['admissionCost']) === ADMISSION_COST_RANGE[1];
 
   useEffect(() => { scrollToTop(); },[])
 
@@ -107,7 +108,7 @@ export default function PaymentInfo({ order, donate, setDonate, clampValue }) {
 
         </StyledPaper>
 
-        {DONATION_OPTION &&
+        {DONATION_OPTION && (hasEnteredDonation || hasEnteredMaxAdmissionCost) &&
           <StyledPaper className='donation-section'>
             <Title>Additional contribution</Title>
             {!donate && 

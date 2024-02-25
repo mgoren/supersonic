@@ -1,5 +1,6 @@
 // NOTE: this component uses some vanilla html becuase it's used in the confirmation email
 
+import { useState } from 'react';
 import { Box, Typography, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
@@ -71,10 +72,12 @@ function PersonContainerDotted({ person }) {
   );
 }
 
-export function PersonContainerAccordion({ order, personIndex, showButtons, handleEdit, handleDelete}) {
+export function PersonContainerAccordion({ order, personIndex, showButtons, handleEdit, handleDelete }) {
+  const [expanded, setExpanded] = useState(false);
   const person = order.people[personIndex];
+
   return (
-    <Accordion sx={{ mt: 2 }}>
+    <Accordion expanded={expanded} onChange={ () => setExpanded(!expanded) } sx={{ mt: 2 }}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
         <Typography>{person.first} {person.last}</Typography>
       </AccordionSummary>

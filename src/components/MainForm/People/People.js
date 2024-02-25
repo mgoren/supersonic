@@ -29,7 +29,7 @@ export default function People({ order, setOrder, resetForm, saveForm }) {
   const handleDelete = (personIndex) => {
     const person = order.people[personIndex];
     if (window.confirm(`Remove ${person.first} ${person.last} from registration?`)) {
-      const people = order.people.filter((_, index) => index !== personIndex);
+      let people = order.people.filter((_, index) => index !== personIndex);
       if (people.length === 0) {
         people.push(PERSON_DEFAULTS);
         setEditIndex(0);

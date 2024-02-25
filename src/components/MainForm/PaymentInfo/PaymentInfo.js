@@ -152,7 +152,7 @@ export default function PaymentInfo({ order, donate, setDonate }) {
             }
           </StyledPaper>
         }
-      </div>      
+      </div>
     </section>
   );
 }

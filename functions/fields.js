@@ -34,5 +34,6 @@ export const validFields = [
   'paymentMethod',
   'receipt',
   'additionalPersonReceipt',
-  'emailConfirmation'
+  'emailConfirmation',
+  'uuid'
 ];

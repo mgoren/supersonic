@@ -18,14 +18,9 @@ export default function StripeCheckoutForm({ setError, processing, setProcessing
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!stripe || !elements) {
-      return;
-    }
-
+    if (!stripe || !elements) return;
     const order = await saveOrderToFirebase();
-    if (order) {
-      processPayment(order);
-    }
+    if (order) processPayment(order);
   };
 
   const processPayment = async (order) => {
@@ -39,9 +34,9 @@ export default function StripeCheckoutForm({ setError, processing, setProcessing
 
     if (result.error) {
       // e.g. payment details incomplete
+      // this results in record left in pendingOrders db
       setProcessing(false);
       setError(`Your payment could not be completed: ${result.error.message}. Please try again or contact ${EMAIL_CONTACT}.`);
-      // if they try again, will result in dupe db & spreadsheet entry, but failed one will show pending as paymentId
     } else if (result.paymentIntent.status === 'succeeded') {
       clientSecretRef.current = null;
       setOrder({ ...order, paymentId: result.paymentIntent.id })

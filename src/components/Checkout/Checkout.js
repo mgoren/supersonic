@@ -16,7 +16,10 @@ import config from 'config';
 const { PAYMENT_METHODS, EMAIL_CONTACT, NUM_PAGES } = config;
 const functions = getFunctions();
 const createOrder = httpsCallable(functions, 'createOrder');
-const updateOrder = httpsCallable(functions, 'updateOrder');
+const ActionType = {
+  CREATE: 'CREATE',
+  UPDATE: 'UPDATE'
+};
 
 export default function Checkout({ order, setOrder, setError, setCurrentPage }) {
   const [paying, setPaying] = useState(null);
@@ -37,10 +40,10 @@ export default function Checkout({ order, setOrder, setError, setCurrentPage }) 
   const updateOrderInFirebase = useCallback(async () => {
     setProcessingMessage(order.paymentId === 'check' ? 'Updating registration...' : 'Payment successful. Updating registration...');
     try {
-      await updateOrder({
+      await createOrder({
         token: process.env.REACT_APP_TOKEN,
-        id: order.id,
-        updates: { paymentId: order.paymentId }
+        action: ActionType.UPDATE,
+        order
       });
     } catch (err) {
       console.error(`error updating firebase record`, err);
@@ -77,14 +80,19 @@ export default function Checkout({ order, setOrder, setError, setCurrentPage }) 
       ...order,
       people: order.people.map(updateApartment),
       paymentMethod,
-      paymentId: 'PENDING'
+      paymentId: 'PENDING',
+      uuid: order.uuid || crypto.randomUUID()
     };
     const receipt = renderToStaticMarkup(<Receipt order={initialOrder} currentPage='confirmation' checkPayment={paymentMethod === 'check'} />);
     const additionalPersonReceipt = renderToStaticMarkup(<AdditionalPersonReceipt order={initialOrder} />);
     const initialOrderWithReceipt = { ...initialOrder, receipt, additionalPersonReceipt };
 
     try {
-      const { data } = await createOrder({ token: process.env.REACT_APP_TOKEN, order: initialOrderWithReceipt });
+      const { data } = await createOrder({
+        token: process.env.REACT_APP_TOKEN,
+        action: ActionType.CREATE,
+        order: initialOrderWithReceipt
+      });
       const orderWithId = { ...initialOrderWithReceipt, id: data.id };
       setOrder(orderWithId);
       setProcessingMessage('Processing payment...');

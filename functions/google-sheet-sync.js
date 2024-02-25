@@ -4,13 +4,11 @@ import * as functions from 'firebase-functions';
 import { google } from 'googleapis';
 import admin from 'firebase-admin';
 import { fieldOrder } from './fields.js';
+import { handleError, joinArrays } from './helpers.js';
 
 const ADMISSION_MINIMUM = parseInt(functions.config().shared.admission_min);
 const SERVICE_ACCOUNT_KEYS = functions.config().sheets.googleapi_service_account;
 const SHEET_ID = functions.config().sheets.sheet_id;
-const PAYMENT_ID_COLUMN = functions.config().sheets.payment_id_column;
-const PAID_COLUMN = functions.config().sheets.paid_column;
-const STATUS_COLUMN = functions.config().sheets.status_column;
 const DATA_PATH = '/orders';
 const RANGE = 'A:AP';
 const MAX_RETRIES = 3;
@@ -31,7 +29,7 @@ export const appendrecordtospreadsheet = functions.database.ref(`${DATA_PATH}/{I
       const promises = orders.map(orderLine => appendPromise(orderLine));
       await Promise.all(promises);
     } catch (err) {
-      handleError(`Error in appendrecordtospreadsheet for ${snap.val().emailConfirmation}`, err);
+      handleError(`Error in appendrecordtospreadsheet for ${snap.val().people[0].email}`, err);
     }
   }
 );
@@ -49,6 +47,15 @@ const mapOrderToSpreadsheetLines = (order) => {
     const total = isPurchaser ? admissionCost + order.donation : admissionCost;
     const address = person.apartment ? `${person.address} ${person.apartment}` : person.address;
     const updatedPerson = person.share ? joinArrays(person) : { ...joinArrays(person), share: 'do not share' };
+    const paid = order.paymentMethod === 'check' ? 0 : total;
+    let status = '';
+    if (order.paymentMethod === 'check') {
+      status = 'awaiting check';
+    } else if (admissionCost < ADMISSION_MINIMUM) {
+      status = 'deposit';
+    } else {
+      status = 'paid';
+    }
     const firstPersonPurchaserField = people.length > 1 ? `self (+${people.length - 1})` : 'self';
     const personFieldsBuilder = {
       ...updatedPerson,
@@ -57,8 +64,8 @@ const mapOrderToSpreadsheetLines = (order) => {
       admissionCost: admission,
       deposit,
       total,
-      paid: 'PENDING',
-      status: 'PENDING',
+      paid,
+      status,
       purchaser: isPurchaser ? firstPersonPurchaserField : `${people[0].first} ${people[0].last}`
     };
     const personFields = isPurchaser ? { ...orderFields, ...personFieldsBuilder } : personFieldsBuilder;
@@ -93,71 +100,6 @@ async function appendPromise(orderLine, attempt = 0) {
 }
 
 
-// ******** UPDATE SPREADSHEET LINE ********
-
-export const updaterecordinspreadsheet = functions.database.ref(`${DATA_PATH}/{ITEM}`).onUpdate(
-  async (change) => {
-    try {
-      const key = change.after.key;
-      const order = change.after.val();
-      const paymentId = order.paymentId;
-      const paid = order.paymentMethod === 'check' ? 0 : total;
-      let status = '';
-      if (order.paymentMethod === 'check') {
-        status = 'awaiting check';
-      } else if (admissionCost < ADMISSION_MINIMUM) {
-        status = 'deposit';
-      } else {
-        status = 'paid';
-      }
-      const row = await findRowByKey({ key });
-      if (row) {
-        await updateSpreadsheetRow({ row, column: PAYMENT_ID_COLUMN, value: paymentId });
-        await updateSpreadsheetRow({ row, column: PAID_COLUMN, value: paid });
-        await updateSpreadsheetRow({ row, column: STATUS_COLUMN, value: status });
-      }
-    } catch (err) {
-      handleError(`Error updating paymentId for key ${key}`, err);
-    }
-  }
-);
-
-async function findRowByKey({ key }) {
-  try {
-    const response = await googleSheetsOperation({ 
-      operation: 'read',
-      params: {}
-    });
-    const rows = response.data.values;
-    if (rows.length) {
-      for (let i = 0; i < rows.length; i++) {
-        if (rows[i][0] === key) {
-          return i + 1;
-        }
-      }
-    }
-    return null; // Key not found
-  } catch (err) {
-    handleError('Error in findRowByKey', err);
-  }
-}
-
-async function updateSpreadsheetRow({ row, column, value }) {
-  try {
-    await googleSheetsOperation({ 
-      operation: 'update',
-      params: {
-        range: `${column}${row}`,
-        valueInputOption: 'USER_ENTERED',
-        resource: { values: [[value]] }
-      }
-    });
-  } catch (err) {
-    handleError('Error in updateSpreadsheetRow', err);
-  }
-}
-
-
 // ******** GOOGLE SHEETS API ********
 
 async function googleSheetsOperation({ operation, params }) {
@@ -184,22 +126,4 @@ async function googleSheetsOperation({ operation, params }) {
   } catch (err) {
     handleError(`Google Sheets API operation (${operation}) failed`, err);
   }
-}
-
-
-// ******** HELPERS ********
-
-const joinArrays = (obj) => {
-  const newObj = { ...obj };
-  for (let key in obj) {
-    if (key !== 'people' && Array.isArray(obj[key])) {
-      newObj[key] = obj[key].join(', ');
-    }
-  }
-  return newObj;
-};
-
-function handleError(message, err) {
-  functions.logger.error(message, err);
-  throw err;
 }

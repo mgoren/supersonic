@@ -1,8 +1,8 @@
 import * as functions from 'firebase-functions';
 import admin from 'firebase-admin';
 import { sendEmailConfirmation } from './email-confirmation.js';
-import { createOrder, updateOrder } from './database.js';
-import { appendrecordtospreadsheet, updaterecordinspreadsheet } from './google-sheet-sync.js';
+import { createOrder } from './database.js';
+import { appendrecordtospreadsheet } from './google-sheet-sync.js';
 import {
   createStripePaymentIntent as createStripePaymentIntentOriginal,
   updateStripePaymentIntent as updateStripePaymentIntentOriginal,
@@ -13,7 +13,7 @@ if (admin.apps.length === 0) {
   admin.initializeApp();
 }
 
-export { sendEmailConfirmation, createOrder, updateOrder, appendrecordtospreadsheet, updaterecordinspreadsheet };
+export { sendEmailConfirmation, createOrder, appendrecordtospreadsheet };
 
 let createStripePaymentIntent, updateStripePaymentIntent, cancelStripePaymentIntent;
 if (functions.config().stripe?.secret_key) {

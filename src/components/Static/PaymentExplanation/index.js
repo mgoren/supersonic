@@ -1,1 +1,1 @@
-export { default } from './PaymentExplanation';
+export { PaymentExplanation, SlidingScaleSummaryExplanation } from './PaymentExplanation';

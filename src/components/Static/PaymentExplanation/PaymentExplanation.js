@@ -4,7 +4,7 @@ import { Box, Typography } from '@mui/material';
 import config from 'config';
 const { EMAIL_CONTACT } = config;
 
-export default function PaymentExplanation() {
+export function PaymentExplanation() {
   return (
     <StyledPaper>
       <Title>Where does my money go?</Title>
@@ -30,4 +30,14 @@ export default function PaymentExplanation() {
       <Typography sx={{mt: 2}}>If your financial situation allows you to contribute above $240, it will help make the camp sustainable and support work-trade positions.</Typography>
     </StyledPaper>
   );
+}
+
+export function SlidingScaleSummaryExplanation() {
+  return (
+    <>
+      <Typography>$100 (standard fee)</Typography>
+      <Typography>$120 (nice)</Typography>
+      <Typography>$150 (real nice)</Typography>
+    </>
+  )
 }

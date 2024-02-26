@@ -4,7 +4,7 @@ import { RightAlignedInput } from '../Input';
 import { StyledPaper, Title, Paragraph } from 'components/Layout/SharedStyles';
 import { InputAdornment, Typography, Link } from '@mui/material';
 import { useFormikContext } from 'formik';
-// import PaymentExplanation from 'components/static/PaymentExplanation';
+import { SlidingScaleSummaryExplanation } from 'components/Static/PaymentExplanation';
 import config from 'config';
 const { DEPOSIT_MIN, ADMISSION_COST_RANGE, DONATION_OPTION, DONATION_RANGE } = config;
 
@@ -79,10 +79,7 @@ export default function PaymentInfo({ order, donate, setDonate }) {
                 {splitPayment ?
                   <>
                     <Paragraph>Specify the amount each person will pay:</Paragraph>
-                    <Typography>$100 (standard fee)</Typography>
-                    <Typography>$120 (a nice donation)</Typography>
-                    <Typography>$150 (a generous donation)</Typography>
-
+                    <SlidingScaleSummaryExplanation />
                     {order.people.map((person, index) =>
                       <RightAlignedInput
                         key={index}
@@ -107,9 +104,7 @@ export default function PaymentInfo({ order, donate, setDonate }) {
                       onBlur={(event) => updateAdmissionCostValues(event)}
                       InputProps={{ startAdornment: <InputAdornment position='start'>$</InputAdornment> }}
                     />
-                    <Typography>$100 (standard fee)</Typography>
-                    <Typography>$120 (nice)</Typography>
-                    <Typography>$150 (real nice)</Typography>
+                    <SlidingScaleSummaryExplanation />
                   </>
                 }
 

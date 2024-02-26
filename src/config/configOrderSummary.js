@@ -1,6 +1,7 @@
 import { FIELD_CONFIG } from './configFields';
 
 export const ORDER_SUMMARY_OPTIONS = [
+  { property: 'nametag', label: 'Name button' },
   { property: 'email', label: '' },
   { property: 'phone', label: '' },
   { property: 'address', label: '' },

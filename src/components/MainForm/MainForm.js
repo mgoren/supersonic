@@ -41,7 +41,9 @@ export default function MainForm({ order, setOrder, currentPage, setCurrentPage 
 }
 
 function updateCountry(person) {
-  if (person.state) {
+  if (person.country === 'United States') {
+    return { ...person, country: 'USA' };
+  } else if (person.state) {
     const region = person.state.toLowerCase().replace(/\s/g, '').trim();
     const country = countryMapping[region] || person.country;
     return { ...person, country };

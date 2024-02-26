@@ -98,26 +98,28 @@ export function PersonContainerAccordion({ order, personIndex, showButtons, hand
 function PersonSummary({ person }) {
   return (
     <>
-        {ORDER_SUMMARY_OPTIONS
-          .map((option) => {
-            const { property, label, mapping, defaultValue } = option;
-            return (
-              <Box key={option.property}>
-                {renderConditionalData({ person, property, label, mapping, defaultValue })}
-              </Box>
-            );
-          })
-        }
+      {ORDER_SUMMARY_OPTIONS
+        .map((option) => {
+          const { property, label, mapping, defaultValue } = option;
+          return (
+            <Box key={option.property}>
+              {renderConditionalData({ person, property, label, mapping, defaultValue })}
+            </Box>
+          );
+        })
+      }
     </>
   );
 }
 
-// helpers
+// data formatting helpers
 
 function renderConditionalData ({ person, property, label, mapping, defaultValue }) {
   const data = person[property];
   let content;
-  if (property === 'address') {
+  if (property === 'nametag') {
+    content = formatNametag(person);
+  } else if (property === 'address') {
     content = formatAddress(person);
   } else if (Array.isArray(data)) {
     content = formatArray(data, defaultValue, mapping);
@@ -129,6 +131,13 @@ function renderConditionalData ({ person, property, label, mapping, defaultValue
   return content ? <>{label && `${label}: `}{content}<br /></> : null;
 }
 
+function formatNametag(person) {
+  const { nametag, first, pronouns } = person;
+  const formattedName = nametag || first;
+  const formattedPronouns = pronouns ? `(${pronouns})` : '';
+  return `${formattedName} ${formattedPronouns}`;
+}
+
 function formatAddress(person) {
   const { address, apartment, city, state, zip, country } = person;
   if (!address && !city && !state && !zip) return null;
@@ -138,7 +147,7 @@ function formatAddress(person) {
     streetAddress = apartment ? `${address} ${displayApartment}` : address;
   }
   const cityStateZip = city ? `${city}, ${state} ${zip}` : `${state} ${zip}`;
-  const cityStateZipWithCountry = country === 'USA' ? cityStateZip : `${cityStateZip}, ${country}`;
+  const cityStateZipWithCountry = country === 'USA' || country === 'United States' ? cityStateZip : `${cityStateZip}, ${country}`;
   return <>{streetAddress && <>{streetAddress}<br /></>}{cityStateZipWithCountry}</>
 }
 

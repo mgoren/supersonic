@@ -5,6 +5,7 @@
 
 import { PAYPAL_OPTIONS } from './configPaypal';
 import { FIELD_CONFIG, PERSON_INPUT_LABELS } from './configFields';
+import { ORDER_SUMMARY_OPTIONS } from './configOrderSummary';
 import { DANCES } from './configContent';
 import { DEPOSIT_MIN, ADMISSION_COST_RANGE, ADMISSION_COST_DEFAULT, ADMISSION_QUANTITY_MAX, DONATION_OPTION, DONATION_RANGE } from './configBasics';
 
@@ -67,6 +68,7 @@ const config = {
   PERSON_DEFAULTS,
   PERSON_INPUT_LABELS,
   ORDER_DEFAULTS,
+  ORDER_SUMMARY_OPTIONS,
   DANCES,
   CAPTCHA_KEY: process.env.REACT_APP_RECAPTCHA_SITE_KEY,
 }

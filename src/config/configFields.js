@@ -142,7 +142,6 @@ export const FIELD_CONFIG = {
     label: "Do you want your city, state, zip, and email shared for carpooling?",
     options: [
       { label: 'Yes', value: 'yes' },
-      { label: 'No', value: 'no' },
     ],
     validation: Yup.array(),
     defaultValue: [],

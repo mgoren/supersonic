@@ -6,8 +6,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import ButtonRow from 'components/ButtonRow';
 import config from 'config';
-const { FIELD_CONFIG } = config;
-const SCHOLARSHIP_OPTIONS = FIELD_CONFIG['scholarship'].options;
+const { FIELD_CONFIG, ORDER_SUMMARY_OPTIONS } = config;
 
 export default function OrderSummary({ order, currentPage }) {
   const admissions = order.people.map(person => parseInt(person.admissionCost));
@@ -76,7 +75,6 @@ function PersonContainerDotted({ person }) {
 export function PersonContainerAccordion({ order, personIndex, showButtons, handleEdit, handleDelete }) {
   const [expanded, setExpanded] = useState(false);
   const person = order.people[personIndex];
-
   return (
     <Box sx={{ mt: 2 }}>
       <Accordion expanded={expanded} onChange={ () => setExpanded(!expanded) }>
@@ -86,10 +84,12 @@ export function PersonContainerAccordion({ order, personIndex, showButtons, hand
         <AccordionDetails>
           <PersonSummary person={person} />
           {showButtons &&
-            <ButtonRow
-              deleteButtonProps={{ onClick: () => handleDelete(personIndex), text: 'Delete' }}
-              editButtonProps={{ onClick: () => handleEdit(personIndex), text: 'Edit' }}
-            />
+            <Box sx={{ my: 4 }}>
+              <ButtonRow
+                deleteButtonProps={{ onClick: () => handleDelete(personIndex), text: 'Delete' }}
+                editButtonProps={{ onClick: () => handleEdit(personIndex), text: 'Edit' }}
+              />
+            </Box>
           }
         </AccordionDetails>
       </Accordion>
@@ -100,46 +100,67 @@ export function PersonContainerAccordion({ order, personIndex, showButtons, hand
 function PersonSummary({ person }) {
   return (
     <>
-      <Box>
-        <p>
-          Nametag: {person.nametag ? <>{person.nametag}</> : <>{person.first}</>} {person.pronouns && <>({person.pronouns})</>}<br />
-          {person.email && <>{person.email}<br /></>}
-          {person.phone && <>{person.phone}<br /></>}
-          {person.address && <>{displayAddress(person.address, person.apartment)}<br /></>}
-          {person.city && <>{person.city}, {person.state} {person.zip}<br /></>}
-          {person.country !== 'USA' && <>{person.country}</>}
-        </p>
-      </Box>
-      <Box>
-        <p>
-          Include on roster: {!!person.share.length ? person.share.join(', ') : 'do not share'}<br />
-          Include on carpool list: {!!person.carpool.length ? person.carpool.join(', ') : 'no'}<br />
-          Volunteering: {person.volunteer || 'no'}<br />
-          Scholarship: {!!person.scholarship.length ? getCheckboxTitles({ property: person.scholarship, options: SCHOLARSHIP_OPTIONS }).join(', ').toLowerCase() : 'not requesting'}<br />
-          {person.comments && <>Comments: {person.comments}<br /></>}
-        </p>
-      </Box>
+        {ORDER_SUMMARY_OPTIONS
+          .map((option) => {
+            const { property, label, mapping, defaultValue } = option;
+            return (
+              <Box key={option.property}>
+                {renderConditionalData({ person, property, label, mapping, defaultValue })}
+              </Box>
+            );
+          })
+        }
     </>
   );
 }
 
-
 // helpers
 
-function displayAddress(address, apartment) {
-  const displayApartment = apartment?.length > 0 && isFinite(apartment.slice(0,1)) ? `#${apartment}` : apartment;
-  return apartment ? `${address} ${displayApartment}` : address;
+function renderConditionalData ({ person, property, label, mapping, defaultValue }) {
+  const data = person[property];
+  let content;
+  if (property === 'address') {
+    content = formatAddress(person);
+  } else if (Array.isArray(data)) {
+    content = formatArray(data, defaultValue, mapping);
+  } else if (data) {
+    content = formatSimpleDataTypes(data, defaultValue);
+  } else {
+    content = defaultValue;
+  }
+  return content ? <>{label && `${label}: `}{content}<br /></> : null;
 }
 
-function getCheckboxTitles({ property, options }) {
-  let checkboxTitles = property.map(property => {
-    const checkboxOption = options.find(option => option.value === property);
-    return checkboxOption ? checkboxOption.label : property;
-  });
-  checkboxTitles.sort((a, b) => {
-    const aIndex = options.findIndex(option => option.label === a);
-    const bIndex = options.findIndex(option => option.label === b);
-    return aIndex - bIndex;
-  });
-  return checkboxTitles;
+function formatAddress(person) {
+  const { address, apartment, city, state, zip, country } = person;
+  if (!address && !city && !state && !zip) return null;
+  let streetAddress;
+  if (address) {
+    const displayApartment = apartment?.length > 0 && isFinite(apartment.slice(0,1)) ? `#${apartment}` : apartment;
+    streetAddress = apartment ? `${address} ${displayApartment}` : address;
+  }
+  const cityStateZip = city ? `${city}, ${state} ${zip}` : `${state} ${zip}`;
+  const cityStateZipWithCountry = country === 'USA' ? cityStateZip : `${cityStateZip}, ${country}`;
+  return <>{streetAddress && <>{streetAddress}<br /></>}{cityStateZipWithCountry}</>
+}
+
+function formatArray(data, defaultValue, mapping) {
+  if (!data.length) return defaultValue;
+  if (mapping) {
+    const checkboxTitles = data
+      .map(item => mapping.find(option => option.value === item)?.label || item)
+      .sort((a, b) => {
+        const aIndex = mapping.findIndex(option => option.label === a);
+        const bIndex = mapping.findIndex(option => option.label === b);
+        return aIndex - bIndex;
+      });
+    return checkboxTitles.join(', ');
+  } else {
+    return data.join(', ');
+  }
+}
+
+function formatSimpleDataTypes(data, defaultValue) {
+  const formattedData = String(data).trim();
+  return formattedData || defaultValue;
 }

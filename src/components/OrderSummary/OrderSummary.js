@@ -6,7 +6,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import ButtonRow from 'components/ButtonRow';
 import config from 'config';
-const { FIELD_CONFIG, ORDER_SUMMARY_OPTIONS } = config;
+const { ORDER_SUMMARY_OPTIONS } = config;
 
 export default function OrderSummary({ order, currentPage }) {
   const admissions = order.people.map(person => parseInt(person.admissionCost));
@@ -17,55 +17,53 @@ export default function OrderSummary({ order, currentPage }) {
 
   return (
     <>
-      <Typography variant="body" gutterBottom sx={{ fontWeight: 'bold' }}>
-        {order.people.length > 1 ? 'Admissions' : 'Your info'}
+      <Typography variant="body" gutterBottom>
+        <strong>{order.people.length > 1 ? 'Admissions' : 'Your info'}</strong>
       </Typography>
 
-      {order.people.map((person, index) => (
+      {order.people.map((person, index) => person.email && (
         <Box key={index}>
-          {person.email && <PersonContainerDotted person={person} />}
+          <PersonContainerDotted person={person} />
         </Box>
       ))}
 
-      {isNaN(currentPage) &&
-        <Box sx={{ mt: 5 }}>
-          <Typography variant="body" gutterBottom sx={{ fontWeight: 'bold' }}>
-            {currentPage === 'confirmation' && order.paymentId !== 'check' ? 'Amount paid' : 'Amount due'}
-          </Typography>
-          <p>
-            {splitPayment ?
-              <>
-                Admissions:&nbsp;
-                {admissions.map((cost, index) => (
-                  <span key={index}>
-                    ${cost} {index < admissions.length - 1 ? '+ ' : '= '}
-                  </span>
-                ))}
-                ${admissionsTotal}
-              </>
-              :
-              <>
-                Admissions: {order.people.length} x ${order.people[0].admissionCost} = ${admissionsTotal}
-              </>
-            }
+      <Box style={{ marginTop: '2em' }}>
+        <Typography variant="body" gutterBottom>
+          <strong>{currentPage === 'confirmation' && order.paymentId !== 'check' ? 'Amount paid' : 'Amount due'}</strong>
+        </Typography>
+        <p>
+          {splitPayment ?
+            <>
+              Admissions:&nbsp;
+              {admissions.map((cost, index) => (
+                <span key={index}>
+                  ${cost} {index < admissions.length - 1 ? '+ ' : '= '}
+                </span>
+              ))}
+              ${admissionsTotal}
+            </>
+            :
+            <>
+              Admissions: {order.people.length} x ${order.people[0].admissionCost} = ${admissionsTotal}
+            </>
+          }
 
-            {order.donation > 0 &&
-              <>
-                <br />
-                Additional donation: ${order.donation}<br />
-                Total: ${total}
-              </>
-            }
-          </p>
-        </Box>
-      }
+          {order.donation > 0 &&
+            <>
+              <br />
+              Additional donation: ${order.donation}<br />
+              Total: ${total}
+            </>
+          }
+        </p>
+      </Box>
     </>
   );
 }
 
 function PersonContainerDotted({ person }) {
   return (
-    <Box sx={{ border: 'dotted', p: 2, m: 2 }}>
+    <Box sx={{ border: 'dotted', p: 2, m: 2 }} style={{ marginTop: '1em' }}>
       <Typography variant='body' sx={{ fontWeight: 'bold' }}>{person.first} {person.last}</Typography>
       <PersonSummary person={person} />
     </Box>

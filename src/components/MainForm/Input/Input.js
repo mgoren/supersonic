@@ -128,6 +128,7 @@ export const CheckboxInput = ({ name, label, options, ...props }) => {
                     {...field}
                     value={option.value}
                     color="secondary"
+                    {...props}
                   />
                 }
                 label={option.label}

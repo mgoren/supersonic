@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { useFormikContext } from 'formik';
 import { scrollToTop } from 'utils.js';
 import { Input, CheckboxInput } from '../Input';
 import { Title } from 'components/Layout/SharedStyles';
@@ -7,7 +8,27 @@ import config from 'config';
 const { SCHOLARSHIP_OPTIONS, VOLUNTEER_OPTIONS, SHARE_OPTIONS, YES_NO_OPTIONS } = config;
 
 export default function MiscInfo({ index }) {
+  const [shareOptions, setShareOptions] = useState(SHARE_OPTIONS);
+  const formik = useFormikContext();
+  const { values, setFieldValue } = formik;
+
   useEffect(() => { scrollToTop(); },[])
+
+  useEffect(() => {
+    if (values.people[index].share) {
+      const newShareOptions = values.people[index].share.includes('name') ? SHARE_OPTIONS : SHARE_OPTIONS.filter(option => option.value === 'name');
+      setShareOptions(newShareOptions);
+    }
+  }, [values.people, index]);
+
+  function updateShareOptions(e) {
+    const { value, checked } = e.target;
+    if( value === 'name') {
+      setFieldValue(`people[${index}].share`, checked ? [value] : []);
+    } else {
+      setFieldValue(`people[${index}].share`, checked ? [...values.people[index].share, value] : values.people[index].share.filter(option => option !== value));
+    }
+  }
 
   return (
     <Box className='MiscInfo' sx={{ mt: 4 }}>
@@ -15,8 +36,9 @@ export default function MiscInfo({ index }) {
         <Title>What information do you want in the roster?</Title>
         <CheckboxInput
           name={`people[${index}].share`}
-          options={SHARE_OPTIONS}
+          options={shareOptions}
           key={`${index}-share`}
+          onChange={(e) => updateShareOptions(e)}
         />
       </Box>
 

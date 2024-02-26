@@ -77,20 +77,22 @@ export function PersonContainerAccordion({ order, personIndex, showButtons, hand
   const person = order.people[personIndex];
 
   return (
-    <Accordion expanded={expanded} onChange={ () => setExpanded(!expanded) } sx={{ mt: 2 }}>
-      <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-        <Typography>{person.first} {person.last}</Typography>
-      </AccordionSummary>
-      <AccordionDetails>
-        <PersonSummary person={person} />
-        {showButtons &&
-          <ButtonRow
-            deleteButtonProps={{ onClick: () => handleDelete(personIndex), text: 'Delete' }}
-            editButtonProps={{ onClick: () => handleEdit(personIndex), text: 'Edit' }}
-          />
-        }
-      </AccordionDetails>
-    </Accordion>
+    <Box sx={{ mt: 2 }}>
+      <Accordion expanded={expanded} onChange={ () => setExpanded(!expanded) }>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+          <Typography>{person.first} {person.last}</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <PersonSummary person={person} />
+          {showButtons &&
+            <ButtonRow
+              deleteButtonProps={{ onClick: () => handleDelete(personIndex), text: 'Delete' }}
+              editButtonProps={{ onClick: () => handleEdit(personIndex), text: 'Edit' }}
+            />
+          }
+        </AccordionDetails>
+      </Accordion>
+    </Box>
   );
 }
 

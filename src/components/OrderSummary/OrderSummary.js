@@ -6,7 +6,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import ButtonRow from 'components/ButtonRow';
 import config from 'config';
-const { SCHOLARSHIP_OPTIONS } = config;
+const { FIELD_CONFIG } = config;
+const SCHOLARSHIP_OPTIONS = FIELD_CONFIG['scholarship'].options;
 
 export default function OrderSummary({ order, currentPage }) {
   const admissions = order.people.map(person => parseInt(person.admissionCost));

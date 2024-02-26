@@ -5,12 +5,13 @@ import { Input, CheckboxInput } from '../Input';
 import { Title } from 'components/Layout/SharedStyles';
 import { Box } from '@mui/material';
 import config from 'config';
-const { SCHOLARSHIP_OPTIONS, VOLUNTEER_OPTIONS, SHARE_OPTIONS, YES_NO_OPTIONS } = config;
+const { FIELD_CONFIG, PERSON_MISC_FIELDS } = config;
+const SHARE_OPTIONS = FIELD_CONFIG['share'].options;
 
 export default function MiscInfo({ index }) {
   const [shareOptions, setShareOptions] = useState(SHARE_OPTIONS);
   const formik = useFormikContext();
-  const { values, setFieldValue } = formik;
+  const { values, setFieldValue, handleChange } = formik;
 
   useEffect(() => { scrollToTop(); },[])
 
@@ -21,64 +22,46 @@ export default function MiscInfo({ index }) {
     }
   }, [values.people, index]);
 
-  function updateShareOptions(e) {
-    const { value, checked } = e.target;
-    if( value === 'name') {
+  function updateCheckboxOptions(e) {
+    const { name, value, checked } = e.target;
+    const field = name.split('.').pop();
+    if( field === 'share'  && value === 'name') {
       setFieldValue(`people[${index}].share`, checked ? [value] : []);
     } else {
-      setFieldValue(`people[${index}].share`, checked ? [...values.people[index].share, value] : values.people[index].share.filter(option => option !== value));
+      handleChange(e); // let formik handle it
     }
   }
-
   return (
     <Box className='MiscInfo' sx={{ mt: 4 }}>
-      <Box sx={{ mb: 6 }}>
-        <Title>What information do you want in the roster?</Title>
-        <CheckboxInput
-          name={`people[${index}].share`}
-          options={shareOptions}
-          key={`${index}-share`}
-          onChange={(e) => updateShareOptions(e)}
-        />
-      </Box>
-
-      <Box sx={{ mb: 6 }}>
-        <Title>Carpool</Title>
-        <CheckboxInput
-          label='Do you want your city, state, zip, and email shared for carpooling?'
-          name={`people[${index}].carpool`}
-          options={YES_NO_OPTIONS}
-          key={`${index}-carpool`}
-        />
-      </Box>
-
-      <Box sx={{ mb: 6 }}>
-        <Title>Volunteering</Title>
-        <CheckboxInput
-          label='Do you want to volunteer to help out over the weekend?  Jobs might include sweeping or checking paper products stashed in the bathrooms.'
-          name={`people[${index}].volunteer`}
-          options={VOLUNTEER_OPTIONS}
-          key={`${index}-volunteer`}
-        />
-      </Box>
-
-      <Box sx={{ mb: 6 }}>
-        <Title>Scholarships (limited availability)</Title>
-        <CheckboxInput
-          label="We feel we've kept the price of camp remarkably low.  However, if you are limited financially, we have a small number of half price scholarships available for camp. If you'd like to be considered for one of these, please let us know."
-          name={`people[${index}].scholarship`}
-          options={SCHOLARSHIP_OPTIONS}
-          key={`${index}-scholarship`}
-        />
-      </Box>
-
-      <Title>Comments</Title>
-      <Input
-        type='textarea'
-        name={`people[${index}].comments`}
-        label="Please tell us any special requests or information we should know regarding your registration."
-        key={`${index}-comments`}
-      />
+      {PERSON_MISC_FIELDS
+        .map(field => ({ field, ...FIELD_CONFIG[field] }))
+        .sort((a, b) => a.order - b.order)
+        .map((input) => {
+          const { field, type, title, label, options } = input;
+          return (
+            <Box sx={{ mb: 6 }} key={field}>
+              <Title>{title}</Title>
+              {type === 'checkbox' &&
+                <CheckboxInput
+                  label={label}
+                  name={`people[${index}].${field}`}
+                  options={field === 'share' ? shareOptions : options}
+                  key={`${index}-${field}`}
+                  onChange={(e) => updateCheckboxOptions(e)}
+                />
+              }
+              {type === 'textarea' &&
+                <Input
+                  type='textarea'
+                  name={`people[${index}].${field}`}
+                  label={label}
+                  key={`${index}-${field}`}
+                />
+              }
+            </Box>
+          );
+        })
+      }
     </Box>
   );
 }

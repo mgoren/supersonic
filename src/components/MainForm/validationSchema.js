@@ -12,7 +12,7 @@ export function validationSchema({ currentPage }) {
     people: Yup.array().of(personValidationSchema),
     emailConfirmation: FIELD_CONFIG.emailConfirmation.validation,
   });
-  
+
   const paymentSchema=Yup.object({
     people: Yup.array().of(personValidationSchema),
     donation: Yup.number().min(DONATION_RANGE[0]).max(DONATION_RANGE[1])

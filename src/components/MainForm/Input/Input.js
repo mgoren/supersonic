@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { isMobile } from "react-device-detect";
 import { Field, useFormikContext, getIn } from 'formik';
 import { PatternFormat } from 'react-number-format';
-import { Box, Typography, TextField, Button, Checkbox, FormControlLabel, FormControl, FormLabel, RadioGroup, Radio } from '@mui/material';
+import { Box, Typography, TextField, Button, Checkbox, FormControlLabel, FormControl, RadioGroup, Radio } from '@mui/material';
 import { usePlacesWidget } from "react-google-autocomplete";
 import { useField } from 'formik';
 
@@ -158,25 +158,21 @@ export const TextArea = ({ label, name, ...props }) => {
   );
 };
 
-export const RadioButtons = ({ name, label, options, ...props }) => {
+export const RadioButtons = ({ name, label, options, field, index }) => {
   const { values, setFieldValue } = useFormikContext();
-
   return (
     <FormControl>
-      <FormLabel htmlFor={name}>{label}</FormLabel>
+      {label && <Typography gutterBottom={true} htmlFor={name}>{label}</Typography>}
       <RadioGroup
-        row
         name={name}
-        value={values[name]}
-        onChange={ (e) => { setFieldValue(name, parseInt(e.currentTarget.value)) } }>
-
+        value={values.people[index][field]}
+        onChange={ (e) => { setFieldValue(name, e.currentTarget.value) } }>
         {options.map((option) => (
           <FormControlLabel
-            sx={{ mr: 1 }}
             key={option.value}
             label={option.label}
-            value={option.value.toString()}
-            labelPlacement="start"
+            value={option.value}
+            labelPlacement="end"
             control={<Radio />}
           />
         ))}

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useFormikContext } from 'formik';
 import { scrollToTop } from 'utils.js';
-import { Input, CheckboxInput } from '../Input';
+import { Input, CheckboxInput, RadioButtons } from '../Input';
 import { Title } from 'components/Layout/SharedStyles';
 import { Box } from '@mui/material';
 import config from 'config';
@@ -48,6 +48,16 @@ export default function MiscInfo({ index }) {
                   options={field === 'share' ? shareOptions : options}
                   key={`${index}-${field}`}
                   onChange={(e) => updateCheckboxOptions(e)}
+                />
+              }
+              {type === 'radio' &&
+                <RadioButtons
+                  label={label}
+                  name={`people[${index}].${field}`}
+                  options={options}
+                  key={`${index}-${field}`}
+                  field={field}
+                  index={index}
                 />
               }
               {type === 'textarea' &&

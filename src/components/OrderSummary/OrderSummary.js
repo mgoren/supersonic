@@ -114,7 +114,7 @@ function PersonSummary({ person }) {
         <p>
           Include on roster: {!!person.share.length ? person.share.join(', ') : 'do not share'}<br />
           Include on carpool list: {!!person.carpool.length ? person.carpool.join(', ') : 'no'}<br />
-          Volunteering: {!!person.volunteer.length ? person.volunteer.join(', ') : 'not signed up'}<br />
+          Volunteering: {person.volunteer || 'no'}<br />
           Scholarship: {!!person.scholarship.length ? getCheckboxTitles({ property: person.scholarship, options: SCHOLARSHIP_OPTIONS }).join(', ').toLowerCase() : 'not requesting'}<br />
           {person.comments && <>Comments: {person.comments}<br /></>}
         </p>

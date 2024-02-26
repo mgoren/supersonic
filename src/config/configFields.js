@@ -149,7 +149,7 @@ export const FIELD_CONFIG = {
     order: 21,
   },
   volunteer: {
-    type: 'checkbox',
+    type: 'radio',
     title: "Volunteering",
     label: "Do you want to volunteer to help out over the weekend? Jobs might include sweeping or checking paper products stashed in the bathrooms.",
     options: [
@@ -157,8 +157,8 @@ export const FIELD_CONFIG = {
       { label: 'No thanks', value: 'no' },
       { label: 'Other (please explain in comments below)', value: 'other' },
     ],
-    validation: Yup.array(),
-    defaultValue: [],
+    validation: Yup.string(),
+    defaultValue: '',
     order: 22,
   },
   hospitality: {

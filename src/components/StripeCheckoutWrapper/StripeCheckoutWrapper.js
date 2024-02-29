@@ -19,7 +19,6 @@ export default function StripeCheckoutWrapper({ total, name, email, processing, 
   const createPaymentIntent = useCallback(async () => {
     try {
       const { data } = await createStripePaymentIntent({
-        token: process.env.REACT_APP_TOKEN,
         amount: total, // amount in dollars
         name,
         email
@@ -33,7 +32,7 @@ export default function StripeCheckoutWrapper({ total, name, email, processing, 
   const cancelPaymentIntent = async () => {
     const paymentIntentId = clientSecretRef.current.split('_secret_')[0];
     try {
-      const { data } = await cancelStripePaymentIntent({ token: process.env.REACT_APP_TOKEN, paymentIntentId });
+      const { data } = await cancelStripePaymentIntent({ paymentIntentId });
       setClientSecret(data.clientSecret);
     } catch (error) {
       console.error(error);

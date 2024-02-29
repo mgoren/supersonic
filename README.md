@@ -71,12 +71,6 @@ firebase apps:sdkconfig web
 
 - Add those values to `.env` file
 
-## Create a token for pseudo-auth to onCall Firebase functions
-
-- generate a long random string as your token (avoid symbols)
-- set your token as the value for REACT_APP_TOKEN in `.env`
-- firebase functions:config:set shared.token="INSERT_TOKEN_HERE"
-
 ## Setup Stripe or PayPal:
 
 Stripe configuration:

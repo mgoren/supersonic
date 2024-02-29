@@ -41,7 +41,6 @@ export default function Checkout({ order, setOrder, setError, setCurrentPage }) 
     setProcessingMessage(order.paymentId === 'check' ? 'Updating registration...' : 'Payment successful. Updating registration...');
     try {
       await createOrder({
-        token: process.env.REACT_APP_TOKEN,
         action: ActionType.UPDATE,
         order
       });
@@ -90,7 +89,6 @@ export default function Checkout({ order, setOrder, setError, setCurrentPage }) 
 
     try {
       const { data } = await createOrder({
-        token: process.env.REACT_APP_TOKEN,
         action: ActionType.CREATE,
         order: initialOrderWithReceipt
       });

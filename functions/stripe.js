@@ -9,10 +9,7 @@ if (admin.apps.length === 0) {
 }
 
 export const createStripePaymentIntent = functions.runWith({ enforceAppCheck: true }).https.onCall(async (data) => {
-  const { token, amount, name, email } = data;
-  if (token.trim() !== functions.config().shared.token.trim()) {
-    throw new functions.https.HttpsError('permission-denied', 'The function must be called with a valid token.');
-  }
+  const { amount, name, email } = data;
   let customer;
   const existingCustomers = await stripe.customers.list({ email, limit: 1 });
   if (existingCustomers.data.length) {
@@ -35,10 +32,7 @@ export const createStripePaymentIntent = functions.runWith({ enforceAppCheck: tr
 });
 
 export const updateStripePaymentIntent = functions.runWith({ enforceAppCheck: true }).https.onCall(async (data) => {
-  const { token, clientSecret, amount } = data;
-  if (token.trim() !== functions.config().shared.token.trim()) {
-    throw new functions.https.HttpsError('permission-denied', 'The function must be called with a valid token.');
-  }
+  const { clientSecret, amount } = data;
   try {
     await stripe.paymentIntents.update(clientSecret, {
       amount: amount * 100 // amount in cents
@@ -50,10 +44,7 @@ export const updateStripePaymentIntent = functions.runWith({ enforceAppCheck: tr
 });
 
 export const cancelStripePaymentIntent = functions.runWith({ enforceAppCheck: true }).https.onCall(async (data) => {
-  const { token, paymentIntentId } = data;
-  if (token.trim() !== functions.config().shared.token.trim()) {
-    throw new functions.https.HttpsError('permission-denied', 'The function must be called with a valid token.');
-  }
+  const { paymentIntentId } = data;
   try {
     const paymentIntent = await stripe.paymentIntents.cancel(paymentIntentId);
     return { paymentIntent };

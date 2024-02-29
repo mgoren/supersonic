@@ -13,8 +13,7 @@ if (admin.apps.length === 0) {
 }
 
 export const createOrder = functions.runWith({ enforceAppCheck: true }).https.onCall(async (data) => {
-  const { token, action, order } = data;
-  authenticate(token);
+  const { action, order } = data;
   const filteredOrder = filterObject(order, validFields);
   const updatedOrder = {
     ...filteredOrder,
@@ -46,9 +45,3 @@ const filterObject = (originalObj, validFields) => validFields.reduce((newObj, k
   }
   return newObj;
 }, {});
-
-const authenticate = (token) => {
-  if (token.trim() !== functions.config().shared.token.trim()) {
-    handleError('permission-denied', 'The function must be called with a valid token.');
-  }
-}

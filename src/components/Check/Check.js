@@ -1,11 +1,15 @@
 import { useState } from 'react';
-import Reaptcha from 'reaptcha';
-import { Typography, Box, Button } from '@mui/material';
+import { Typography, Button } from '@mui/material';
+import Loading from 'components/Loading';
 import config from 'config';
-const { CAPTCHA_KEY, CHECK_ADDRESS, CHECK_TO, SANDBOX_MODE } = config;
+const { CHECK_ADDRESS, CHECK_TO, SANDBOX_MODE } = config;
 
 export default function Check({ saveOrderToFirebase, processing, setOrder }) {
   const [verified, setVerified] = useState(SANDBOX_MODE);
+
+  setTimeout(() => {
+    setVerified(true);
+  }, 5000);
 
   const handleRegister = async () => {
     const order = await saveOrderToFirebase();
@@ -26,17 +30,8 @@ export default function Check({ saveOrderToFirebase, processing, setOrder }) {
             {CHECK_ADDRESS }
           </Typography>
 
-          <Box sx={{ my: 3 }}>
-            {!SANDBOX_MODE &&
-              <Reaptcha
-                sitekey={CAPTCHA_KEY}
-                onVerify={() => setVerified(true)}
-                onExpire={() => setVerified(false)}
-              />
-            }
-          </Box>
-
-          <Button variant='contained' color='success' disabled={!verified} onClick={handleRegister} sx={{ mb: 2 }}>
+          {!verified && <Loading />}
+          <Button variant='contained' color='success' disabled={!verified} onClick={handleRegister} sx={{ mt: 4, mb: 2 }}>
             Register and agree to send a check
           </Button>
         </>

@@ -67,7 +67,6 @@ const config = {
   ORDER_DEFAULTS,
   ORDER_SUMMARY_OPTIONS,
   DANCES,
-  CAPTCHA_KEY: process.env.REACT_APP_RECAPTCHA_SITE_KEY,
 }
 
 export default config;

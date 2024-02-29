@@ -101,14 +101,19 @@ gcloud beta services api-keys create --flags-file=google-places-api-flags.yaml -
 
 - Copy `keyString` value to `REACT_APP_GOOGLE_PLACES_API_KEY` in `.env`.
 
-## IF ALLOWING CHECK PAYMENT: setup reCAPTCHA
+## Enable reCAPTCHA for Firebase App Check
 
-- [Register site with recaptcha](https://www.google.com/recaptcha/admin/create)
-- label: [doesn't really matter]
-- reCAPTCHA type: v2 not a robot challege
-- Domains: localhost, [PROJECT_ID].web.app, EXAMPLE.COM (obviously replace with actual domain)
-- Google Cloud Platform: associate with this google cloud project
+- Replace EXAMPLE.COM above with actual domain in command below.
+
+```sh
+gcloud services enable recaptchaenterprise.googleapis.com --project [PROJECT_ID]
+gcloud recaptcha keys create --display-name="recaptcha-enterprise" --integration-type="SCORE" --web --domains="localhost,[PROJECT_ID].web.app,EXAMPLE.COM" --project [PROJECT_ID]
+```
+
 - Copy site key value to `REACT_APP_RECAPTCHA_SITE_KEY` in `.env`.
+- [Enable Firebase App Check](https://console.firebase.google.com/project/[PROJECT_ID]/appcheck/apps)
+  - choose Recaptcha Enterprise option
+  - use site key value from previous step
 
 ## Copy `.env` file values over to GitHub Secrets for workflow use:
 

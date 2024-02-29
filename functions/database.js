@@ -12,7 +12,7 @@ if (admin.apps.length === 0) {
   admin.initializeApp();
 }
 
-export const createOrder = functions.https.onCall(async (data) => {
+export const createOrder = functions.runWith({ enforceAppCheck: true }).https.onCall(async (data) => {
   const { token, action, order } = data;
   authenticate(token);
   const filteredOrder = filterObject(order, validFields);

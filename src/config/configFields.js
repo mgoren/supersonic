@@ -47,14 +47,13 @@ export const FIELD_CONFIG = {
     validation: EMAIL_VALIDATION.required('Please enter email address.'),
     defaultValue: '',
     order: 5,
-    width: 12,
+    width: 6,
     autoComplete: 'email'
   },
   emailConfirmation: {
     label: 'Re-enter email',
-    name: 'emailConfirmation',
     type: 'email',
-    validation: EMAIL_VALIDATION.required('Please re-enter your email address.').oneOf([Yup.ref('people[0].email'), null], 'Email addresses must match.'),
+    validation: EMAIL_VALIDATION.required('Please re-enter your email address.').oneOf([Yup.ref('email'), null], 'Email addresses must match.'),
     defaultValue: '',
     order: 6,
     width: 6,

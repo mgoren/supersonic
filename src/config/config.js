@@ -10,18 +10,15 @@ import { DANCES } from './configContent';
 import { DEPOSIT_MIN, ADMISSION_COST_RANGE, ADMISSION_COST_DEFAULT, ADMISSION_QUANTITY_MAX, DONATION_OPTION, DONATION_RANGE } from './configBasics';
 
 // config for this particular registration instance; update this as needed!
-const PERSON_CONTACT_FIELDS = ['first', 'last', 'nametag', 'pronouns', 'email', 'phone', 'address', 'apartment', 'city', 'state', 'zip', 'country'];
+const PERSON_CONTACT_FIELDS = ['first', 'last', 'nametag', 'pronouns', 'email', 'emailConfirmation', 'phone', 'address', 'apartment', 'city', 'state', 'zip', 'country'];
 const PERSON_MISC_FIELDS = ['share', 'carpool', 'volunteer', 'scholarship', 'comments'];
 const PERSON_PAYMENT_FIELDS = ['admissionCost'];
 
 const ORDER_MISC_DEFAULTS = {
-  emailConfirmation: '',
   donation: DONATION_RANGE[0]
 };
 
 // don't change these
-const i = PERSON_CONTACT_FIELDS.indexOf('phone');
-const FIRST_PERSON_CONTACT_FIELDS = [ ...PERSON_CONTACT_FIELDS.slice(0, i), 'emailConfirmation', ...PERSON_CONTACT_FIELDS.slice(i) ];
 const PERSON_FIELDS = [...PERSON_CONTACT_FIELDS, ...PERSON_MISC_FIELDS, ...PERSON_PAYMENT_FIELDS];
 const PERSON_DEFAULTS = PERSON_FIELDS.reduce((obj, field) => ({ ...obj, [field]: FIELD_CONFIG[field].defaultValue }), {});
 const ORDER_DEFAULTS = {
@@ -63,7 +60,6 @@ const config = {
   PAYPAL_OPTIONS,
   FIELD_CONFIG,
   PERSON_CONTACT_FIELDS,
-  FIRST_PERSON_CONTACT_FIELDS,
   PERSON_MISC_FIELDS,
   PERSON_DEFAULTS,
   PERSON_INPUT_LABELS,

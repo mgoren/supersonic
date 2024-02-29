@@ -32,7 +32,7 @@ export default function PersonForm({ editIndex, setEditIndex, saveForm, order, r
       <MiscInfo index={editIndex} />
       <Box sx={{ mt: 5, mb: 2 }}>
         <ButtonRow
-          cancelButtonProps = { order.emailConfirmation !== '' && { onClick: handleCancelButton, text: 'Cancel' }}
+          cancelButtonProps = { order.people[0].email !== '' && { onClick: handleCancelButton, text: 'Cancel' }}
           saveButtonProps = {{ onClick: handleSaveButton, text: 'Save'  }}
         />
       </Box>

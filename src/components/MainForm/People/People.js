@@ -9,7 +9,7 @@ import { PersonContainerAccordion } from 'components/OrderSummary';
 const { ADMISSION_QUANTITY_MAX, PERSON_DEFAULTS } = config;
 
 export default function People({ order, setOrder, resetForm, saveForm }) {
-  const [editIndex, setEditIndex] = useState(order.emailConfirmation === '' ? 0 : null);
+  const [editIndex, setEditIndex] = useState(order.people[0].email === '' ? 0 : null);
   const [isNewPerson, setIsNewPerson] = useState(false);
 
   const formik = useFormikContext();
@@ -35,13 +35,8 @@ export default function People({ order, setOrder, resetForm, saveForm }) {
         setEditIndex(0);
         resetForm();
       }
-      setOrder({
-        ...order,
-        people,
-        emailConfirmation: people[0].email 
-      });
+      setOrder({ ...order, people });
       setFieldValue('people', people); // update formik field array
-      setFieldValue('emailConfirmation', people[0].email); // update formik field
     }
   };
 

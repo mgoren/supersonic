@@ -1,7 +1,5 @@
 import DOMPurify from 'dompurify';
 import preval from 'preval.macro'
-import config from 'config';
-const { FIRST_PERSON_CONTACT_FIELDS } = config;
 
 export const clamp = (value, range) => Math.min(Math.max(value, range[0]), range[1]);
 
@@ -40,13 +38,8 @@ export const warnBeforeUserLeavesSite = event => {
   event.returnValue = '';
 };
 
-// helpers for scrolling to first invalid field
+// helper for scrolling to first invalid field
 export const getFirstInvalidFieldName = (errors) => {
-  // console.log('errors', errors);
-  // this relies on formik only generating errors on the people and emailConfirmation fields
-  if (errors.emailConfirmation && emailConfirmationIsFirstInvalidField(errors)) {
-    return 'emailConfirmation';
-  }
   if (errors.people) {
     for (const i in errors.people) {
       if (errors.people[i] !== null) {
@@ -57,11 +50,6 @@ export const getFirstInvalidFieldName = (errors) => {
     }
   }
   return null;
-};
-const emailConfirmationIsFirstInvalidField = (errors) => {
-  const fields = FIRST_PERSON_CONTACT_FIELDS;
-  const fieldsBeforeEmailConfirmation = fields.slice(0, fields.indexOf('emailConfirmation'));
-  return !errors.people || !errors.people[0] || !fieldsBeforeEmailConfirmation.some(field => errors.people[0][field]);
 };
 
 export const fullName = (person) => `${person.first} ${person.last}`;

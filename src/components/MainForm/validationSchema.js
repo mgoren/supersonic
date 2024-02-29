@@ -9,8 +9,7 @@ export function validationSchema({ currentPage }) {
   );
 
   const peopleSchema=Yup.object({
-    people: Yup.array().of(personValidationSchema),
-    emailConfirmation: FIELD_CONFIG.emailConfirmation.validation,
+    people: Yup.array().of(personValidationSchema)
   });
 
   const paymentSchema=Yup.object({

@@ -65,7 +65,7 @@ export default function Checkout({ order, setOrder, setError, setCurrentPage }) 
 
   const admissionsTotal = order.people.reduce((total, person) => total + person.admissionCost, 0);
   const total = admissionsTotal + order.donation;
-  console.log('typeof admissionsTotal', typeof admissionsTotal);
+  // console.log('typeof admissionsTotal', typeof admissionsTotal);
 
   const handleClickBackButton = () => {
     setError(null);

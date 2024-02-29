@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import {useStripe, useElements, PaymentElement} from '@stripe/react-stripe-js';
 import Loading from 'components/Loading';
-import { Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import config from 'config';
 const { EMAIL_CONTACT } = config;
 
@@ -51,8 +51,10 @@ export default function StripeCheckoutForm({ setError, processing, setProcessing
     <>
       {ready &&
         <form onSubmit={handleSubmit}>
-          <PaymentElement />
-          <Button type='submit' variant='contained' color='success' disabled={!stripe || processing} sx={{ my: 2 }}>Register and submit payment</Button>
+          <Box sx={{ visibility: processing ? 'hidden' : 'visible', height: processing ? 0 : 'auto' }}>
+            <PaymentElement />
+            <Button type='submit' variant='contained' color='success' disabled={!stripe || processing} sx={{ my: 2 }}>Register and submit payment</Button>
+          </Box>
         </form>
       }
       {!ready &&

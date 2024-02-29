@@ -10,7 +10,7 @@ const { DEPOSIT_MIN, ADMISSION_COST_RANGE, DONATION_OPTION, DONATION_RANGE, PAYM
 
 export default function PaymentInfo({ order, donate, setDonate }) {
   const admissionsTotal = order.people.reduce((total, person) => total + person.admissionCost, 0);
-  console.log('admissionsTotal', typeof admissionsTotal)
+  // console.log('admissionsTotal', typeof admissionsTotal)
   const priceRange = [DEPOSIT_MIN, ADMISSION_COST_RANGE[1]];
   const [splitPayment, setSplitPayment] = useState(order.people.some(person => person.admissionCost * order.people.length !== admissionsTotal));
   const [payingDeposit, setPayingDeposit] = useState(order.people.some(person => person.admissionCost < ADMISSION_COST_RANGE[0]));

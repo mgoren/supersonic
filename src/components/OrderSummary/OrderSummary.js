@@ -11,7 +11,7 @@ const { ORDER_SUMMARY_OPTIONS, ADMISSION_COST_RANGE, PAYMENT_DUE_DATE } = config
 export default function OrderSummary({ order, currentPage }) {
   const admissions = order.people.map(person => person.admissionCost);
   const admissionsTotal = admissions.reduce((total, admission) => total + admission, 0);
-  console.log('typoeof admissionsTotal', typeof admissionsTotal);
+  // console.log('typoeof admissionsTotal', typeof admissionsTotal);
   const total = admissionsTotal + order.donation;
   const splitPayment = order.people.some(person => person.admissionCost * order.people.length !== admissionsTotal);
   const isPayingDeposit = order.people.some(person => person.admissionCost < ADMISSION_COST_RANGE[0]);

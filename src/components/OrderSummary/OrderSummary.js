@@ -9,11 +9,11 @@ import config from 'config';
 const { ORDER_SUMMARY_OPTIONS, ADMISSION_COST_RANGE, PAYMENT_DUE_DATE } = config;
 
 export default function OrderSummary({ order, currentPage }) {
-  const admissions = order.people.map(person => parseInt(person.admissionCost));
+  const admissions = order.people.map(person => person.admissionCost);
   const admissionsTotal = admissions.reduce((total, admission) => total + admission, 0);
-  // console.log('typoeof admissionsTotal', typeof admissionsTotal);
+  console.log('typoeof admissionsTotal', typeof admissionsTotal);
   const total = admissionsTotal + order.donation;
-  const splitPayment = order.people.some(person => parseInt(person.admissionCost) * order.people.length !== admissionsTotal);
+  const splitPayment = order.people.some(person => person.admissionCost * order.people.length !== admissionsTotal);
   const isPayingDeposit = order.people.some(person => person.admissionCost < ADMISSION_COST_RANGE[0]);
 
   return (
@@ -103,7 +103,7 @@ function PersonSummary({ person, skipCost=false }) {
       {ORDER_SUMMARY_OPTIONS
         .map((option) => {
           const { property, label, mapping, defaultValue } = option;
-          if (skipCost && property === 'admissionCost') return;
+          if (skipCost && property === 'admissionCost') return null;
           return (
             <Box key={option.property}>
               {renderConditionalData({ person, property, label, mapping, defaultValue })}

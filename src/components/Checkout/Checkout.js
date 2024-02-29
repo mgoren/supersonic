@@ -63,8 +63,11 @@ export default function Checkout({ order, setOrder, setError, setCurrentPage }) 
     }
   }, [order, updateOrderInFirebase]);
 
-  const admissionsTotal = order.people.reduce((total, person) => total + parseInt(person.admissionCost), 0);
+  console.log(order.people);
+  const admissionsTotal = order.people.reduce((total, person) => total + person.admissionCost, 0);
   const total = admissionsTotal + order.donation;
+  console.log('typeof admissionsTotal', typeof admissionsTotal);
+  console.log('typeof total', typeof total);
 
   const handleClickBackButton = () => {
     setError(null);

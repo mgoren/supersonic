@@ -18,7 +18,7 @@ export default function Receipt({ order, checkPayment }) {
 }
 
 function CheckPaymentReceipt({ order }) {
-  const total = order.people.reduce((total, person) => total + parseInt(person.admissionCost), 0) + order.donation;
+  const total = order.people.reduce((total, person) => total + person.admissionCost, 0) + order.donation;
   return (
     <>
       <Typography component='p' color='error'>
@@ -49,7 +49,7 @@ function CheckPaymentReceipt({ order }) {
 }
 
 function ElectronicPaymentReceipt({ order }) {
-  const total = order.people.reduce((total, person) => total + parseInt(person.admissionCost), 0) + order.donation;
+  const total = order.people.reduce((total, person) => total + person.admissionCost, 0) + order.donation;
   const isPayingDeposit = order.people.some(person => person.admissionCost < ADMISSION_COST_RANGE[0]);
   return (
     <>

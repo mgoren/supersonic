@@ -9,10 +9,11 @@ import config from 'config';
 const { DEPOSIT_MIN, ADMISSION_COST_RANGE, DONATION_OPTION, DONATION_RANGE, PAYMENT_DUE_DATE } = config;
 
 export default function PaymentInfo({ order, donate, setDonate }) {
-  const admissionsTotal = order.people.reduce((total, person) => total + parseInt(person.admissionCost), 0);
+  const admissionsTotal = order.people.reduce((total, person) => total + person.admissionCost, 0);
+  console.log(typeof admissionsTotal)
   const priceRange = [DEPOSIT_MIN, ADMISSION_COST_RANGE[1]];
-  const [splitPayment, setSplitPayment] = useState(order.people.some(person => parseInt(person.admissionCost) * order.people.length !== admissionsTotal));
-  const [payingDeposit, setPayingDeposit] = useState(order.people.some(person => parseInt(person.admissionCost) < ADMISSION_COST_RANGE[0]));
+  const [splitPayment, setSplitPayment] = useState(order.people.some(person => person.admissionCost * order.people.length !== admissionsTotal));
+  const [payingDeposit, setPayingDeposit] = useState(order.people.some(person => person.admissionCost < ADMISSION_COST_RANGE[0]));
   const [payingMax, setPayingMax] = useState(order.people[0].admissionCost === ADMISSION_COST_RANGE[1]);
   const { values, setFieldValue, handleBlur } = useFormikContext();
 

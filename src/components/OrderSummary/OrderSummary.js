@@ -6,7 +6,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import ButtonRow from 'components/ButtonRow';
 import config from 'config';
-const { ORDER_SUMMARY_OPTIONS } = config;
+const { ORDER_SUMMARY_OPTIONS, ADMISSION_COST_RANGE, PAYMENT_DUE_DATE } = config;
 
 export default function OrderSummary({ order, currentPage }) {
   const admissions = order.people.map(person => parseInt(person.admissionCost));
@@ -14,6 +14,7 @@ export default function OrderSummary({ order, currentPage }) {
   // console.log('typoeof admissionsTotal', typeof admissionsTotal);
   const total = admissionsTotal + order.donation;
   const splitPayment = order.people.some(person => parseInt(person.admissionCost) * order.people.length !== admissionsTotal);
+  const isPayingDeposit = order.people.some(person => person.admissionCost < ADMISSION_COST_RANGE[0]);
 
   return (
     <>
@@ -47,6 +48,7 @@ export default function OrderSummary({ order, currentPage }) {
               Admissions: {order.people.length} x ${order.people[0].admissionCost} = ${admissionsTotal}
             </>
           }
+          {isPayingDeposit && <><br /><strong><font color='orange'>The balance of the payment will be due by {PAYMENT_DUE_DATE}.</font></strong></>}
 
           {order.donation > 0 &&
             <>
@@ -80,7 +82,7 @@ export function PersonContainerAccordion({ order, personIndex, showButtons, hand
           <Typography>{person.first} {person.last}</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <PersonSummary person={person} />
+          <PersonSummary person={person} skipCost={true} />
           {showButtons &&
             <Box sx={{ my: 4 }}>
               <ButtonRow
@@ -95,12 +97,13 @@ export function PersonContainerAccordion({ order, personIndex, showButtons, hand
   );
 }
 
-function PersonSummary({ person }) {
+function PersonSummary({ person, skipCost=false }) {
   return (
     <>
       {ORDER_SUMMARY_OPTIONS
         .map((option) => {
           const { property, label, mapping, defaultValue } = option;
+          if (skipCost && property === 'admissionCost') return;
           return (
             <Box key={option.property}>
               {renderConditionalData({ person, property, label, mapping, defaultValue })}
@@ -115,9 +118,12 @@ function PersonSummary({ person }) {
 // data formatting helpers
 
 function renderConditionalData ({ person, property, label, mapping, defaultValue }) {
-  const data = person[property];
+  let data = person[property];
   let content;
-  if (property === 'nametag') {
+  if (property === 'admissionCost') {
+    content = formatCost(data);
+    label = data < ADMISSION_COST_RANGE[0] ? 'Deposit Amount' : label;
+  } else if (property === 'nametag') {
     content = formatNametag(person);
   } else if (property === 'address') {
     content = formatAddress(person);
@@ -129,6 +135,10 @@ function renderConditionalData ({ person, property, label, mapping, defaultValue
     content = defaultValue;
   }
   return content ? <>{label && `${label}: `}{content}<br /></> : null;
+}
+
+function formatCost(cost) {
+  return cost < ADMISSION_COST_RANGE[0] ? <>${cost}<br /><strong><font color='orange'>The balance of this payment will be due by {PAYMENT_DUE_DATE}.</font></strong></> : <>${cost}</>;
 }
 
 function formatNametag(person) {

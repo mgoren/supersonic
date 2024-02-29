@@ -6,7 +6,7 @@ import { InputAdornment, Typography, Link } from '@mui/material';
 import { useFormikContext } from 'formik';
 import { SlidingScaleSummaryExplanation } from 'components/Static/PaymentExplanation';
 import config from 'config';
-const { DEPOSIT_MIN, ADMISSION_COST_RANGE, DONATION_OPTION, DONATION_RANGE } = config;
+const { DEPOSIT_MIN, ADMISSION_COST_RANGE, DONATION_OPTION, DONATION_RANGE, PAYMENT_DUE_DATE } = config;
 
 export default function PaymentInfo({ order, donate, setDonate }) {
   const admissionsTotal = order.people.reduce((total, person) => total + parseInt(person.admissionCost), 0);
@@ -113,7 +113,7 @@ export default function PaymentInfo({ order, donate, setDonate }) {
                 }
 
                 {payingDeposit &&
-                  <Paragraph sx={{ my: 2, color: 'orange', fontWeight: 'bold' }}>You will need to send the remainder of your payment later.</Paragraph>
+                  <Paragraph sx={{ my: 2, color: 'orange', fontWeight: 'bold' }}>The balance of the payment will be due by {PAYMENT_DUE_DATE}.</Paragraph>
                 }
               </>
             }

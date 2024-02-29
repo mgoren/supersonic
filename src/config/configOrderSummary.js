@@ -10,4 +10,5 @@ export const ORDER_SUMMARY_OPTIONS = [
   { property: 'volunteer', label: 'Volunteering', defaultValue: 'not signed up' },
   { property: 'scholarship', label: 'Scholarship', mapping: FIELD_CONFIG['scholarship'].options, defaultValue: 'not requesting' },
   { property: 'comments', label: 'Comments' },
+  { property: 'admissionCost', label: 'Admission Cost' },
 ];

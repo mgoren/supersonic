@@ -4,10 +4,10 @@ import OrderSummary from 'components/OrderSummary';
 import { Divider, Typography } from '@mui/material';
 import { StyledLink } from 'components/Layout/SharedStyles';
 import config from 'config';
-const { COVID_POLICY_URL, CHECK_TO, CHECK_ADDRESS, EVENT_TITLE } = config;
+const { COVID_POLICY_URL, CHECK_TO, CHECK_ADDRESS, EVENT_TITLE, ADMISSION_COST_RANGE, PAYMENT_DUE_DATE } = config;
 
 export default function Receipt({ order, checkPayment }) {
-  checkPayment ??= order.paymentId === 'check'
+  checkPayment ??= order.paymentId === 'check'; // checkPayment needs to be passed when saving receipts for email
   useEffect(() => { scrollToTop() },[]);
   return(
     <>
@@ -18,12 +18,13 @@ export default function Receipt({ order, checkPayment }) {
 }
 
 function CheckPaymentReceipt({ order }) {
+  const total = order.people.reduce((total, person) => total + parseInt(person.admissionCost), 0) + order.donation;
   return (
     <>
       <Typography component='p' color='error'>
         <strong>You are not yet registered!</strong><br />
         Paying on time can increase your chance of being accepted.<br />
-        Please send a check for ${order.total}.
+        Please send a check for ${total} to secure your spot.<br />
       </Typography>
 
       <Typography component='p' sx={{ mt: 2 }}>
@@ -31,7 +32,7 @@ function CheckPaymentReceipt({ order }) {
       </Typography>
 
       <Typography component='p' sx={{ mt: 2 }}>
-        <span dangerouslySetInnerHTML={{ __html: CHECK_ADDRESS }}></span>
+        {CHECK_ADDRESS}
       </Typography>
 
       <Typography component='p' sx={{ mt: 2 }}>
@@ -48,12 +49,20 @@ function CheckPaymentReceipt({ order }) {
 }
 
 function ElectronicPaymentReceipt({ order }) {
+  const total = order.people.reduce((total, person) => total + parseInt(person.admissionCost), 0) + order.donation;
+  const isPayingDeposit = order.people.some(person => person.admissionCost < ADMISSION_COST_RANGE[0]);
   return (
     <>
       <Typography component='p' sx={{ mt: 2 }}>
         Thank you for registering for the {EVENT_TITLE}!<br />
-        Your payment for ${order.total} has been successfully processed.<br />
+        Your payment for ${total} has been successfully processed.<br />
       </Typography>
+
+      {isPayingDeposit &&
+        <Typography component='p' sx={{ mt: 2 }}>
+          <strong><font color='red'>The balance of your registration fee is due by {PAYMENT_DUE_DATE}.</font></strong><br />
+        </Typography>
+      }
 
       <SharedReceipt />
 
@@ -64,14 +73,26 @@ function ElectronicPaymentReceipt({ order }) {
   );
 }
 
-export function AdditionalPersonReceipt({ order }) {
+export function AdditionalPersonReceipt({ order, checkPayment }) {
+  checkPayment ??= order.paymentId === 'check'; // checkPayment needs to be passed when saving receipts for email
+  const isPayingDeposit = order.people.some(person => person.admissionCost < ADMISSION_COST_RANGE[0]);
   return (
     <>
       <Typography component='p' sx={{ mt: 2 }}>
         Thank you for registering for the {EVENT_TITLE}.
-        --- if check payment, say "Your spot in camp will be confirmed once we receive payment for your registration."
-        --- if paid depsit, say "Your spot in camp is reserved. The balance of your registration fee is due by ___."
       </Typography>
+
+      {checkPayment &&
+        <Typography component='p' sx={{ mt: 2 }}>
+          Your spot in camp will be confirmed once we receive payment for your registration.
+        </Typography>
+      }
+
+      {isPayingDeposit && !checkPayment &&
+        <Typography component='p' sx={{ mt: 2 }}>
+          Your spot in camp is reserved. The balance of your registration fee is due by {PAYMENT_DUE_DATE}.
+        </Typography>
+      }
 
       <SharedReceipt />
     </>

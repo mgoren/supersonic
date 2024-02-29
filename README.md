@@ -34,6 +34,7 @@ bash clear-old-settings.sh
 - Update favicon (can use [this site](https://www.favicon-generator.org) to generate them)
 - Copy desired logo to `public/logo.png` and set to desired height (likely <= 80px)
 - Update `MiscInfo`, `OrderSummary`, `Receipt` and other pages as needed
+- Ensure receipt text for all scenarios is as desired!
 
 ## Create a Firebase project, which will also create a Google Cloud project with the same PROJECT_ID:
 

@@ -23,7 +23,7 @@ export default function Check({ saveOrderToFirebase, processing, setOrder }) {
             Write your name in the memo area, and mail to:
           </Typography>
           <Typography sx={{ mt: 2 }}>
-            <span dangerouslySetInnerHTML={{ __html: CHECK_ADDRESS }}></span>
+            {CHECK_ADDRESS }
           </Typography>
 
           <Box sx={{ my: 3 }}>

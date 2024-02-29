@@ -84,7 +84,7 @@ export default function Checkout({ order, setOrder, setError, setCurrentPage }) 
       uuid: order.uuid || crypto.randomUUID()
     };
     const receipt = renderToStaticMarkup(<Receipt order={initialOrder} currentPage='confirmation' checkPayment={paymentMethod === 'check'} />);
-    const additionalPersonReceipt = renderToStaticMarkup(<AdditionalPersonReceipt order={initialOrder} />);
+    const additionalPersonReceipt = renderToStaticMarkup(<AdditionalPersonReceipt order={initialOrder} checkPayment={paymentMethod === 'check'} />);
     const initialOrderWithReceipt = { ...initialOrder, receipt, additionalPersonReceipt };
 
     try {

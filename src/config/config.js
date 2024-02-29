@@ -50,8 +50,9 @@ const config = {
   COVID_POLICY_URL: 'example.com/covid',
   SAFETY_POLICY_URL: 'example.com/safety',
   CHECK_TO: 'Check To Example',
-  CHECK_ADDRESS: "Address line 1<br />Address line 2<br />Address line 3<br />Address line 4",
+  CHECK_ADDRESS: <>Address line 1<br />Address line 2<br />Address line 3<br />Address line 4</>, // enclosed in <> </> to allow multiple lines
   DEPOSIT_MIN,
+  PAYMENT_DUE_DATE: 'Example Payment Due Date',
   ADMISSION_COST_RANGE,
   ADMISSION_COST_DEFAULT,
   ADMISSION_QUANTITY_MAX,

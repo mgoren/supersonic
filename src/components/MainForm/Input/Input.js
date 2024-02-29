@@ -88,8 +88,9 @@ const NumericInput = ({ variant, label, name, type, pattern, range, ...props }) 
   return (
     <Field name={name}>
       {({ field }) => {
-        const fieldError = name.includes('phone') && getIn(errors, name);
-        const isTouched = name.includes('phone') && getIn(touched, name);
+        const isPhoneInput = name.includes('phone');
+        const fieldError = isPhoneInput && getIn(errors, name);
+        const isTouched = isPhoneInput && getIn(touched, name);
         return (
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <PatternFormat
@@ -97,7 +98,7 @@ const NumericInput = ({ variant, label, name, type, pattern, range, ...props }) 
               customInput={TextField}
               label={label}
               format={pattern}
-              onValueChange={({value}) => setFieldValue(name, value)}
+              onValueChange={({value}) => setFieldValue(name, isPhoneInput ? value : parseInt(value))}
               inputMode='numeric'
               variant={variant || 'outlined'}
               error={Boolean(isTouched && fieldError)}

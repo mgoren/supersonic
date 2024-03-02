@@ -40,8 +40,6 @@ bash clear-old-settings.sh
 
 ```sh
 firebase projects:create [PROJECT_ID]
-firebase init database --project [PROJECT_ID] # accept defaults, don't overwrite dataabase rules
-firebase deploy --only database
 ```
 
 ## Enable billing on Google Cloud account from the [Google Cloud console](https://console.cloud.google.com/billing)
@@ -70,6 +68,11 @@ firebase apps:sdkconfig web
 ```
 
 - Add those values to `.env` file
+
+## Setup database
+
+- [Create Firestore database](https://console.firebase.google.com/project/[PROJECT_ID]/firestore)
+- Deploy Firestore database: `firebase deploy --only firestore`
 
 ## Setup Stripe or PayPal:
 

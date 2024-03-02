@@ -9,7 +9,7 @@ import { handleError, joinArrays } from './helpers.js';
 const ADMISSION_MINIMUM = parseInt(functions.config().shared.admission_min);
 const SERVICE_ACCOUNT_KEYS = functions.config().sheets.googleapi_service_account;
 const SHEET_ID = functions.config().sheets.sheet_id;
-const DATA_PATH = '/orders';
+const CONFIG_DATA_COLLECTION = 'orders';
 const RANGE = 'A:AP';
 const MAX_RETRIES = 3;
 const RETRY_DELAY_MS = 500;
@@ -20,23 +20,20 @@ const client = new google.auth.JWT(SERVICE_ACCOUNT_KEYS.client_email, null, SERV
 
 // ******** ADD LINE(S) TO SPREADSHEET ********
 
-export const appendrecordtospreadsheet = functions.database.ref(`${DATA_PATH}/{ITEM}`).onCreate(
-  async (snap) => {
-    try {
-      const key = snap.key;
-      const newRecord = snap.val();
-      const orders = mapOrderToSpreadsheetLines({ ...newRecord, key });
-      const promises = orders.map(orderLine => appendPromise(orderLine));
-      await Promise.all(promises);
-    } catch (err) {
-      handleError(`Error in appendrecordtospreadsheet for ${snap.val().people[0].email}`, err);
-    }
+export const appendrecordtospreadsheet = functions.firestore.document(`${CONFIG_DATA_COLLECTION}/{ITEM}`).onCreate(async (snap) => {
+  try {
+    const order = { ...snap.data(), key: snap.id };
+    const orders = mapOrderToSpreadsheetLines(order);
+    const promises = orders.map(orderLine => appendPromise(orderLine));
+    await Promise.all(promises);
+  } catch (err) {
+    handleError(`Error in appendrecordtospreadsheet for ${snap.data().people[0].email}`, err);
   }
-);
+});
 
 const mapOrderToSpreadsheetLines = (order) => {
   const orders = []
-  const createdAt = new Date(order.createdAt).toLocaleDateString();
+  const createdAt = order.createdAt.toDate().toLocaleDateString();
   const updatedOrder = joinArrays(order);
   const { people, ...orderFields } = updatedOrder
   let isPurchaser = true;

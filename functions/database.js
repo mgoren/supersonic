@@ -14,18 +14,21 @@ if (admin.apps.length === 0) {
 
 export const createOrder = functions.runWith({ enforceAppCheck: true }).https.onCall(async (data) => {
   const { action, order } = data;
+  const createdAt = admin.firestore.FieldValue.serverTimestamp();
   const filteredOrder = filterObject(order, validFields);
-  const updatedOrder = {
-    ...filteredOrder,
-    createdAt: admin.database.ServerValue.TIMESTAMP
-  };
+  const updatedOrder = { ...filteredOrder, createdAt };
   try {
-    const newOrderRef = admin.database().ref(action === ActionType.UPDATE ? 'orders/' : 'pendingOrders/').push();
-    await newOrderRef.set(updatedOrder);
-    if (action === ActionType.UPDATE) {
-      await admin.database().ref(`pendingOrders/${order.id}`).remove();
+    const pendingCollection = admin.firestore().collection('pendingOrders');
+    const ordersCollection = admin.firestore().collection('orders');
+    let orderRef;
+    if (action === ActionType.CREATE) {
+      orderRef = await pendingCollection.add(updatedOrder);
+    } else if (action === ActionType.UPDATE) {
+      orderRef = ordersCollection.doc(order.id);
+      await orderRef.set(updatedOrder);
+      await pendingCollection.doc(order.id).delete();
     }
-    return { id: newOrderRef.key };
+    return { id: orderRef.id };
   } catch (err) {
     handleError(`An error occurred while ${action === ActionType.UPDATE ? 'updating' : 'creating' } the order`, err);
   }

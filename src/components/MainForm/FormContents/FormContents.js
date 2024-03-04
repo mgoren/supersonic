@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Form, useFormikContext } from 'formik';
-import { cache, getFirstInvalidFieldName, sanitizeObject } from 'utils';
+import { getFirstInvalidFieldName, sanitizeObject } from 'utils';
 import People from '../People';
 import PaymentInfo from '../PaymentInfo';
 import ButtonRow from 'components/ButtonRow';
@@ -40,8 +40,7 @@ export default function FormContents({ currentPage, setCurrentPage, order, setOr
   }
 
   function handleClickBackButton() {
-    const orderInProgress = Object.assign({}, values);
-    cache('order', orderInProgress);
+    setOrder(values);
     formik.setSubmitting(false);
     setCurrentPage(currentPage - 1);
   }

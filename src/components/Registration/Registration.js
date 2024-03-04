@@ -12,8 +12,9 @@ import Receipt from "components/Receipt";
 import { cache, cached } from 'utils';
 import { Typography, Button } from "@mui/material";
 import { StyledPaper, Paragraph } from 'components/Layout/SharedStyles';
+import { useOrder } from 'components/OrderContext';
 import config from 'config';
-const { PAYMENT_METHODS, PAYPAL_OPTIONS, ORDER_DEFAULTS, TITLE, CONFIRMATION_CHECK_TITLE, CONFIRMATION_PAYPAL_TITLE, SANDBOX_MODE, SHOW_PRE_REGISTRATION } = config;
+const { PAYMENT_METHODS, PAYPAL_OPTIONS, TITLE, CONFIRMATION_CHECK_TITLE, CONFIRMATION_PAYPAL_TITLE, SANDBOX_MODE, SHOW_PRE_REGISTRATION } = config;
 
 export default function Registration() {
   const [registering, setRegistering] = useState(false);
@@ -38,13 +39,13 @@ const PreRegistration = ({ setRegistering }) => {
 }
 
 const RealRegistration = () => {
-  const [order, setOrder] = useState(cached('order') || ORDER_DEFAULTS);
-  // const [order, setOrder] = useOrder();
+  const { state, dispatch } = useOrder();
+  const order = state;
+  const setOrder = (newOrder) => dispatch({ type: 'UPDATE_ORDER', payload: newOrder });
   const [currentPage, setCurrentPage] = useState(cached('currentPage') || 1);
   const [error, setError] = useState(null);
   const CONFIRMATION_TITLE = order.paymentId === 'check' ? CONFIRMATION_CHECK_TITLE : CONFIRMATION_PAYPAL_TITLE;
 
-  useEffect(() => { cache('order', order) }, [order]);
   useEffect(() => { cache('currentPage', currentPage) }, [currentPage]);
 
   const content = (

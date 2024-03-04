@@ -28,4 +28,14 @@ export const OrderProvider = ({ children }) => {
   return <OrderContext.Provider value={value}>{children}</OrderContext.Provider>;
 };
 
-export const useOrder = () => useContext(OrderContext);
+export function useOrder() {
+  const context = useContext(OrderContext);
+  if (!context) throw new Error('useOrder must be used within an OrderProvider');
+  const { state, dispatch } = context;
+
+  // expose shortcuts for common operations
+  const setOrder = (order) => dispatch({ type: 'UPDATE_ORDER', payload: order });
+  const resetOrder = () => dispatch({ type: 'RESET_ORDER' });
+
+  return { order: state, setOrder, resetOrder, dispatch };
+}

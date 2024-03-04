@@ -39,9 +39,7 @@ const PreRegistration = ({ setRegistering }) => {
 }
 
 const RealRegistration = () => {
-  const { state, dispatch } = useOrder();
-  const order = state;
-  const setOrder = (newOrder) => dispatch({ type: 'UPDATE_ORDER', payload: newOrder });
+  const { order, setOrder } = useOrder();
   const [currentPage, setCurrentPage] = useState(cached('currentPage') || 1);
   const [error, setError] = useState(null);
   const CONFIRMATION_TITLE = order.paymentId === 'check' ? CONFIRMATION_CHECK_TITLE : CONFIRMATION_PAYPAL_TITLE;

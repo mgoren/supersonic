@@ -30,7 +30,7 @@ try {
   const orders = getOrders(ordersSnapshot);
     
   const pendingOrdersMissingFromOrders = pendingOrders.filter((pendingOrder) => {
-    return !orders.some((order) => order.uuid === pendingOrder.uuid);
+    return !orders.some((order) => order.idempotencyKey === pendingOrder.idempotencyKey);
   });
   for (const order of pendingOrdersMissingFromOrders) {
     console.log(order.key, order.people[0].email);

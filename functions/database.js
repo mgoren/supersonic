@@ -12,7 +12,7 @@ if (admin.apps.length === 0) {
   admin.initializeApp();
 }
 
-export const createOrder = functions.runWith({ enforceAppCheck: true }).https.onCall(async (data) => {
+export const createOrUpdateOrder = functions.runWith({ enforceAppCheck: true }).https.onCall(async (data) => {
   const { action, order } = data;
   const createdAt = admin.firestore.FieldValue.serverTimestamp();
   const filteredOrder = filterObject(order, validFields);
@@ -22,7 +22,9 @@ export const createOrder = functions.runWith({ enforceAppCheck: true }).https.on
     const ordersCollection = admin.firestore().collection('orders');
     let orderRef;
     if (action === ActionType.CREATE) {
-      orderRef = await pendingCollection.add(updatedOrder);
+      const { idempotencyKey } = updatedOrder;
+      const existingOrder = await pendingCollection.where('idempotencyKey', '==', idempotencyKey).get();
+      orderRef = existingOrder.empty ? await pendingCollection.add(updatedOrder) : pendingCollection.doc(existingOrder.docs[0].id);
     } else if (action === ActionType.UPDATE) {
       orderRef = ordersCollection.doc(order.id);
       await orderRef.set(updatedOrder);

@@ -5,6 +5,7 @@ import {loadStripe} from '@stripe/stripe-js';
 import Loading from 'components/Loading';
 import { Box } from '@mui/material';
 import StripeCheckoutForm from 'components/StripeCheckoutForm';
+import { fullName } from 'utils';
 import config from 'config';
 const { SANDBOX_MODE, PAYMENT_METHODS } = config;
 const functions = getFunctions();
@@ -12,7 +13,7 @@ const createStripePaymentIntent = httpsCallable(functions, 'createStripePaymentI
 const cancelStripePaymentIntent = httpsCallable(functions, 'cancelStripePaymentIntent');
 const stripePromise = PAYMENT_METHODS.includes('stripe') ? await loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY) : null;
 
-export default function StripeCheckoutWrapper({ total, name, email, processing, setProcessing, setError, saveOrderToFirebase, setOrder }) {
+export default function StripeCheckoutWrapper({ total, processing, setProcessing, setError, saveOrderToFirebase, order, setOrder }) {
   const [clientSecret, setClientSecret] = useState(null);
   const clientSecretRef = useRef(null);
 
@@ -20,14 +21,15 @@ export default function StripeCheckoutWrapper({ total, name, email, processing, 
     try {
       const { data } = await createStripePaymentIntent({
         amount: total, // amount in dollars
-        name,
-        email
+        name: fullName(order.people[0]),
+        email: order.people[0].email,
+        idempotencyKey: order.idempotencyKey
       });
       setClientSecret(data.clientSecret);
     } catch (error) {
       console.error(error);
     }
-  }, [total, name, email]);
+  }, [total, order]);
   
   const cancelPaymentIntent = async () => {
     const paymentIntentId = clientSecretRef.current.split('_secret_')[0];

@@ -15,7 +15,7 @@ import StripeCheckoutWrapper from "components/StripeCheckoutWrapper";
 import config from 'config';
 const { PAYMENT_METHODS, EMAIL_CONTACT, NUM_PAGES } = config;
 const functions = getFunctions();
-const createOrder = httpsCallable(functions, 'createOrder');
+const createOrUpdateOrder = httpsCallable(functions, 'createOrUpdateOrder');
 const ActionType = {
   CREATE: 'CREATE',
   UPDATE: 'UPDATE'
@@ -40,7 +40,7 @@ export default function Checkout({ order, setOrder, setError, setCurrentPage }) 
   const updateOrderInFirebase = useCallback(async () => {
     setProcessingMessage(order.paymentId === 'check' ? 'Updating registration...' : 'Payment successful. Updating registration...');
     try {
-      await createOrder({
+      await createOrUpdateOrder({
         action: ActionType.UPDATE,
         order
       });
@@ -81,14 +81,14 @@ export default function Checkout({ order, setOrder, setError, setCurrentPage }) 
       people: order.people.map(updateApartment),
       paymentMethod,
       paymentId: 'PENDING',
-      uuid: order.uuid || crypto.randomUUID()
+      idempotencyKey: order.idempotencyKey || crypto.randomUUID()
     };
     const receipt = renderToStaticMarkup(<Receipt order={initialOrder} currentPage='confirmation' checkPayment={paymentMethod === 'check'} />);
     const additionalPersonReceipt = renderToStaticMarkup(<AdditionalPersonReceipt order={initialOrder} checkPayment={paymentMethod === 'check'} />);
     const initialOrderWithReceipt = { ...initialOrder, receipt, additionalPersonReceipt };
 
     try {
-      const { data } = await createOrder({
+      const { data } = await createOrUpdateOrder({
         action: ActionType.CREATE,
         order: initialOrderWithReceipt
       });
@@ -123,7 +123,7 @@ export default function Checkout({ order, setOrder, setError, setCurrentPage }) 
             setError={setError}
             processing={processing} setProcessing={setProcessing}
             saveOrderToFirebase={saveOrderToFirebase}
-            setOrder={setOrder}
+            order={order} setOrder={setOrder}
           />
         }
 

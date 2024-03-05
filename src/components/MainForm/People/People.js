@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useOrder } from 'components/OrderContext';
 import { useFormikContext } from 'formik';
 import { Box } from '@mui/material';
 import PersonForm from '../PersonForm';
@@ -8,7 +9,8 @@ import config from 'config';
 import { PersonContainerAccordion } from 'components/OrderSummary';
 const { ADMISSION_QUANTITY_MAX, PERSON_DEFAULTS } = config;
 
-export default function People({ order, setOrder, resetForm, saveForm }) {
+export default function People({ resetForm, saveForm }) {
+  const { order, setOrder } = useOrder();
   const [editIndex, setEditIndex] = useState(order.people[0].email === '' ? 0 : null);
   const [isNewPerson, setIsNewPerson] = useState(false);
 
@@ -48,7 +50,7 @@ export default function People({ order, setOrder, resetForm, saveForm }) {
             <Box key={index}>
               {index !== editIndex && person.email && 
                 <PersonContainerAccordion
-                  order={order}
+                  person={person}
                   personIndex={index}
                   showButtons={editIndex === null}
                   setEditIndex={setEditIndex} 
@@ -64,7 +66,6 @@ export default function People({ order, setOrder, resetForm, saveForm }) {
         <>
           <StyledPaper>
             <PersonForm
-              order={order}
               editIndex={editIndex} setEditIndex={setEditIndex}
               resetForm={resetForm}
               saveForm={saveForm}

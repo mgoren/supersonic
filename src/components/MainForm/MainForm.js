@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useOrder } from 'components/OrderContext';
 import { Formik } from 'formik';
 import { sanitizeObject, warnBeforeUserLeavesSite } from 'utils';
 import FormContents from "./FormContents";
@@ -7,7 +8,8 @@ import countryMapping from 'countryMapping';
 import config from 'config';
 const { NUM_PAGES } = config;
 
-export default function MainForm({ order, setOrder, currentPage, setCurrentPage }) {
+export default function MainForm({ currentPage, setCurrentPage }) {
+  const { order, setOrder } = useOrder();
 
   useEffect(() => {
     if (window.location.hostname !== 'localhost') {
@@ -34,7 +36,6 @@ export default function MainForm({ order, setOrder, currentPage, setCurrentPage 
     >
       <FormContents
         currentPage={currentPage} setCurrentPage={setCurrentPage}
-        order={order} setOrder={setOrder}
       />
     </Formik>
   );

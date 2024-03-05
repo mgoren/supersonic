@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
+import { useOrder } from 'components/OrderContext';
 import {useStripe, useElements, PaymentElement} from '@stripe/react-stripe-js';
 import Loading from 'components/Loading';
 import { Box, Button } from '@mui/material';
 import config from 'config';
 const { EMAIL_CONTACT } = config;
 
-export default function StripeCheckoutForm({ setError, processing, setProcessing, clientSecretRef, saveOrderToFirebase, setOrder }) {
+export default function StripeCheckoutForm({ setError, processing, setProcessing, clientSecretRef, saveOrderToFirebase }) {
+  const { setOrder } = useOrder();
   const [ready, setReady] = useState(false);
   const stripe = useStripe();
   const elements = useElements();
@@ -19,8 +21,8 @@ export default function StripeCheckoutForm({ setError, processing, setProcessing
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!stripe || !elements) return;
-    const order = await saveOrderToFirebase();
-    if (order) processPayment(order);
+    const savedOrder = await saveOrderToFirebase();
+    if (savedOrder) processPayment(savedOrder);
   };
 
   const processPayment = async (order) => {

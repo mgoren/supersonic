@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useOrder } from 'components/OrderContext';
 import { Form, useFormikContext } from 'formik';
 import { getFirstInvalidFieldName, sanitizeObject } from 'utils';
 import People from '../People';
@@ -10,7 +11,8 @@ import { StyledPaper } from 'components/Layout/SharedStyles';
 import config from 'config';
 const { NUM_PAGES } = config;
 
-export default function FormContents({ currentPage, setCurrentPage, order, setOrder }) {
+export default function FormContents({ currentPage, setCurrentPage }) {
+  const { order, setOrder } = useOrder();
   const formik = useFormikContext();
   const { values } = formik;
   const [donate, setDonate] = useState(values.donation > 0);
@@ -49,14 +51,12 @@ export default function FormContents({ currentPage, setCurrentPage, order, setOr
     <Form spellCheck='false'>
       {currentPage === 1 &&
         <People
-          order={order} setOrder={setOrder}
           resetForm={resetForm}
           saveForm={saveForm}
         />
       }
       {currentPage === 2 &&
         <PaymentInfo
-          order={order}
           donate={donate} setDonate={setDonate}
         />
       }

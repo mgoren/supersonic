@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useOrder } from 'components/OrderContext';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { scrollToTop, warnBeforeUserLeavesSite, fullName } from 'utils';
@@ -21,7 +22,8 @@ const ActionType = {
   UPDATE: 'UPDATE'
 };
 
-export default function Checkout({ order, setOrder, setError, setCurrentPage }) {
+export default function Checkout({ setError, setCurrentPage }) {
+  const { order, setOrder } = useOrder();
   const [paying, setPaying] = useState(null);
   const [processing, setProcessing] = useState(null);
   const [processingMessage, setProcessingMessage] = useState(null);
@@ -123,7 +125,6 @@ export default function Checkout({ order, setOrder, setError, setCurrentPage }) 
             setError={setError}
             processing={processing} setProcessing={setProcessing}
             saveOrderToFirebase={saveOrderToFirebase}
-            order={order} setOrder={setOrder}
           />
         }
 
@@ -135,7 +136,6 @@ export default function Checkout({ order, setOrder, setError, setCurrentPage }) 
             setPaying={setPaying} 
             processing={processing}
             saveOrderToFirebase={saveOrderToFirebase}
-            setOrder={setOrder}
           />
         }
 
@@ -144,7 +144,6 @@ export default function Checkout({ order, setOrder, setError, setCurrentPage }) 
             <Check 
               processing={processing}
               saveOrderToFirebase={saveOrderToFirebase}
-              setOrder={setOrder}
             />
           </>
         }

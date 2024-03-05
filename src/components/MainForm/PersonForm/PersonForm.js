@@ -1,10 +1,12 @@
+import { useOrder } from 'components/OrderContext';
 import { useFormikContext } from 'formik';
 import { Box } from '@mui/material';
 import ContactInfo from '../ContactInfo';
 import MiscInfo from '../MiscInfo';
 import ButtonRow from 'components/ButtonRow';
 
-export default function PersonForm({ editIndex, setEditIndex, saveForm, order, resetForm, isNewPerson, setIsNewPerson }) {
+export default function PersonForm({ editIndex, setEditIndex, saveForm, resetForm, isNewPerson, setIsNewPerson }) {
+  const { order } = useOrder();
   const formik = useFormikContext();
   const { values, setFieldValue } = formik;
 

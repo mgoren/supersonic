@@ -6,6 +6,7 @@ import { StyledLink } from 'components/Layout/SharedStyles';
 import config from 'config';
 const { COVID_POLICY_URL, CHECK_TO, CHECK_ADDRESS, EVENT_TITLE, ADMISSION_COST_RANGE, PAYMENT_DUE_DATE } = config;
 
+// relies on passing order as prop to ensure is updated
 export default function Receipt({ order, checkPayment }) {
   checkPayment ??= order.paymentId === 'check'; // checkPayment needs to be passed when saving receipts for email
   useEffect(() => { scrollToTop() },[]);

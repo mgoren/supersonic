@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useOrder } from 'components/OrderContext';
 import { scrollToTop, clamp } from 'utils';
 import { RightAlignedInput } from '../Input';
 import { StyledPaper, Title, Paragraph } from 'components/Layout/SharedStyles';
@@ -8,7 +9,8 @@ import { SlidingScaleSummaryExplanation } from 'components/Static/PaymentExplana
 import config from 'config';
 const { DEPOSIT_MIN, ADMISSION_COST_RANGE, DONATION_OPTION, DONATION_RANGE, PAYMENT_DUE_DATE } = config;
 
-export default function PaymentInfo({ order, donate, setDonate }) {
+export default function PaymentInfo({ donate, setDonate }) {
+  const { order } = useOrder();
   const admissionsTotal = order.people.reduce((total, person) => total + person.admissionCost, 0);
   // console.log('admissionsTotal', typeof admissionsTotal)
   const priceRange = [DEPOSIT_MIN, ADMISSION_COST_RANGE[1]];

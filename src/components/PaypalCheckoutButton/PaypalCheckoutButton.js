@@ -1,11 +1,13 @@
 import { useEffect } from "react";
+import { useOrder } from 'components/OrderContext';
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 import Loading from 'components/Loading';
 import { Typography, Box } from "@mui/material";
 import config from 'config';
 const { SANDBOX_MODE, EMAIL_CONTACT, EVENT_TITLE } = config;
 
-const PaypalCheckoutButton = ({ paypalButtonsLoaded, setPaypalButtonsLoaded, total, setError, setPaying, processing, saveOrderToFirebase, setOrder }) => {
+const PaypalCheckoutButton = ({ paypalButtonsLoaded, setPaypalButtonsLoaded, total, setError, setPaying, processing, saveOrderToFirebase }) => {
+	const { setOrder } = useOrder();
 	const [, isResolved] = usePayPalScriptReducer();
 
 	// this feels hella hacky, but sometimes the buttons don't render despite isResolved
@@ -45,10 +47,10 @@ const PaypalCheckoutButton = ({ paypalButtonsLoaded, setPaypalButtonsLoaded, tot
 	};
 
 	const onApprove = async (data, actions) => {
-		const order = await saveOrderToFirebase();
-		if (order) {
+		const savedOrder = await saveOrderToFirebase();
+		if (savedOrder) {
 			const paypalOrder = await actions.order.capture();
-			setOrder({ ...order, paymentId: paypalOrder.payer.email_address })
+			setOrder({ ...savedOrder, paymentId: paypalOrder.payer.email_address })
 		}
 	};
 

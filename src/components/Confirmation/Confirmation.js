@@ -1,13 +1,12 @@
-import { clearCache } from 'utils';
+import { useOrder } from 'components/OrderContext';
 import ButtonRow from 'components/ButtonRow';
 import { StyledPaper } from 'components/Layout/SharedStyles';
-import config from 'config';
-const { ORDER_DEFAULTS } = config;
 
-export default function Confirmation({ setOrder, setCurrentPage }) {
+export default function Confirmation({ setCurrentPage }) {
+  const { resetOrder } = useOrder();
+
   function startOver() {
-    clearCache();
-    setOrder(ORDER_DEFAULTS);
+    resetOrder();
     setCurrentPage(1);
   }
 

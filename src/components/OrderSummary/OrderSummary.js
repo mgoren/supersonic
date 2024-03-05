@@ -8,6 +8,7 @@ import ButtonRow from 'components/ButtonRow';
 import config from 'config';
 const { ORDER_SUMMARY_OPTIONS, ADMISSION_COST_RANGE, PAYMENT_DUE_DATE } = config;
 
+// order is passed as prop to be sure it is most up-to-date when coming from receipt
 export default function OrderSummary({ order, currentPage }) {
   const admissions = order.people.map(person => person.admissionCost);
   const admissionsTotal = admissions.reduce((total, admission) => total + admission, 0);
@@ -72,9 +73,8 @@ function PersonContainerDotted({ person }) {
   );
 }
 
-export function PersonContainerAccordion({ order, personIndex, showButtons, handleEdit, handleDelete }) {
+export function PersonContainerAccordion({ person, personIndex, showButtons, handleEdit, handleDelete }) {
   const [expanded, setExpanded] = useState(false);
-  const person = order.people[personIndex];
   return (
     <Box sx={{ mt: 2 }}>
       <Accordion expanded={expanded} onChange={ () => setExpanded(!expanded) }>

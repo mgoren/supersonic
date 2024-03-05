@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { useOrder } from 'components/OrderContext';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import {Elements} from '@stripe/react-stripe-js';
 import {loadStripe} from '@stripe/stripe-js';
@@ -13,7 +14,8 @@ const createStripePaymentIntent = httpsCallable(functions, 'createStripePaymentI
 const cancelStripePaymentIntent = httpsCallable(functions, 'cancelStripePaymentIntent');
 const stripePromise = PAYMENT_METHODS.includes('stripe') ? await loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY) : null;
 
-export default function StripeCheckoutWrapper({ total, processing, setProcessing, setError, saveOrderToFirebase, order, setOrder }) {
+export default function StripeCheckoutWrapper({ total, processing, setProcessing, setError, saveOrderToFirebase }) {
+  const { order } = useOrder();
   const [clientSecret, setClientSecret] = useState(null);
   const clientSecretRef = useRef(null);
 
@@ -73,7 +75,6 @@ export default function StripeCheckoutWrapper({ total, processing, setProcessing
             processing={processing} setProcessing={setProcessing}
             clientSecretRef={clientSecretRef}
             saveOrderToFirebase={saveOrderToFirebase}
-            setOrder={setOrder}
           />
         </Elements>
       :

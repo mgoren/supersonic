@@ -6,19 +6,17 @@ import { appendrecordtospreadsheet } from './google-sheet-sync.js';
 import {
   createStripePaymentIntent as createStripePaymentIntentOriginal,
   updateStripePaymentIntent as updateStripePaymentIntentOriginal,
-  cancelStripePaymentIntent as cancelStripePaymentIntentOriginal
 } from './stripe.js';
 
 if (admin.apps.length === 0) {
   admin.initializeApp();
 }
 
-export { sendEmailConfirmation, createOrUpdateOrder, appendrecordtospreadsheet };
+export { createOrUpdateOrder, sendEmailConfirmation, appendrecordtospreadsheet };
 
-let createStripePaymentIntent, updateStripePaymentIntent, cancelStripePaymentIntent;
+let createStripePaymentIntent, updateStripePaymentIntent;
 if (functions.config().stripe?.secret_key) {
   createStripePaymentIntent = createStripePaymentIntentOriginal;
   updateStripePaymentIntent = updateStripePaymentIntentOriginal;
-  cancelStripePaymentIntent = cancelStripePaymentIntentOriginal;
 }
-export { createStripePaymentIntent, updateStripePaymentIntent, cancelStripePaymentIntent };
+export { createStripePaymentIntent, updateStripePaymentIntent };

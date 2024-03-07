@@ -1,6 +1,7 @@
 import * as functions from "firebase-functions";
 import admin from 'firebase-admin';
 import stripeModule from "stripe";
+import { handleError } from "./helpers.js";
 
 const stripe = stripeModule(functions.config().stripe.secret_key);
 const statement_descriptor_suffix = functions.config().stripe.statement_descriptor_suffix; // appended to statement descriptor set in Stripe dashboard
@@ -23,30 +24,26 @@ export const createStripePaymentIntent = functions.runWith({ enforceAppCheck: tr
       { idempotencyKey }
     );
     return { clientSecret: paymentIntent.client_secret };
-  } catch (error) {
-    throw new functions.https.HttpsError('internal', 'Server error', error);
+  } catch (err) {
+    handleError('An error occurred while creating the Stripe Payment Intent', {
+      error: err.message,
+      data: JSON.stringify(data)
+    });
   }
 });
 
 export const updateStripePaymentIntent = functions.runWith({ enforceAppCheck: true }).https.onCall(async (data) => {
-  const { clientSecret, amount } = data;
+  const { paymentIntentId, amount } = data;
   try {
-    await stripe.paymentIntents.update(clientSecret, {
+    await stripe.paymentIntents.update(paymentIntentId, {
       amount: amount * 100 // amount in cents
     });
     return { result: 'Stripe Payment Intent updated successfully' };
-  } catch (error) {
-    throw new functions.https.HttpsError('internal', 'Server error', error);
-  }
-});
-
-export const cancelStripePaymentIntent = functions.runWith({ enforceAppCheck: true }).https.onCall(async (data) => {
-  const { paymentIntentId } = data;
-  try {
-    const paymentIntent = await stripe.paymentIntents.cancel(paymentIntentId);
-    return { paymentIntent };
-  } catch (error) {
-    throw new functions.https.HttpsError('internal', 'Server error', error);
+  } catch (err) {
+    handleError('An error occurred while updating the Stripe Payment Intent', {
+      error: err.message,
+      data: JSON.stringify(data)
+    });
   }
 });
 

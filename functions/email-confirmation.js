@@ -27,11 +27,9 @@ export const sendEmailConfirmation = functions.firestore.document(`${CONFIG_DATA
       from: emailConfig.from,
       to: person.email,
       subject: emailConfig.subject,
-      html: receipt
+      html: receipt,
+      ...(emailConfig.reply_to && {replyTo: emailConfig.reply_to})
     };
-    if (emailConfig.reply_to) {
-      mailOptions.replyTo = emailConfig.reply_to;
-    }
     try {
       await mailTransport.sendMail(mailOptions);
       functions.logger.log(`Receipt sent to:`, person.email);
@@ -39,6 +37,5 @@ export const sendEmailConfirmation = functions.firestore.document(`${CONFIG_DATA
       functions.logger.error('There was an error while sending the email confirmation:', error);
     }
   }
-
   return null;
 });

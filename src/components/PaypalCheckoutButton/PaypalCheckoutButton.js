@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import { useOrder } from 'components/OrderContext';
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 import Loading from 'components/Loading';
@@ -6,8 +6,8 @@ import { Typography, Box } from "@mui/material";
 import config from 'config';
 const { SANDBOX_MODE, EMAIL_CONTACT, EVENT_TITLE } = config;
 
-const PaypalCheckoutButton = ({ paypalButtonsLoaded, setPaypalButtonsLoaded, total, setError, setPaying, processing, saveOrderToFirebase }) => {
-	const { setOrder } = useOrder();
+const PaypalCheckoutButton = ({ paypalButtonsLoaded, setPaypalButtonsLoaded, total, setError, setPaying, processing, prepOrderForFirebase }) => {
+	const { order, setOrder } = useOrder();
 	const [, isResolved] = usePayPalScriptReducer();
 
 	// this feels hella hacky, but sometimes the buttons don't render despite isResolved
@@ -30,6 +30,17 @@ const PaypalCheckoutButton = ({ paypalButtonsLoaded, setPaypalButtonsLoaded, tot
 		});
 	}, [setPaypalButtonsLoaded]);
 
+	const processPayment = useCallback(async (actions) => {
+		const paypalOrder = await actions.order.capture();
+		setOrder({ ...order, paymentId: paypalOrder.payer.email_address })
+	}, [order, setOrder]);
+
+	useEffect(() => {
+    if (order.paymentId === 'PENDING') {
+      processPayment();
+    }
+  }, [order.paymentId, processPayment]);
+
 	const createOrder = (data, actions) => {
 		return actions.order.create({
 			purchase_units: [
@@ -47,11 +58,7 @@ const PaypalCheckoutButton = ({ paypalButtonsLoaded, setPaypalButtonsLoaded, tot
 	};
 
 	const onApprove = async (data, actions) => {
-		const savedOrder = await saveOrderToFirebase();
-		if (savedOrder) {
-			const paypalOrder = await actions.order.capture();
-			setOrder({ ...savedOrder, paymentId: paypalOrder.payer.email_address })
-		}
+		prepOrderForFirebase(actions);
 	};
 
 	const onError = (err) => {

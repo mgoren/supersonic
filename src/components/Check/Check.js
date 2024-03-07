@@ -1,23 +1,30 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useOrder } from 'components/OrderContext';
 import { Typography, Button } from '@mui/material';
 import Loading from 'components/Loading';
 import config from 'config';
 const { CHECK_ADDRESS, CHECK_TO, SANDBOX_MODE } = config;
 
-export default function Check({ saveOrderToFirebase, processing }) {
-  const { setOrder } = useOrder();
+export default function Check({ prepOrderForFirebase, processing }) {
+  const { order, setOrder } = useOrder();
   const [verified, setVerified] = useState(SANDBOX_MODE);
 
   setTimeout(() => {
     setVerified(true);
   }, 5000);
 
-  const handleRegister = async () => {
-    const savedOrder = await saveOrderToFirebase();
-    if (savedOrder) {
-      setOrder({ ...savedOrder, paymentId: 'check' })
+  const processPayment = useCallback(() => {
+    setOrder({ ...order, paymentId: 'check' });
+  }, [order, setOrder]);
+
+  useEffect(() => {
+    if (order.paymentId === 'PENDING') {
+      processPayment();
     }
+  }, [order.paymentId, processPayment]);
+
+  const handleRegister = async () => {
+    prepOrderForFirebase();
   }
 
   return (

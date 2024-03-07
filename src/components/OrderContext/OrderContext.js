@@ -1,4 +1,4 @@
-import { createContext, useReducer, useContext, useEffect } from 'react';
+import { createContext, useState, useReducer, useContext, useEffect } from 'react';
 import { cache, cached } from 'utils';
 import config from 'config';
 const { ORDER_DEFAULTS } = config;
@@ -19,23 +19,20 @@ function orderReducer(state, action) {
 }
 
 export const OrderProvider = ({ children }) => {
-  const initialState = cached('order') || ORDER_DEFAULTS;
-  const [state, dispatch] = useReducer(orderReducer, initialState);
+  const initialOrderState = cached('order') || ORDER_DEFAULTS;
+  const [order, dispatch] = useReducer(orderReducer, initialOrderState);
+  const [ clientSecret, setClientSecret ] = useState(null);
 
-  useEffect(() => { cache('order', state) }, [state]);
+  useEffect(() => { cache('order', order) }, [order]);
   
-  const value = { state, dispatch };
+  const setOrder = (orderData) => dispatch({ type: 'UPDATE_ORDER', payload: orderData });
+  const resetOrder = () => {
+    dispatch({ type: 'RESET_ORDER' });
+    setClientSecret(null);
+  }
+
+  const value = { order, setOrder, resetOrder, clientSecret, setClientSecret };
   return <OrderContext.Provider value={value}>{children}</OrderContext.Provider>;
 };
 
-export function useOrder() {
-  const context = useContext(OrderContext);
-  if (!context) throw new Error('useOrder must be used within an OrderProvider');
-  const { state, dispatch } = context;
-
-  // expose shortcuts for common operations
-  const setOrder = (order) => dispatch({ type: 'UPDATE_ORDER', payload: order });
-  const resetOrder = () => dispatch({ type: 'RESET_ORDER' });
-
-  return { order: state, setOrder, resetOrder, dispatch };
-}
+export const useOrder = () => useContext(OrderContext);

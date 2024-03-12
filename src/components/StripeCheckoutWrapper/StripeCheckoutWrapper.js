@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useOrder } from 'components/OrderContext';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import {Elements} from '@stripe/react-stripe-js';
@@ -15,7 +15,8 @@ const updateStripePaymentIntent = httpsCallable(functions, 'updateStripePaymentI
 const stripePromise = PAYMENT_METHODS.includes('stripe') ? await loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY) : null;
 
 export default function StripeCheckoutWrapper({ total, processCheckout }) {
-  const { order, clientSecret, setClientSecret, setError } = useOrder();
+  const { order, clientSecret, setClientSecret, setError, lastUpdatedTotal, setLastUpdatedTotal } = useOrder();
+  const [ready, setReady] = useState(false);
 
   const createPaymentIntent = useCallback(async () => {
     try {
@@ -28,11 +29,13 @@ export default function StripeCheckoutWrapper({ total, processCheckout }) {
       });
       console.log('Stripe payment intent created in', new Date() - startTime, 'ms');
       setClientSecret(data.clientSecret);
+      setLastUpdatedTotal(total);
+      setReady(true);
     } catch (error) {
       console.error(error);
       setError(`We encountered an error initializing Stripe. Please try again or contact ${EMAIL_CONTACT}.`);
     }
-  }, [total, order, setClientSecret, setError]);
+  }, [total, order, setClientSecret, setError, setReady, setLastUpdatedTotal]);
 
   const updatePaymentIntent = useCallback(async () => {
     const startTime = new Date();
@@ -44,19 +47,23 @@ export default function StripeCheckoutWrapper({ total, processCheckout }) {
         amount: total, // amount in dollars
       });
       console.log('Stripe payment intent updated in', new Date() - startTime, 'ms');
+      setLastUpdatedTotal(total);
+      setReady(true);
     } catch (error) {
       console.error(error);
       setError(`We encountered an error initializing Stripe. Please try again or contact ${EMAIL_CONTACT}.`);
     }
-  }, [total, clientSecret, setError]);
+  }, [total, clientSecret, setError, setReady, setLastUpdatedTotal]);
 
   useEffect(() => {
-    if (!clientSecret) createPaymentIntent();
-  }, [createPaymentIntent, clientSecret]);
-
-  useEffect(() => {
-    updatePaymentIntent();
-  }, [updatePaymentIntent, total]);
+    if (clientSecret && total === lastUpdatedTotal) {
+      setReady(true);
+    } else if (clientSecret) {
+      updatePaymentIntent();
+    } else {
+      createPaymentIntent();
+    }
+  }, [createPaymentIntent, updatePaymentIntent, setReady, clientSecret, total, lastUpdatedTotal]);
 
   return (
     <>
@@ -66,7 +73,7 @@ export default function StripeCheckoutWrapper({ total, processCheckout }) {
         </Box>
       }
 
-      {clientSecret ?
+      {ready ?
         <Elements stripe={stripePromise} options={{ clientSecret }} key={clientSecret}>
           <StripeCheckoutForm
             processCheckout={processCheckout}

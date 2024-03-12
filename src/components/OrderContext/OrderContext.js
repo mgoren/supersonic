@@ -33,6 +33,7 @@ export const OrderProvider = ({ children }) => {
   const [processingMessage, setProcessingMessage] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState(PAYMENT_METHODS[0]);
   const [error, setError] = useState(null);
+  const [lastUpdatedTotal, setLastUpdatedTotal] = useState(null);
 
   useEffect(() => { cache('order', order) }, [order]);
   useEffect(() => { cache('currentPage', currentPage) }, [currentPage]);
@@ -59,6 +60,7 @@ export const OrderProvider = ({ children }) => {
     processingMessage, setProcessingMessage,
     error, setError,
     paymentMethod, setPaymentMethod,
+    lastUpdatedTotal, setLastUpdatedTotal
   };
   return <OrderContext.Provider value={value}>{children}</OrderContext.Provider>;
 };

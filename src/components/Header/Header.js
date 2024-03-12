@@ -1,10 +1,13 @@
+import { useOrder } from 'components/OrderContext';
 import { StyledPaper } from 'components/Layout/SharedStyles';
 import { Typography, Divider, Hidden } from "@mui/material";
 import { MyStepper } from 'components/MyStepper';
 import config from 'config';
 const { TITLE } = config;
 
-export default function Header({ titleText = TITLE, currentPage, children }) {
+export default function Header({ titleText = TITLE, children }) {
+  const { currentPage } = useOrder();
+
   return (
     <StyledPaper>
       <Typography variant="h4" component="h1" align="center" gutterBottom>

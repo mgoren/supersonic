@@ -3,7 +3,7 @@ import { Box, Typography } from '@mui/material';
 import config from 'config';
 const { EMAIL_CONTACT } = config;
 
-export default function Loading({ text, isHeading=true, processing=false }) {
+export default function Loading({ text='Thinking...', isHeading=true, processing=false }) {
   return (
     <Box align='center' sx={{ my: 10 }}>
       <TailSpin stroke='black' strokeWidth='2.5' />

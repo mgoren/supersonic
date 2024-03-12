@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from "react";
+import { useEffect } from "react";
 import { useOrder } from 'components/OrderContext';
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 import Loading from 'components/Loading';
@@ -6,8 +6,8 @@ import { Typography, Box } from "@mui/material";
 import config from 'config';
 const { SANDBOX_MODE, EMAIL_CONTACT, EVENT_TITLE } = config;
 
-const PaypalCheckoutButton = ({ paypalButtonsLoaded, setPaypalButtonsLoaded, total, setError, setPaying, processing, prepOrderForFirebase }) => {
-	const { order, setOrder } = useOrder();
+const PaypalCheckoutButton = ({ paypalButtonsLoaded, setPaypalButtonsLoaded, total, setPaying, processCheckout }) => {
+	const { processing, setError } = useOrder();
 	const [, isResolved] = usePayPalScriptReducer();
 
 	// this feels hella hacky, but sometimes the buttons don't render despite isResolved
@@ -26,26 +26,24 @@ const PaypalCheckoutButton = ({ paypalButtonsLoaded, setPaypalButtonsLoaded, tot
 	useEffect(() => {
 		awaitPayPalButtons(() => {
 			setPaypalButtonsLoaded(true);
-			// console.log("PayPal buttons are present on the screen");
 		});
 	}, [setPaypalButtonsLoaded]);
 
-	const processPayment = useCallback(async (actions) => {
-		const paypalOrder = await actions.order.capture();
-		setOrder({ ...order, paymentId: paypalOrder.payer.email_address })
-	}, [order, setOrder]);
-
-	useEffect(() => {
-    if (order.paymentId === 'PENDING') {
-      processPayment();
-    }
-  }, [order.paymentId, processPayment]);
+	const processPayment = async ({ actions }) => {
+		try {
+			const paypalOrder = await actions.order.capture();
+			return paypalOrder.payer.email_address
+		} catch (err) {
+			setPaying(false);
+			setError(`PayPal encountered an error: ${err}. Please try again or contact ${EMAIL_CONTACT}.`);
+		}
+	};
 
 	const createOrder = (data, actions) => {
 		return actions.order.create({
 			purchase_units: [
 				{
-					description: {EVENT_TITLE},
+					description: `${EVENT_TITLE}`,
 					amount: {
 						value: total.toString() // must be a string
 					}
@@ -58,7 +56,7 @@ const PaypalCheckoutButton = ({ paypalButtonsLoaded, setPaypalButtonsLoaded, tot
 	};
 
 	const onApprove = async (data, actions) => {
-		prepOrderForFirebase(actions);
+		processCheckout({ paymentProcessorFn: processPayment, paymentParams: { actions } });
 	};
 
 	const onError = (err) => {

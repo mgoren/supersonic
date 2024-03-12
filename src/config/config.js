@@ -30,7 +30,7 @@ const ORDER_DEFAULTS = {
 // ***                           Export fields here if added fields above!                   ***
 // *********************************************************************************************
 const config = {
-  SANDBOX_MODE: false, // for testing only
+  SANDBOX_MODE: true, // for testing only
   SHOW_PRE_REGISTRATION: false,
   NUM_PAGES: 2,
   STEPS: [

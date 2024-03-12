@@ -14,17 +14,19 @@ const createStripePaymentIntent = httpsCallable(functions, 'createStripePaymentI
 const updateStripePaymentIntent = httpsCallable(functions, 'updateStripePaymentIntent');
 const stripePromise = PAYMENT_METHODS.includes('stripe') ? await loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY) : null;
 
-export default function StripeCheckoutWrapper({ total, processing, setProcessing, setError, prepOrderForFirebase }) {
-  const { order, clientSecret, setClientSecret } = useOrder();
+export default function StripeCheckoutWrapper({ total, processCheckout }) {
+  const { order, clientSecret, setClientSecret, setError } = useOrder();
 
   const createPaymentIntent = useCallback(async () => {
     try {
+      const startTime = new Date();
       const { data } = await createStripePaymentIntent({
         amount: total, // amount in dollars
         name: fullName(order.people[0]),
         email: order.people[0].email,
         idempotencyKey: order.idempotencyKey
       });
+      console.log('Stripe payment intent created in', new Date() - startTime, 'ms');
       setClientSecret(data.clientSecret);
     } catch (error) {
       console.error(error);
@@ -33,6 +35,7 @@ export default function StripeCheckoutWrapper({ total, processing, setProcessing
   }, [total, order, setClientSecret, setError]);
 
   const updatePaymentIntent = useCallback(async () => {
+    const startTime = new Date();
     if (!clientSecret) return;
     const paymentIntentId = clientSecret.split('_secret_')[0];
     try {
@@ -40,6 +43,7 @@ export default function StripeCheckoutWrapper({ total, processing, setProcessing
         paymentIntentId,
         amount: total, // amount in dollars
       });
+      console.log('Stripe payment intent updated in', new Date() - startTime, 'ms');
     } catch (error) {
       console.error(error);
       setError(`We encountered an error initializing Stripe. Please try again or contact ${EMAIL_CONTACT}.`);
@@ -65,9 +69,7 @@ export default function StripeCheckoutWrapper({ total, processing, setProcessing
       {clientSecret ?
         <Elements stripe={stripePromise} options={{ clientSecret }} key={clientSecret}>
           <StripeCheckoutForm
-            setError={setError}
-            processing={processing} setProcessing={setProcessing}
-            prepOrderForFirebase={prepOrderForFirebase}
+            processCheckout={processCheckout}
           />
         </Elements>
       :

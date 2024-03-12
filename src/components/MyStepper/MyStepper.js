@@ -1,9 +1,12 @@
+import { useOrder } from 'components/OrderContext';
 import { Stepper, Step, StepLabel, MobileStepper, Button } from "@mui/material";
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
 import config from 'config';
 const { STEPS, NUM_PAGES } = config;
 
-export const MyStepper = ({ currentPage }) => {
+export const MyStepper = () => {
+  const { currentPage } = useOrder();
+
   return (
     <Stepper
       activeStep={STEPS.findIndex(step => step.key === currentPage)}
@@ -22,7 +25,9 @@ export const MyStepper = ({ currentPage }) => {
   );
 };
 
-export const MyMobileStepper = ({ currentPage, onClickBack }) => {
+export const MyMobileStepper = ({ onClickBack }) => {
+  const { currentPage } = useOrder();
+
   return (
     <MobileStepper
       variant="dots"

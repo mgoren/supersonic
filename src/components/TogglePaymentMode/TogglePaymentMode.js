@@ -1,12 +1,14 @@
+import { useOrder } from 'components/OrderContext';
 import { Typography, Button } from '@mui/material';
 import config from 'config';
 const { PAYMENT_METHODS } = config;
 
 const switchToCheckText = '(or pay by check)';
-const switchToPaypalText = '(or view online payment options)';
+const switchToElectronicText = '(or view online payment options)';
 
-export default function TogglePaymentMode({ paymentMethod, setPaymentMethod, setError }) {
-  const text = paymentMethod === 'check' ? switchToPaypalText : switchToCheckText;
+export default function TogglePaymentMode() {
+  const { paymentMethod, setPaymentMethod, setError } = useOrder();
+  const text = paymentMethod === 'check' ? switchToElectronicText : switchToCheckText;
   const togglePaymentMethod = () => {
     setError(null);
     setPaymentMethod(paymentMethod === 'check' ? PAYMENT_METHODS[0] : 'check');

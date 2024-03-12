@@ -8,8 +8,8 @@ import countryMapping from 'countryMapping';
 import config from 'config';
 const { NUM_PAGES } = config;
 
-export default function MainForm({ currentPage, setCurrentPage }) {
-  const { order, setOrder } = useOrder();
+export default function MainForm() {
+  const { order, updateOrder, currentPage, setCurrentPage } = useOrder();
 
   useEffect(() => {
     if (window.location.hostname !== 'localhost') {
@@ -24,8 +24,12 @@ export default function MainForm({ currentPage, setCurrentPage }) {
     const submittedOrder = Object.assign({}, values);
     const sanitizedOrder = sanitizeObject(submittedOrder);
     const orderWithCountry = { ...sanitizedOrder, people: sanitizedOrder.people.map(updateCountry) };
-    setOrder(orderWithCountry);
-    setCurrentPage(currentPage === NUM_PAGES ? 'checkout' : currentPage + 1);
+    if (currentPage === NUM_PAGES) {
+      updateOrder({ ...orderWithCountry, status: 'checkout' });
+    } else {
+      updateOrder(orderWithCountry);
+      setCurrentPage(currentPage + 1);
+    }
   }
 
   return (
@@ -34,9 +38,7 @@ export default function MainForm({ currentPage, setCurrentPage }) {
       validationSchema={validationSchema({ currentPage })}
       onSubmit={ (values, actions) => {submitForm(values, actions);} }
     >
-      <FormContents
-        currentPage={currentPage} setCurrentPage={setCurrentPage}
-      />
+      <FormContents />
     </Formik>
   );
 }

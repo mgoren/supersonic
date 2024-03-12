@@ -1,22 +1,23 @@
 import * as functions from 'firebase-functions';
 import admin from 'firebase-admin';
-import { sendEmailConfirmation } from './email-confirmation.js';
 import { savePendingOrder, saveFinalOrder } from './database.js';
+import { sendEmailConfirmations } from './email-confirmation.js';
 import { appendrecordtospreadsheet } from './google-sheet-sync.js';
-import {
-  createStripePaymentIntent as createStripePaymentIntentOriginal,
-  updateStripePaymentIntent as updateStripePaymentIntentOriginal,
-} from './stripe.js';
+import { createStripePaymentIntent as createStripeImport, updateStripePaymentIntent as updateStripeImport } from './stripe.js';
 
-if (admin.apps.length === 0) {
-  admin.initializeApp();
-}
-
-export { savePendingOrder, saveFinalOrder, sendEmailConfirmation, appendrecordtospreadsheet };
+if (admin.apps.length === 0) admin.initializeApp();
 
 let createStripePaymentIntent, updateStripePaymentIntent;
 if (functions.config().stripe?.secret_key) {
-  createStripePaymentIntent = createStripePaymentIntentOriginal;
-  updateStripePaymentIntent = updateStripePaymentIntentOriginal;
+  createStripePaymentIntent = createStripeImport;
+  updateStripePaymentIntent = updateStripeImport;
 }
-export { createStripePaymentIntent, updateStripePaymentIntent };
+
+export {
+  savePendingOrder,
+  saveFinalOrder,
+  sendEmailConfirmations,
+  appendrecordtospreadsheet,
+  createStripePaymentIntent,
+  updateStripePaymentIntent
+};

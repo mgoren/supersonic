@@ -11,8 +11,8 @@ import { StyledPaper } from 'components/Layout/SharedStyles';
 import config from 'config';
 const { NUM_PAGES } = config;
 
-export default function FormContents({ currentPage, setCurrentPage }) {
-  const { order, setOrder } = useOrder();
+export default function FormContents() {
+  const { order, updateOrder, currentPage, setCurrentPage } = useOrder();
   const formik = useFormikContext();
   const { values } = formik;
   const [donate, setDonate] = useState(values.donation > 0);
@@ -33,7 +33,7 @@ export default function FormContents({ currentPage, setCurrentPage }) {
     }
     const updatedOrder = Object.assign({}, values);
     const sanitizedOrder = sanitizeObject(updatedOrder);
-    setOrder(sanitizedOrder);
+    updateOrder(sanitizedOrder);
     return true;
   }
 
@@ -42,7 +42,7 @@ export default function FormContents({ currentPage, setCurrentPage }) {
   }
 
   function handleClickBackButton() {
-    setOrder(values);
+    updateOrder(values);
     formik.setSubmitting(false);
     setCurrentPage(currentPage - 1);
   }
@@ -71,7 +71,7 @@ export default function FormContents({ currentPage, setCurrentPage }) {
         }
       </Hidden>
       <Hidden smUp>
-        <MyMobileStepper currentPage={currentPage} onClickBack={handleClickBackButton} />
+        <MyMobileStepper onClickBack={handleClickBackButton} />
       </Hidden>
     </Form>
   );

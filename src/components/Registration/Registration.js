@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useOrder } from 'components/OrderContext';
-import 'firebase.js'; // initializes firebase
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import MainForm from "components/MainForm";
 import Checkout from "components/Checkout";
@@ -10,7 +9,6 @@ import Header from 'components/Header';
 import IntroHeader from 'components/Header/IntroHeader';
 import OrderSummary from "components/OrderSummary";
 import Receipt from "components/Receipt";
-import { cache, cached } from 'utils';
 import { Typography, Button } from "@mui/material";
 import { StyledPaper, Paragraph } from 'components/Layout/SharedStyles';
 import config from 'config';
@@ -19,7 +17,7 @@ const { PAYMENT_METHODS, PAYPAL_OPTIONS, TITLE, CONFIRMATION_CHECK_TITLE, CONFIR
 export default function Registration() {
   const [registering, setRegistering] = useState(false);
   return (
-    SHOW_PRE_REGISTRATION || SANDBOX_MODE ? (
+    SHOW_PRE_REGISTRATION || (SANDBOX_MODE && window.location.hostname !== 'localhost') ? (
       registering ? <RealRegistration /> : <PreRegistration setRegistering={setRegistering} />
     ) : <RealRegistration />
   );
@@ -39,12 +37,8 @@ const PreRegistration = ({ setRegistering }) => {
 }
 
 const RealRegistration = () => {
-  const { order } = useOrder();
-  const [currentPage, setCurrentPage] = useState(cached('currentPage') || 1);
-  const [error, setError] = useState(null);
+  const { order, currentPage, error } = useOrder();
   const CONFIRMATION_TITLE = order.paymentId === 'check' ? CONFIRMATION_CHECK_TITLE : CONFIRMATION_PAYPAL_TITLE;
-
-  useEffect(() => { cache('currentPage', currentPage) }, [currentPage]);
 
   const content = (
     <>
@@ -53,34 +47,24 @@ const RealRegistration = () => {
           TEST MODE ONLY - DO NOT USE FOR REAL REGISTRATION
         </Box>
       } */}
-      {error && <Error error={error} />}
+      {error && <Error />}
 
-      <Header
-        titleText={currentPage === 'confirmation' ? CONFIRMATION_TITLE : TITLE}
-        currentPage={currentPage}
-      >
+      <Header titleText={currentPage === 'confirmation' ? CONFIRMATION_TITLE : TITLE}>
         {currentPage === 1 && <IntroHeader />}
         {currentPage === 'checkout' && <OrderSummary order={order} currentPage={currentPage} />}
         {currentPage === 'confirmation' && <Receipt order={order} />}
       </Header>
 
       {isFinite(currentPage) &&
-        <MainForm
-          currentPage={currentPage} setCurrentPage={setCurrentPage}
-        />
+        <MainForm />
       }
 
       {currentPage === 'checkout' &&
-        <Checkout
-          setCurrentPage={setCurrentPage}
-          setError={setError}
-        />
+        <Checkout />
       }
 
       {currentPage === 'confirmation' &&
-        <Confirmation
-          setCurrentPage={setCurrentPage}
-        />
+        <Confirmation />
       }
     </>
   )

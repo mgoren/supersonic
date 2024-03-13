@@ -11,7 +11,7 @@ import { DEPOSIT_MIN, ADMISSION_COST_RANGE, ADMISSION_COST_DEFAULT, ADMISSION_QU
 
 // config for this particular registration instance; update this as needed!
 const PERSON_CONTACT_FIELDS = ['first', 'last', 'nametag', 'pronouns', 'email', 'emailConfirmation', 'phone', 'address', 'apartment', 'city', 'state', 'zip', 'country'];
-const PERSON_MISC_FIELDS = ['share', 'dietaryPreferences', 'dietaryRestrictions', 'allergies', 'carpool', 'volunteer', 'scholarship', 'comments'];
+const PERSON_MISC_FIELDS = ['share', 'dietaryPreferences', 'dietaryRestrictions', 'allergies', 'scent', 'carpool', 'bedding', 'volunteer', 'housing', 'roommate', 'photo', 'comments'];
 const PERSON_PAYMENT_FIELDS = ['admissionCost'];
 
 const ORDER_MISC_DEFAULTS = {

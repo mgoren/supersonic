@@ -190,6 +190,15 @@ export const FIELD_CONFIG = {
     defaultValue: [],
     order: 22,
   },
+  allergies: {
+    type: 'text',
+    title: 'Allergy / Safety Information',
+    label: '',
+    validation: Yup.string(),
+    defaultValue: '',
+    order: 23,
+    width: '100%',
+  },
   hospitality: {
     type: 'checkbox',
     title: "Housing",

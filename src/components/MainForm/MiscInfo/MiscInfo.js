@@ -61,6 +61,15 @@ export default function MiscInfo({ index }) {
                   {...props}
                 />
               }
+              {type === 'text' &&
+                <Input
+                  type='text'
+                  name={`people[${index}].${field}`}
+                  label={label}
+                  key={`${index}-${field}`}
+                  width={props.width}
+                />
+              }
               {type === 'textarea' &&
                 <Input
                   type='textarea'

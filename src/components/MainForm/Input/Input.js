@@ -41,7 +41,6 @@ const ButtonInput = ({ buttonText, onClick, ...props }) => {
 
 const TextInput = ({ label, name, type, hidden, ...props }) => {
   const { touched, errors, values, setFieldValue, handleBlur } = useFormikContext();
-
   const handleBlurAndSetNametag = (e) => {
     handleBlur(e);  // bubble up to default Formik onBlur handler
     if (name.includes('first')) {
@@ -64,8 +63,8 @@ const TextInput = ({ label, name, type, hidden, ...props }) => {
             <TextField
               sx={{
                 marginBottom: '.3rem',
-                display: hidden ? 'none' : 'block',
-                // '& .MuiFormHelperText-root': { fontSize: '.9rem' }
+                display: hidden ? 'none' : undefined,
+                ...(props.width && { width: props.width })
               }}
               type={type}
               label={label}
@@ -159,16 +158,15 @@ export const TextArea = ({ label, name, ...props }) => {
   );
 };
 
-export const RadioButtons = ({ name, label, options, field, index, ...props }) => {
+export const RadioButtons = ({ name, label, options, field, index, required }) => {
   const { values, setFieldValue, errors } = useFormikContext();
-  const fieldName = `people[${index}].${field}`;
-  const fieldError = getIn(errors, fieldName);
+  const fieldError = getIn(errors, name);
 
   return (
     <FormControl error={Boolean(fieldError)}>
       {label && <Typography gutterBottom htmlFor={name}>
         {label}
-        {props.required && <Box component="span" sx={{ color: 'red' }}> *</Box>}
+        {required && <Box component="span" sx={{ color: 'red' }}> *</Box>}
       </Typography>}
       <RadioGroup
         name={name}

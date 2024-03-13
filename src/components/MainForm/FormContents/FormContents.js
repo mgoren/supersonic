@@ -19,7 +19,7 @@ export default function FormContents() {
     if (Object.keys(errors).length > 0) {
       formik.setTouched(errors, true); // show errors
       // scroll to first invalid field; refactor to use ref instead of directly accessing DOM
-      const firstInvalidFieldName = getFirstInvalidFieldName(formik.errors);
+      const firstInvalidFieldName = getFirstInvalidFieldName(errors);
       if (firstInvalidFieldName) {
         const invalidFieldElement = document.getElementsByName(firstInvalidFieldName)[0];
         if (invalidFieldElement) {

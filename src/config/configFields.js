@@ -191,13 +191,13 @@ export const FIELD_CONFIG = {
     order: 22,
   },
   allergies: {
-    type: 'text',
+    type: 'textarea',
     title: 'Allergy / Safety Information',
-    label: '',
+    label: "So there's \"I don't eat gluten\" and then there's \"if a single crumb of gluten cross-contaminates my food I will be sick all weekend.\" Please elaborate as much are you need to feel comfortable that we know your safety and allergy needs. This can include non-food things as well.",
     validation: Yup.string(),
     defaultValue: '',
     order: 23,
-    width: '100%',
+    rows: 2
   },
   hospitality: {
     type: 'checkbox',
@@ -228,6 +228,7 @@ export const FIELD_CONFIG = {
     label: "Please tell us any special requests or information we should know regarding your registration.",
     validation: Yup.string(),
     defaultValue: '',
+    rows: 5,
     order: 25,
   },
   admissionCost: {

@@ -141,7 +141,7 @@ export const CheckboxInput = ({ name, label, options, ...props }) => {
   );
 };
 
-export const TextArea = ({ label, name, ...props }) => {
+export const TextArea = ({ label, name, rows, ...props }) => {
   return (
     <>
       <Typography gutterBottom={true} sx={{ marginBottom: '1rem' }} htmlFor={name}>
@@ -151,7 +151,7 @@ export const TextArea = ({ label, name, ...props }) => {
         as={TextField}
         name={name}
         multiline
-        rows={5}
+        rows={rows}
         sx={{ width: '100%' }}
       />
     </>

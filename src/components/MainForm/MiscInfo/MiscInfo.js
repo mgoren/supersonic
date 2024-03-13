@@ -76,6 +76,7 @@ export default function MiscInfo({ index }) {
                   name={`people[${index}].${field}`}
                   label={label}
                   key={`${index}-${field}`}
+                  rows={props.rows}
                 />
               }
             </Box>

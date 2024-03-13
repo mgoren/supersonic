@@ -7,7 +7,7 @@ import { PAYPAL_OPTIONS } from './configPaypal';
 import { FIELD_CONFIG, PERSON_INPUT_LABELS } from './configFields';
 import { ORDER_SUMMARY_OPTIONS } from './configOrderSummary';
 import { DANCES } from './configContent';
-import { DEPOSIT_MIN, ADMISSION_COST_RANGE, ADMISSION_COST_DEFAULT, ADMISSION_QUANTITY_MAX, DONATION_OPTION, DONATION_RANGE } from './configBasics';
+import { DEPOSIT_MIN, ADMISSION_COST_RANGE, ADMISSION_COST_DEFAULT, ADMISSION_QUANTITY_MAX, DONATION_OPTION, DONATION_RANGE, INCLUDE_PRONOUNS_ON_NAMETAG } from './configBasics';
 
 // config for this particular registration instance; update this as needed!
 const PERSON_CONTACT_FIELDS = ['first', 'last', 'nametag', 'pronouns', 'email', 'emailConfirmation', 'phone', 'address', 'apartment', 'city', 'state', 'zip', 'country'];
@@ -67,6 +67,7 @@ const config = {
   PERSON_INPUT_LABELS,
   ORDER_SUMMARY_OPTIONS,
   DANCES,
+  INCLUDE_PRONOUNS_ON_NAMETAG,
   getOrderDefaults
 }
 

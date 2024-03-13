@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Box, Typography, Accordion, AccordionSummary, AccordionDetails, Button } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import config from 'config';
-const { ORDER_SUMMARY_OPTIONS, ADMISSION_COST_RANGE, PAYMENT_DUE_DATE } = config;
+const { ORDER_SUMMARY_OPTIONS, ADMISSION_COST_RANGE, PAYMENT_DUE_DATE, INCLUDE_PRONOUNS_ON_NAMETAG } = config;
 
 // order is passed as prop to be sure it is most up-to-date when coming from receipt
 export default function OrderSummary({ order, currentPage }) {
@@ -146,7 +146,7 @@ function formatNametag(person) {
   const { nametag, first, pronouns } = person;
   const formattedName = nametag || first;
   const formattedPronouns = pronouns ? `(${pronouns})` : '';
-  return `${formattedName} ${formattedPronouns}`;
+  return INCLUDE_PRONOUNS_ON_NAMETAG ? `${formattedName} ${formattedPronouns}` : formattedName;
 }
 
 function formatAddress(person) {

@@ -27,18 +27,18 @@ export const FIELD_CONFIG = {
     width: 6,
     autoComplete: 'family-name'
   },
-  nametag: {
-    label: 'Name for badge',
-    validation: NAME_VALIDATION,
-    defaultValue: '',
-    order: 3,
-    width: 12
-  },
   pronouns: {
-    label: 'Pronouns for badge',
+    label: 'Pronouns',
     validation: PRONOUNS_VALIDATION,
     defaultValue: '',
     order: 4,
+    width: 12
+  },
+  nametag: {
+    label: 'Name for button',
+    validation: NAME_VALIDATION,
+    defaultValue: '',
+    order: 3,
     width: 12
   },
   email: {

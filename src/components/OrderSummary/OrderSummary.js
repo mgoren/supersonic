@@ -1,10 +1,8 @@
 // NOTE: this component uses some vanilla html becuase it's used in the confirmation email
 
 import { useState } from 'react';
-import { Box, Typography, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
+import { Box, Typography, Accordion, AccordionSummary, AccordionDetails, Button } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-
-import ButtonRow from 'components/ButtonRow';
 import config from 'config';
 const { ORDER_SUMMARY_OPTIONS, ADMISSION_COST_RANGE, PAYMENT_DUE_DATE } = config;
 
@@ -85,10 +83,13 @@ export function PersonContainerAccordion({ person, personIndex, showButtons, han
           <PersonSummary person={person} skipCost={true} />
           {showButtons &&
             <Box sx={{ my: 4 }}>
-              <ButtonRow
-                deleteButtonProps={{ onClick: () => handleDelete(personIndex), text: 'Delete' }}
-                editButtonProps={{ onClick: () => handleEdit(personIndex), text: 'Edit' }}
-              />
+              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <div />
+                <Button onClick={() => handleDelete(personIndex)} variant='contained' color='error'>Delete</Button>
+                <div />
+                <Button onClick={() => handleEdit(personIndex)} variant='contained' color='info'>Edit</Button>
+                <div />
+              </Box>
             </Box>
           }
         </AccordionDetails>

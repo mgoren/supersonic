@@ -5,10 +5,8 @@ import PaypalCheckoutButton from 'components/PaypalCheckoutButton';
 import Check from "components/Check";
 import Loading from 'components/Loading';
 import TogglePaymentMode from 'components/TogglePaymentMode';
-import ButtonRow from 'components/ButtonRow/index.js';
+import NavButtons from 'components/NavButtons/index.js';
 import { StyledPaper, Title } from 'components/Layout/SharedStyles';
-import { Box } from '@mui/material';
-import { MyMobileStepper } from 'components/MyStepper';
 import StripeCheckoutWrapper from "components/StripeCheckoutWrapper";
 import config from 'config';
 const { NUM_PAGES } = config;
@@ -102,19 +100,7 @@ export default function Checkout() {
       </StyledPaper>
 
       {!paying && !processing &&
-        <>
-          {/* desktop */}
-          <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-            <StyledPaper>
-              <ButtonRow backButtonProps = {{ onClick: handleClickBackButton, text: 'Back' }} />
-            </StyledPaper>
-          </Box>
-
-          {/* mobile */}
-          <Box sx={{ display: { sm: 'none' } }}>
-            <MyMobileStepper onClickBack={handleClickBackButton} />
-          </Box>
-        </>
+        <NavButtons backButtonProps = {{ onClick: handleClickBackButton, text: 'Back' }} />
       }
     </section>
   );

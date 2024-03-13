@@ -4,10 +4,7 @@ import { Form, useFormikContext } from 'formik';
 import { getFirstInvalidFieldName, sanitizeObject } from 'utils';
 import People from '../People';
 import PaymentInfo from '../PaymentInfo';
-import ButtonRow from 'components/ButtonRow';
-import { Box } from '@mui/material';
-import { MyMobileStepper } from 'components/MyStepper';
-import { StyledPaper } from 'components/Layout/SharedStyles';
+import NavButtons from 'components/NavButtons';
 import config from 'config';
 const { NUM_PAGES } = config;
 
@@ -62,22 +59,10 @@ export default function FormContents() {
       }
 
       {currentPage > 1 && (
-        <>
-          {/* desktop */}
-          <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-            <StyledPaper>
-              <ButtonRow
-                backButtonProps = {{ text: 'Back', onClick: handleClickBackButton }}
-                nextButtonProps = {{ text: currentPage === NUM_PAGES ? 'Checkout...' : 'Next...'}}
-              />
-            </StyledPaper>
-          </Box>
-
-          {/* mobile */}
-          <Box sx={{ display: { sm: 'none' } }}>
-            <MyMobileStepper onClickBack={handleClickBackButton} />
-          </Box>
-        </>
+        <NavButtons
+          backButtonProps = {{ text: 'Back', onClick: handleClickBackButton }}
+          nextButtonProps = {{ text: currentPage === NUM_PAGES ? 'Checkout' : 'Next...'}}
+        />
       )}
     </Form>
   );

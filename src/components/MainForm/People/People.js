@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { useOrder } from 'components/OrderContext';
 import { useFormikContext } from 'formik';
-import { Box } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import PersonForm from '../PersonForm';
-import ButtonRow from 'components/ButtonRow';
+import NavButtons from 'components/NavButtons';
 import { StyledPaper } from 'components/Layout/SharedStyles';
-import { MyMobileStepper } from 'components/MyStepper';
 import config from 'config';
 import { PersonContainerAccordion } from 'components/OrderSummary';
 const { ADMISSION_QUANTITY_MAX, PERSON_DEFAULTS } = config;
@@ -60,6 +59,14 @@ export default function People({ resetForm, saveForm }) {
               }
             </Box>
           ))}
+
+          { editIndex === null && order.people.length < ADMISSION_QUANTITY_MAX &&
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3 }}>
+              <div />
+              <Button onClick={handleAddNew} variant='text' color='warning'>Add another person</Button>
+              <div />
+            </Box>
+          }
         </StyledPaper>
       }
 
@@ -77,29 +84,7 @@ export default function People({ resetForm, saveForm }) {
       }
 
       {editIndex === null &&
-        <>
-          {/* desktop */}
-          <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-            <StyledPaper>
-              <ButtonRow
-                backButtonProps = { order.people.length < ADMISSION_QUANTITY_MAX && { onClick: handleAddNew, text: 'Add another person' }}
-                nextButtonProps = {{ text: 'Next...' }}
-              />
-            </StyledPaper>
-          </Box>
-
-          {/* mobile */}
-          {order.people.length < ADMISSION_QUANTITY_MAX && (
-            <Box sx={{ display: { sm: 'none' } }}>
-              <StyledPaper>
-                <ButtonRow centerButtonProps = {{ onClick: handleAddNew, text: 'Add another person' }} />
-              </StyledPaper>
-            </Box>
-          )}
-          <Box sx={{ display: { sm: 'none' } }}>
-            <MyMobileStepper />
-          </Box>
-        </>
+        <NavButtons nextButtonProps = {{ text: 'Next' }} />
       }
     </>
   );

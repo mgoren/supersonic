@@ -48,6 +48,9 @@ export const OrderProvider = ({ children }) => {
   const startOver = () => {
     dispatch({ type: 'RESET_ORDER' });
     setClientSecret(null);
+    setPaymentMethod(PAYMENT_METHODS[0]);
+    setProcessingMessage(null);
+    setLastUpdatedTotal(null);
     setCurrentPage(1);
   }
 

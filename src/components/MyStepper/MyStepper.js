@@ -2,7 +2,7 @@ import { useOrder } from 'components/OrderContext';
 import { Stepper, Step, StepLabel, MobileStepper, Button } from "@mui/material";
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
 import config from 'config';
-const { STEPS, NUM_PAGES } = config;
+const { STEPS } = config;
 
 export const MyStepper = () => {
   const { currentPage } = useOrder();
@@ -25,7 +25,7 @@ export const MyStepper = () => {
   );
 };
 
-export const MyMobileStepper = ({ onClickBack }) => {
+export const MyMobileStepper = ({ backButtonProps, nextButtonProps }) => {
   const { currentPage } = useOrder();
 
   return (
@@ -34,28 +34,27 @@ export const MyMobileStepper = ({ onClickBack }) => {
       steps={STEPS.length}
       position="static"
       activeStep={STEPS.findIndex(step => step.key === currentPage)}
-      nextButton={
-        <>
-          <Button
-            type='submit'
-            size='small'
-            sx={currentPage === 'checkout' ? { visibility: 'hidden' } : {} }
-          >
-            {currentPage === NUM_PAGES ? 'Checkout' : 'Next'}<KeyboardArrowRight />
-          </Button>
-        </>
+      backButton={backButtonProps ?
+        <Button
+          {...backButtonProps}
+          type="button"
+          size="small"
+          sx={!backButtonProps.onClick ? { visibility: 'hidden' } : {}}
+        >
+          <KeyboardArrowLeft />{backButtonProps.text}
+        </Button>
+        : <div />
       }
-      backButton={
-        <>
-          <Button
-            type='button'
-            onClick={onClickBack}
-            size="small"
-            sx={currentPage === 1 ? { visibility: 'hidden' } : {} }
-          >
-            <KeyboardArrowLeft />Back
-          </Button>
-        </>
+      nextButton={nextButtonProps ?
+        <Button
+          {...nextButtonProps}
+          type='submit'
+          size='small'
+          sx={!nextButtonProps ? { visibility: 'hidden' } : {}}
+        >
+          {nextButtonProps.text}<KeyboardArrowRight />
+        </Button>
+      : <div />
       }
     />
   );

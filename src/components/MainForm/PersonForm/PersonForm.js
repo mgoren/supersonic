@@ -1,9 +1,8 @@
 import { useOrder } from 'components/OrderContext';
 import { useFormikContext } from 'formik';
-import { Box } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import ContactInfo from '../ContactInfo';
 import MiscInfo from '../MiscInfo';
-import ButtonRow from 'components/ButtonRow';
 
 export default function PersonForm({ editIndex, setEditIndex, saveForm, resetForm, isNewPerson, setIsNewPerson }) {
   const { order } = useOrder();
@@ -33,10 +32,23 @@ export default function PersonForm({ editIndex, setEditIndex, saveForm, resetFor
       <ContactInfo index={editIndex} />
       <MiscInfo index={editIndex} />
       <Box sx={{ mt: 5, mb: 2 }}>
-        <ButtonRow
-          cancelButtonProps = { order.people[0].email !== '' && { onClick: handleCancelButton, text: 'Cancel' }}
-          saveButtonProps = {{ onClick: handleSaveButton, text: 'Save'  }}
-        />
+        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          { order.people[0].email !== '' ?
+            <>
+              <div />
+              <Button onClick={handleCancelButton} variant='contained' color='warning'>Cancel</Button>
+              <div />
+              <Button onClick={handleSaveButton} variant='contained' color='success'>Save</Button>
+              <div />
+            </>
+            :
+            <>
+              <div />
+              <Button onClick={handleSaveButton} variant='contained' color='success'>Save</Button>
+              <div />
+            </>
+          }
+        </Box>
       </Box>
     </>
   );

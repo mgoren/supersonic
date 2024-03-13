@@ -5,7 +5,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import Receipt, { AdditionalPersonReceipt } from 'components/Receipt';
 import { cache, cached } from 'utils';
 import config from 'config';
-const { ORDER_DEFAULTS, PAYMENT_METHODS, EMAIL_CONTACT } = config;
+const { getOrderDefaults, PAYMENT_METHODS, EMAIL_CONTACT } = config;
 const functions = getFunctions();
 const savePendingOrder = httpsCallable(functions, 'savePendingOrder');
 const saveFinalOrder = httpsCallable(functions, 'saveFinalOrder');
@@ -18,14 +18,14 @@ function orderReducer(state, action) {
     case 'UPDATE_ORDER':
       return { ...state, ...action.payload };
     case 'RESET_ORDER':
-      return ORDER_DEFAULTS;
+      return getOrderDefaults();
     default:
       throw new Error(`Unhandled action type: ${action.type}`);
   }
 }
 
 export const OrderProvider = ({ children }) => {
-  const initialOrderState = cached('order') || ORDER_DEFAULTS;
+  const initialOrderState = cached('order') || getOrderDefaults();
   const [order, dispatch] = useReducer(orderReducer, initialOrderState);
   const [clientSecret, setClientSecret] = useState(null);
   const [currentPage, setCurrentPage] = useState(cached('currentPage') || 1);
@@ -78,7 +78,6 @@ export const useOrderOperations = () => {
       people: order.people.map(updateApartment),
       paymentMethod,
       paymentId: 'PENDING',
-      idempotencyKey: order.idempotencyKey || crypto.randomUUID(),
       status: 'pendingInitialSave'
     };
     updateOrder(updates);

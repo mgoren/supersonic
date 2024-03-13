@@ -21,10 +21,11 @@ const ORDER_MISC_DEFAULTS = {
 // don't change these
 const PERSON_FIELDS = [...PERSON_CONTACT_FIELDS, ...PERSON_MISC_FIELDS, ...PERSON_PAYMENT_FIELDS];
 const PERSON_DEFAULTS = PERSON_FIELDS.reduce((obj, field) => ({ ...obj, [field]: FIELD_CONFIG[field].defaultValue }), {});
-const ORDER_DEFAULTS = {
+const getOrderDefaults = () => ({
   ...ORDER_MISC_DEFAULTS,
-  people: [PERSON_DEFAULTS]
-}
+  people: [PERSON_DEFAULTS],
+  idempotencyKey: crypto.randomUUID()
+});
 
 // *********************************************************************************************
 // ***                           Export fields here if added fields above!                   ***
@@ -64,9 +65,9 @@ const config = {
   PERSON_MISC_FIELDS,
   PERSON_DEFAULTS,
   PERSON_INPUT_LABELS,
-  ORDER_DEFAULTS,
   ORDER_SUMMARY_OPTIONS,
   DANCES,
+  getOrderDefaults
 }
 
 export default config;

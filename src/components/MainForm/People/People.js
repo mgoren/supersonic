@@ -5,6 +5,7 @@ import { Box } from '@mui/material';
 import PersonForm from '../PersonForm';
 import ButtonRow from 'components/ButtonRow';
 import { StyledPaper } from 'components/Layout/SharedStyles';
+import { MyMobileStepper } from 'components/MyStepper';
 import config from 'config';
 import { PersonContainerAccordion } from 'components/OrderSummary';
 const { ADMISSION_QUANTITY_MAX, PERSON_DEFAULTS } = config;
@@ -76,12 +77,29 @@ export default function People({ resetForm, saveForm }) {
       }
 
       {editIndex === null &&
-        <StyledPaper>
-          <ButtonRow
-            backButtonProps = { order.people.length < ADMISSION_QUANTITY_MAX && { onClick: handleAddNew, text: 'Add another person' }}
-            nextButtonProps = {{ text: 'Next...' }}
-          />
-        </StyledPaper>
+        <>
+          {/* desktop */}
+          <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+            <StyledPaper>
+              <ButtonRow
+                backButtonProps = { order.people.length < ADMISSION_QUANTITY_MAX && { onClick: handleAddNew, text: 'Add another person' }}
+                nextButtonProps = {{ text: 'Next...' }}
+              />
+            </StyledPaper>
+          </Box>
+
+          {/* mobile */}
+          {order.people.length < ADMISSION_QUANTITY_MAX && (
+            <Box sx={{ display: { sm: 'none' } }}>
+              <StyledPaper>
+                <ButtonRow centerButtonProps = {{ onClick: handleAddNew, text: 'Add another person' }} />
+              </StyledPaper>
+            </Box>
+          )}
+          <Box sx={{ display: { sm: 'none' } }}>
+            <MyMobileStepper />
+          </Box>
+        </>
       }
     </>
   );

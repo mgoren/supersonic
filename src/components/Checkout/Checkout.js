@@ -7,7 +7,7 @@ import Loading from 'components/Loading';
 import TogglePaymentMode from 'components/TogglePaymentMode';
 import ButtonRow from 'components/ButtonRow/index.js';
 import { StyledPaper, Title } from 'components/Layout/SharedStyles';
-import { Hidden } from '@mui/material';
+import { Box } from '@mui/material';
 import { MyMobileStepper } from 'components/MyStepper';
 import StripeCheckoutWrapper from "components/StripeCheckoutWrapper";
 import config from 'config';
@@ -103,15 +103,17 @@ export default function Checkout() {
 
       {!paying && !processing &&
         <>
-          <Hidden smDown>
+          {/* desktop */}
+          <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
             <StyledPaper>
               <ButtonRow backButtonProps = {{ onClick: handleClickBackButton, text: 'Back' }} />
             </StyledPaper>
-          </Hidden>
+          </Box>
 
-          <Hidden smUp>
+          {/* mobile */}
+          <Box sx={{ display: { sm: 'none' } }}>
             <MyMobileStepper onClickBack={handleClickBackButton} />
-          </Hidden>
+          </Box>
         </>
       }
     </section>

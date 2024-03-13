@@ -1,6 +1,6 @@
 import { useOrder } from 'components/OrderContext';
 import { StyledPaper } from 'components/Layout/SharedStyles';
-import { Typography, Divider, Hidden } from "@mui/material";
+import { Typography, Divider, Box } from "@mui/material";
 import { MyStepper } from 'components/MyStepper';
 import config from 'config';
 const { TITLE } = config;
@@ -15,9 +15,9 @@ export default function Header({ titleText = TITLE, children }) {
       </Typography>
 
       {currentPage !== 'confirmation' &&
-        <Hidden smDown>
+        <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
           <MyStepper currentPage={currentPage} />
-        </Hidden>
+        </Box>
       }
 
       <Divider component="hr" sx={{borderBottomWidth: 4, mb: 2 }}/>

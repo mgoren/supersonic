@@ -5,7 +5,7 @@ import { getFirstInvalidFieldName, sanitizeObject } from 'utils';
 import People from '../People';
 import PaymentInfo from '../PaymentInfo';
 import ButtonRow from 'components/ButtonRow';
-import { Hidden } from '@mui/material';
+import { Box } from '@mui/material';
 import { MyMobileStepper } from 'components/MyStepper';
 import { StyledPaper } from 'components/Layout/SharedStyles';
 import config from 'config';
@@ -60,19 +60,25 @@ export default function FormContents() {
           donate={donate} setDonate={setDonate}
         />
       }
-      <Hidden smDown>
-        {currentPage > 1 &&
-          <StyledPaper>
-            <ButtonRow
-              backButtonProps = {{ text: 'Back', onClick: handleClickBackButton }}
-              nextButtonProps = {{ text: currentPage === NUM_PAGES ? 'Checkout...' : 'Next...'}}
-            />
-          </StyledPaper>
-        }
-      </Hidden>
-      <Hidden smUp>
-        <MyMobileStepper onClickBack={handleClickBackButton} />
-      </Hidden>
+
+      {currentPage > 1 && (
+        <>
+          {/* desktop */}
+          <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+            <StyledPaper>
+              <ButtonRow
+                backButtonProps = {{ text: 'Back', onClick: handleClickBackButton }}
+                nextButtonProps = {{ text: currentPage === NUM_PAGES ? 'Checkout...' : 'Next...'}}
+              />
+            </StyledPaper>
+          </Box>
+
+          {/* mobile */}
+          <Box sx={{ display: { sm: 'none' } }}>
+            <MyMobileStepper onClickBack={handleClickBackButton} />
+          </Box>
+        </>
+      )}
     </Form>
   );
 }

@@ -11,7 +11,7 @@ import { DEPOSIT_MIN, ADMISSION_COST_RANGE, ADMISSION_COST_DEFAULT, ADMISSION_QU
 
 // config for this particular registration instance; update this as needed!
 const PERSON_CONTACT_FIELDS = ['first', 'last', 'nametag', 'pronouns', 'email', 'emailConfirmation', 'phone', 'address', 'apartment', 'city', 'state', 'zip', 'country'];
-const PERSON_MISC_FIELDS = ['share', 'carpool', 'volunteer', 'scholarship', 'comments'];
+const PERSON_MISC_FIELDS = ['share', 'dietaryPreferences', 'dietaryRestrictions', 'carpool', 'volunteer', 'scholarship', 'comments'];
 const PERSON_PAYMENT_FIELDS = ['admissionCost'];
 
 const ORDER_MISC_DEFAULTS = {
@@ -62,6 +62,7 @@ const config = {
   PAYPAL_OPTIONS,
   FIELD_CONFIG,
   PERSON_CONTACT_FIELDS,
+  PERSON_FIELDS,
   PERSON_MISC_FIELDS,
   PERSON_DEFAULTS,
   PERSON_INPUT_LABELS,

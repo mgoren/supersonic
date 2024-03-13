@@ -37,7 +37,7 @@ export default function MiscInfo({ index }) {
         .map(field => ({ field, ...FIELD_CONFIG[field] }))
         .sort((a, b) => a.order - b.order)
         .map((input) => {
-          const { field, type, title, label, options } = input;
+          const { field, type, title, label, options, ...props } = input;
           return (
             <Box sx={{ mb: 6 }} key={field}>
               <Title>{title}</Title>
@@ -58,6 +58,7 @@ export default function MiscInfo({ index }) {
                   key={`${index}-${field}`}
                   field={field}
                   index={index}
+                  {...props}
                 />
               }
               {type === 'textarea' &&

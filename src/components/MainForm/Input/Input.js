@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { isMobile } from "react-device-detect";
 import { Field, useFormikContext, getIn } from 'formik';
 import { PatternFormat } from 'react-number-format';
-import { Box, Typography, TextField, Button, Checkbox, FormControlLabel, FormControl, RadioGroup, Radio } from '@mui/material';
+import { Box, Typography, TextField, Button, Checkbox, FormControlLabel, FormControl, RadioGroup, Radio, FormHelperText } from '@mui/material';
 import { usePlacesWidget } from "react-google-autocomplete";
 import { useField } from 'formik';
 
@@ -116,7 +116,7 @@ const NumericInput = ({ variant, label, name, type, pattern, range, ...props }) 
 export const CheckboxInput = ({ name, label, options, ...props }) => {
   return (
     <>
-      {label && <Typography gutterBottom={true} htmlFor={name}>{label}</Typography>}
+      {label && <Typography gutterBottom htmlFor={name}>{label}</Typography>}
       {options.map(option => (
         <div key={option.value}>
           <Field name={name}>
@@ -159,11 +159,17 @@ export const TextArea = ({ label, name, ...props }) => {
   );
 };
 
-export const RadioButtons = ({ name, label, options, field, index }) => {
-  const { values, setFieldValue } = useFormikContext();
+export const RadioButtons = ({ name, label, options, field, index, ...props }) => {
+  const { values, setFieldValue, errors } = useFormikContext();
+  const fieldName = `people[${index}].${field}`;
+  const fieldError = getIn(errors, fieldName);
+
   return (
-    <FormControl>
-      {label && <Typography gutterBottom={true} htmlFor={name}>{label}</Typography>}
+    <FormControl error={Boolean(fieldError)}>
+      {label && <Typography gutterBottom htmlFor={name}>
+        {label}
+        {props.required && <Box component="span" sx={{ color: 'red' }}> *</Box>}
+      </Typography>}
       <RadioGroup
         name={name}
         value={values.people[index][field]}
@@ -178,6 +184,7 @@ export const RadioButtons = ({ name, label, options, field, index }) => {
           />
         ))}
       </RadioGroup>
+      {fieldError && <FormHelperText sx={{ mt: 2 }}>{fieldError}</FormHelperText>}
     </FormControl>
   );
 };

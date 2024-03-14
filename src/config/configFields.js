@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { ADMISSION_COST_DEFAULT, ADMISSION_COST_RANGE } from './configBasics';
+import { ADMISSION_COST_DEFAULT, ADMISSION_COST_RANGE, DEPOSIT_MIN } from './configBasics';
 
 const NAME_REGEX = "^[^<>&@]+$";
 const PRONOUNS_REGEX = "^[^<>&@]+$";
@@ -299,7 +299,7 @@ export const FIELD_CONFIG = {
     order: 50,
   },
   admissionCost: {
-    validation: Yup.number().min(ADMISSION_COST_RANGE[0]).max(ADMISSION_COST_RANGE[1]).required(),
+    validation: Yup.number().min(DEPOSIT_MIN).max(ADMISSION_COST_RANGE[1]).required(),
     defaultValue: ADMISSION_COST_DEFAULT,
   },
 }

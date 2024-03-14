@@ -35,8 +35,8 @@ export default function MainForm() {
     <Formik
       initialValues={order}
       validationSchema={validationSchema({ currentPage })}
-      validateOnBlur={false}
-      validateOnChange={false}
+      validateOnBlur={true}
+      validateOnChange={true}
       onSubmit={ (values, actions) => {submitForm(values, actions);} }
     >
       <FormContents />

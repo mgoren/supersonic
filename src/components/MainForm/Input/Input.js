@@ -166,8 +166,9 @@ export const TextArea = ({ label, name, rows, ...props }) => {
 };
 
 export const RadioButtons = ({ name, label, options, field, index, required }) => {
-  const { values, errors, setFieldValue } = useFormikContext();
+  const { values, errors, touched, setFieldValue } = useFormikContext();
   const fieldError = getIn(errors, name);
+  const isTouched = getIn(touched, name);
 
   return (
     <FormControl error={Boolean(fieldError)}>
@@ -191,7 +192,7 @@ export const RadioButtons = ({ name, label, options, field, index, required }) =
           />
         ))}
       </RadioGroup>
-      {fieldError && <FormHelperText sx={{ mt: 2 }}>{fieldError}</FormHelperText>}
+      {isTouched && fieldError && <FormHelperText sx={{ mt: 2 }}>{fieldError}</FormHelperText>}
     </FormControl>
   );
 };

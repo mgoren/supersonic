@@ -9,13 +9,17 @@ import config from 'config';
 import { PersonContainerAccordion } from 'components/OrderSummary';
 const { ADMISSION_QUANTITY_MAX, PERSON_DEFAULTS } = config;
 
-export default function People({ resetForm, saveForm }) {
+export default function People() {
   const { order, updateOrder } = useOrder();
   const [editIndex, setEditIndex] = useState(order.people[0].email === '' ? 0 : null);
   const [isNewPerson, setIsNewPerson] = useState(false);
 
   const formik = useFormikContext();
   const { values, setFieldValue } = formik;
+
+  const resetForm = () => {
+    formik.resetForm({ values: order });
+  };
 
   const handleAddNew = () => {
     const people = [...values.people, PERSON_DEFAULTS];
@@ -75,9 +79,8 @@ export default function People({ resetForm, saveForm }) {
           <StyledPaper>
             <PersonForm
               editIndex={editIndex} setEditIndex={setEditIndex}
-              resetForm={resetForm}
-              saveForm={saveForm}
               isNewPerson={isNewPerson} setIsNewPerson={setIsNewPerson}
+              resetForm={resetForm}
             />
           </StyledPaper>
         </>

@@ -3,11 +3,34 @@ import { useFormikContext } from 'formik';
 import { Box, Button } from '@mui/material';
 import ContactInfo from '../ContactInfo';
 import MiscInfo from '../MiscInfo';
+import { getFirstInvalidFieldName, sanitizeObject } from 'utils';
+import countryMapping from 'countryMapping';
 
-export default function PersonForm({ editIndex, setEditIndex, saveForm, resetForm, isNewPerson, setIsNewPerson }) {
-  const { order } = useOrder();
+export default function PersonForm({ editIndex, setEditIndex, isNewPerson, setIsNewPerson, resetForm }) {
+  const { order, updateOrder } = useOrder();
   const formik = useFormikContext();
   const { values, setFieldValue } = formik;
+
+  async function savePersonForm() {
+    const errors = await formik.validateForm();
+    if (Object.keys(errors).length > 0) {
+      formik.setTouched(errors, true); // show errors
+      // scroll to first invalid field; refactor to use ref instead of directly accessing DOM
+      const firstInvalidFieldName = getFirstInvalidFieldName(errors);
+      if (firstInvalidFieldName) {
+        const invalidFieldElement = document.getElementsByName(firstInvalidFieldName)[0];
+        if (invalidFieldElement) {
+          invalidFieldElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }
+      return;
+    }
+    const submittedOrder = Object.assign({}, values);
+    const sanitizedOrder = sanitizeObject(submittedOrder);
+    const orderWithCountry = { ...sanitizedOrder, people: sanitizedOrder.people.map(updateCountry) };
+    updateOrder(orderWithCountry);
+    return true;
+  }
 
   function handleCancelButton() {
     setEditIndex(null);
@@ -20,7 +43,7 @@ export default function PersonForm({ editIndex, setEditIndex, saveForm, resetFor
   }
 
   async function handleSaveButton() {
-    const success = await saveForm();
+    const success = await savePersonForm();
     if (success) {
       setEditIndex(null);
       setIsNewPerson(false);
@@ -52,4 +75,16 @@ export default function PersonForm({ editIndex, setEditIndex, saveForm, resetFor
       </Box>
     </>
   );
+}
+
+function updateCountry(person) {
+  if (person.country === 'United States') {
+    return { ...person, country: 'USA' };
+  } else if (person.state) {
+    const region = person.state.toLowerCase().replace(/\s/g, '').trim();
+    const country = countryMapping[region] || person.country;
+    return { ...person, country };
+  } else {
+    return person;
+  }
 }

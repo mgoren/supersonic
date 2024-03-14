@@ -12,12 +12,14 @@ const { DEPOSIT_MIN, ADMISSION_COST_RANGE, DONATION_OPTION, DONATION_RANGE, PAYM
 export default function PaymentInfo({ donate, setDonate }) {
   const { order } = useOrder();
   const admissionsTotal = order.people.reduce((total, person) => total + person.admissionCost, 0);
-  // console.log('admissionsTotal', typeof admissionsTotal)
   const priceRange = [DEPOSIT_MIN, ADMISSION_COST_RANGE[1]];
   const [splitPayment, setSplitPayment] = useState(order.people.some(person => person.admissionCost * order.people.length !== admissionsTotal));
   const [payingDeposit, setPayingDeposit] = useState(order.people.some(person => person.admissionCost < ADMISSION_COST_RANGE[0]));
   const [payingMax, setPayingMax] = useState(order.people[0].admissionCost === ADMISSION_COST_RANGE[1]);
   const { values, setFieldValue, handleBlur } = useFormikContext();
+
+  // const admissionCostLabel = <>How much are you able to pay{order.people.length > 1 && <em><strong> per person</strong></em>}? (${ADMISSION_COST_RANGE[0]}-{ADMISSION_COST_RANGE[1]})</>;
+  const admissionCostLabel = <>How much are you able to pay{order.people.length > 1 && <em><strong> per person</strong></em>}?</>;
 
   useEffect(() => { scrollToTop(); },[])
 
@@ -79,6 +81,7 @@ export default function PaymentInfo({ donate, setDonate }) {
                   <Paragraph>Deposit minimum: ${DEPOSIT_MIN}</Paragraph>
                 } */}
 
+                <Typography>Please read the sliding scale and deposit explanations above.</Typography>
                 {splitPayment ?
                   <>
                     <Paragraph>Specify the amount each person will pay:</Paragraph>
@@ -101,14 +104,13 @@ export default function PaymentInfo({ donate, setDonate }) {
                     <RightAlignedInput
                       sx={{ width: '5em' }}
                       // label={`How much are you able to pay${order.people.length > 1 ? ' *per person*' : ''}? ($${ADMISSION_COST_RANGE[0]}-${ADMISSION_COST_RANGE[1]})`}
-                      label={`How much are you able to pay${order.people.length > 1 ? ' *per person*' : ''}?`}
+                      label={admissionCostLabel}
                       name='people[0].admissionCost'
                       pattern='###'
                       range={priceRange}
                       onBlur={(event) => updateAdmissionCostValues(event)}
                       InputProps={{ startAdornment: <InputAdornment position='start'>$</InputAdornment> }}
                     />
-                    (Please read the sliding scale and deposit explanations above.)
                     {/* <SlidingScaleSummaryExplanation /> */}
                   </>
                 }

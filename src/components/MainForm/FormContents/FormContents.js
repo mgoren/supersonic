@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useOrder } from 'components/OrderContext';
 import { Form, useFormikContext } from 'formik';
 import { getFirstInvalidFieldName, sanitizeObject } from 'utils';
+import countryMapping from 'countryMapping';
 import People from '../People';
 import PaymentInfo from '../PaymentInfo';
 import NavButtons from 'components/NavButtons';
@@ -28,9 +29,10 @@ export default function FormContents() {
       }
       return;
     }
-    const updatedOrder = Object.assign({}, values);
-    const sanitizedOrder = sanitizeObject(updatedOrder);
-    updateOrder(sanitizedOrder);
+    const submittedOrder = Object.assign({}, values);
+    const sanitizedOrder = sanitizeObject(submittedOrder);
+    const orderWithCountry = { ...sanitizedOrder, people: sanitizedOrder.people.map(updateCountry) };
+    updateOrder(orderWithCountry);
     return true;
   }
 
@@ -66,4 +68,16 @@ export default function FormContents() {
       )}
     </Form>
   );
+}
+
+function updateCountry(person) {
+  if (person.country === 'United States') {
+    return { ...person, country: 'USA' };
+  } else if (person.state) {
+    const region = person.state.toLowerCase().replace(/\s/g, '').trim();
+    const country = countryMapping[region] || person.country;
+    return { ...person, country };
+  } else {
+    return person;
+  }
 }

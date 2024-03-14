@@ -4,7 +4,6 @@ import { Formik } from 'formik';
 import { sanitizeObject, warnBeforeUserLeavesSite } from 'utils';
 import FormContents from "./FormContents";
 import { validationSchema } from './validationSchema';
-import countryMapping from 'countryMapping';
 import config from 'config';
 const { NUM_PAGES } = config;
 
@@ -22,11 +21,10 @@ export default function MainForm() {
   function submitForm(values, actions) {
     const submittedOrder = Object.assign({}, values);
     const sanitizedOrder = sanitizeObject(submittedOrder);
-    const orderWithCountry = { ...sanitizedOrder, people: sanitizedOrder.people.map(updateCountry) };
     if (currentPage === NUM_PAGES) {
-      updateOrder({ ...orderWithCountry, status: 'checkout' });
+      updateOrder({ ...sanitizedOrder, status: 'checkout' });
     } else {
-      updateOrder(orderWithCountry);
+      updateOrder(sanitizedOrder);
       setCurrentPage(currentPage + 1);
     }
   }
@@ -42,16 +40,4 @@ export default function MainForm() {
       <FormContents />
     </Formik>
   );
-}
-
-function updateCountry(person) {
-  if (person.country === 'United States') {
-    return { ...person, country: 'USA' };
-  } else if (person.state) {
-    const region = person.state.toLowerCase().replace(/\s/g, '').trim();
-    const country = countryMapping[region] || person.country;
-    return { ...person, country };
-  } else {
-    return person;
-  }
 }

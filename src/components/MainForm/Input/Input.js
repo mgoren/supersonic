@@ -166,7 +166,7 @@ export const TextArea = ({ label, name, rows, ...props }) => {
 };
 
 export const RadioButtons = ({ name, label, options, field, index, required }) => {
-  const { values, setFieldValue, errors } = useFormikContext();
+  const { values, errors, setFieldValue } = useFormikContext();
   const fieldError = getIn(errors, name);
 
   return (
@@ -178,7 +178,9 @@ export const RadioButtons = ({ name, label, options, field, index, required }) =
       <RadioGroup
         name={name}
         value={values.people[index][field]}
-        onChange={ (e) => { setFieldValue(name, e.currentTarget.value) } }>
+        onChange={ (e) => {
+          setFieldValue(name, e.currentTarget.value, true);
+        } }>
         {options.map((option) => (
           <FormControlLabel
             key={option.value}

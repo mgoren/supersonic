@@ -17,7 +17,9 @@ export default function MainForm() {
     }
   }, []);
 
-  // it doesn't get here until all validations are passing
+  // this is for the final form submit (after last page before checkout)
+  // for now it's really just validating the PaymentInfo page fields
+  // note: it doesn't get here until all validations are passing
   function submitForm(values, actions) {
     const submittedOrder = Object.assign({}, values);
     const sanitizedOrder = sanitizeObject(submittedOrder);

@@ -9,7 +9,7 @@ import { PaymentExplanation } from 'components/Static/PaymentExplanation';
 import config from 'config';
 const { DEPOSIT_MIN, ADMISSION_COST_RANGE, DONATION_OPTION, DONATION_RANGE, PAYMENT_DUE_DATE } = config;
 
-export default function PaymentInfo({ donate, setDonate }) {
+export default function PaymentInfo() {
   const { order } = useOrder();
   const admissionsTotal = order.people.reduce((total, person) => total + person.admissionCost, 0);
   const priceRange = [DEPOSIT_MIN, ADMISSION_COST_RANGE[1]];
@@ -17,6 +17,7 @@ export default function PaymentInfo({ donate, setDonate }) {
   const [payingDeposit, setPayingDeposit] = useState(order.people.some(person => person.admissionCost < ADMISSION_COST_RANGE[0]));
   const [payingMax, setPayingMax] = useState(order.people[0].admissionCost === ADMISSION_COST_RANGE[1]);
   const { values, setFieldValue, handleBlur } = useFormikContext();
+  const [donate, setDonate] = useState(values.donation > 0);
 
   // const admissionCostLabel = <>How much are you able to pay{order.people.length > 1 && <em><strong> per person</strong></em>}? (${ADMISSION_COST_RANGE[0]}-{ADMISSION_COST_RANGE[1]})</>;
   const admissionCostLabel = <>How much are you able to pay{order.people.length > 1 && <em><strong> per person</strong></em>}?</>;

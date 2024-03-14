@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useOrder } from 'components/OrderContext';
 import { Form, useFormikContext } from 'formik';
 import People from '../People';
@@ -11,7 +10,6 @@ export default function FormContents() {
   const { updateOrder, currentPage, setCurrentPage } = useOrder();
   const formik = useFormikContext();
   const { values } = formik;
-  const [donate, setDonate] = useState(values.donation > 0);
 
   function handleClickBackButton() {
     updateOrder(values);
@@ -21,21 +19,15 @@ export default function FormContents() {
 
   return(
     <Form spellCheck='false'>
-      {currentPage === 1 &&
-        <People />
-      }
-      {currentPage === 2 &&
-        <PaymentInfo
-          donate={donate} setDonate={setDonate}
-        />
-      }
+      {currentPage === 1 && <People />}
+      {currentPage === 2 && <PaymentInfo />}
 
-      {currentPage > 1 && (
+      {currentPage > 1 &&
         <NavButtons
           backButtonProps = {{ text: 'Back', onClick: handleClickBackButton }}
           nextButtonProps = {{ text: currentPage === NUM_PAGES ? 'Checkout' : 'Next...'}}
         />
-      )}
+      }
     </Form>
   );
 }

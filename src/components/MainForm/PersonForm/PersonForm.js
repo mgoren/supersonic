@@ -11,7 +11,7 @@ export default function PersonForm({ editIndex, setEditIndex, isNewPerson, setIs
   const formik = useFormikContext();
   const { values, setFieldValue } = formik;
 
-  async function savePersonForm() {
+  async function validatePersonForm() {
     const errors = await formik.validateForm();
     if (Object.keys(errors).length > 0) {
       formik.setTouched(errors, true); // show errors
@@ -23,13 +23,29 @@ export default function PersonForm({ editIndex, setEditIndex, isNewPerson, setIs
           invalidFieldElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
       }
-      return;
+      return false;
     }
+    return true;
+  }
+
+  function saveUpdatedOrder() {
     const submittedOrder = Object.assign({}, values);
     const sanitizedOrder = sanitizeObject(submittedOrder);
-    const orderWithCountry = { ...sanitizedOrder, people: sanitizedOrder.people.map(updateCountry) };
+    const orderWithCountry = {
+      ...sanitizedOrder,
+      people: sanitizedOrder.people.map(updateCountry)
+    };
     updateOrder(orderWithCountry);
-    return true;
+  }
+
+  // saves updated order, which includes the new or edited person
+  async function handleSaveButton() {
+    const isValid = await validatePersonForm();
+    if (isValid) {
+      saveUpdatedOrder();
+      setEditIndex(null);
+      setIsNewPerson(false);
+    }
   }
 
   function handleCancelButton() {
@@ -38,14 +54,6 @@ export default function PersonForm({ editIndex, setEditIndex, isNewPerson, setIs
     if (isNewPerson) {
       const people = values.people.slice(0, -1);
       setFieldValue('people', people);
-      setIsNewPerson(false);
-    }
-  }
-
-  async function handleSaveButton() {
-    const success = await savePersonForm();
-    if (success) {
-      setEditIndex(null);
       setIsNewPerson(false);
     }
   }

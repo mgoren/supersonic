@@ -129,10 +129,10 @@ export const FIELD_CONFIG = {
       { label: 'Include my name in the roster', value: 'name' },
       { label: 'Include my email in the roster', value: 'email' },
       { label: 'Include my phone number in the roster', value: 'phone' },
-      { label: 'Include my city, state, zip in the roster', value: 'location' },
+      { label: 'Include my address in the roster', value: 'address' },
     ],
     validation: Yup.array(),
-    defaultValue: ['name', 'email', 'phone', 'location'],
+    defaultValue: ['name', 'email', 'phone', 'address'],
     order: 20,
   },
   carpool: {

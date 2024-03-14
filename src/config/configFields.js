@@ -28,7 +28,7 @@ export const FIELD_CONFIG = {
     autoComplete: 'family-name'
   },
   pronouns: {
-    label: 'Pronouns',
+    label: 'Pronouns (not shared)',
     validation: PRONOUNS_VALIDATION,
     defaultValue: '',
     order: 4,

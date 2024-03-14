@@ -77,7 +77,7 @@ export function PersonContainerAccordion({ person, personIndex, showButtons, han
     <Box sx={{ mt: 2 }}>
       <Accordion expanded={expanded} onChange={ () => setExpanded(!expanded) }>
         <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-          <Typography>{person.first} {person.last}</Typography>
+          <Typography><strong>{person.first} {person.last}</strong></Typography>
         </AccordionSummary>
         <AccordionDetails>
           <PersonSummary person={person} skipCost={true} />

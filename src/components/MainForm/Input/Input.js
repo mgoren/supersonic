@@ -195,7 +195,7 @@ export const RadioButtons = ({ name, label, options, field, index, required }) =
 };
 
 const AddressAutocompleteInput = ({ label, ...props }) => {
-  const { setFieldValue, validateField } = useFormikContext();
+  const { setFieldValue } = useFormikContext();
   const [field, meta] = useField(props);
   const { ref } = usePlacesWidget({
     apiKey: process.env.REACT_APP_GOOGLE_PLACES_API_KEY,
@@ -232,7 +232,6 @@ const AddressAutocompleteInput = ({ label, ...props }) => {
       Object.keys(fieldValues).forEach(async(key) => {
         const fieldName = `people[${personIndex}][${key}]`;
         await setFieldValue(fieldName, fieldValues[key]);
-        validateField(fieldName);
       });
     },
     options: {

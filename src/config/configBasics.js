@@ -5,3 +5,4 @@ export const ADMISSION_QUANTITY_MAX = 4;
 export const DONATION_OPTION = true;
 export const DONATION_RANGE = [0, 999];
 export const INCLUDE_PRONOUNS_ON_NAMETAG = false;
+export const INCLUDE_LAST_ON_NAMETAG = true;

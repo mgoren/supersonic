@@ -135,7 +135,7 @@ function renderConditionalData ({ person, property, label, mapping, defaultValue
   } else {
     content = defaultValue;
   }
-  return content ? <>{label && `${label}: `}{content}<br /></> : null;
+  return content ? <>{label && <strong>{label}: </strong>}{content}<br /></> : null;
 }
 
 function formatCost(cost) {
@@ -159,7 +159,7 @@ function formatAddress(person) {
   }
   const cityStateZip = city ? `${city}, ${state} ${zip}` : `${state} ${zip}`;
   const cityStateZipWithCountry = country === 'USA' || country === 'United States' ? cityStateZip : `${cityStateZip}, ${country}`;
-  return <>{streetAddress && <>{streetAddress}<br /></>}{cityStateZipWithCountry}</>
+  return <>{streetAddress && <>{streetAddress}, </>}{cityStateZipWithCountry}</>
 }
 
 function formatArray(data, defaultValue, mapping) {

@@ -5,6 +5,8 @@ import { PatternFormat } from 'react-number-format';
 import { Box, Typography, TextField, Button, Checkbox, FormControlLabel, FormControl, RadioGroup, Radio, FormHelperText } from '@mui/material';
 import { usePlacesWidget } from "react-google-autocomplete";
 import { useField } from 'formik';
+import config from 'config';
+const { INCLUDE_LAST_ON_NAMETAG } = config;
 
 export const Input = ({ pattern, buttonText, onClick, ...props }) => {
   if (buttonText) {
@@ -43,12 +45,17 @@ const TextInput = ({ label, name, type, hidden, ...props }) => {
   const { touched, errors, values, setFieldValue, handleBlur } = useFormikContext();
   const handleBlurAndSetNametag = (e) => {
     handleBlur(e);  // bubble up to default Formik onBlur handler
-    if (name.includes('first')) {
+    const triggerField = INCLUDE_LAST_ON_NAMETAG ? 'last' : 'first';
+    if (name.includes(triggerField)) {
       const personIndex = name.split('[')[1].split(']')[0];
-      const first = getIn(values, `people[${personIndex}].first`);
       const existingNametag = getIn(values, `people[${personIndex}].nametag`);
-      if (first && !existingNametag) {
-        setFieldValue(`people[${personIndex}].nametag`, first);
+      if (existingNametag) return;
+      const first = getIn(values, `people[${personIndex}].first`);
+      const last = getIn(values, `people[${personIndex}].last`);
+      const fieldsFilled = INCLUDE_LAST_ON_NAMETAG ? first && last : first;
+      const newNametag = INCLUDE_LAST_ON_NAMETAG ? `${first} ${last}` : first;
+      if (fieldsFilled) {
+        setFieldValue(`people[${personIndex}].nametag`, newNametag);
       }
     }
   };

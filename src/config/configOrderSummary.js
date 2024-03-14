@@ -2,9 +2,9 @@ import { FIELD_CONFIG } from './configFields';
 
 export const ORDER_SUMMARY_OPTIONS = [
   { property: 'nametag', label: 'Name for roster' },
-  { property: 'email', label: '' },
-  { property: 'phone', label: '' },
-  { property: 'address', label: '' },
+  { property: 'email', label: 'Email' },
+  { property: 'phone', label: 'Phone' },
+  { property: 'address', label: 'Address' },
   { property: 'share', label: 'Include on roster', defaultValue: 'do not share' },
   { property: 'dietaryPreferences', label: 'Dietary Preferences', mapping: FIELD_CONFIG['dietaryPreferences'].options },
   { property: 'dietaryRestrictions', label: 'Dietary Restrictions', mapping: FIELD_CONFIG['dietaryRestrictions'].options},

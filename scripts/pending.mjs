@@ -11,33 +11,24 @@
 
 import serviceAccount from '../firebase-service-key.json' assert { type: 'json' };
 import admin from 'firebase-admin';
-import dotenv from 'dotenv';
-dotenv.config();
+admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: process.env.FIREBASE_DATABASE_URL || process.env.REACT_APP_FIREBASE_DATABASE_URL,
-});
-
-const db = admin.database();
-const pendingRef = db.ref('pendingOrders');
-const ordersRef = db.ref('orders');
+const PENDING_ORDERS_DB = 'pendingOrders';
+const ORDERS_DB = 'orders';
 
 try {
-  const pendingSnapshot = await pendingRef.once('value');
-  const ordersSnapshot = await ordersRef.once('value');
-  const pendingOrders = getOrders(pendingSnapshot);
-  const orders = getOrders(ordersSnapshot);
-    
+  const pendingOrders = getOrders(await admin.firestore().collection(PENDING_ORDERS_DB).get());
+  const orders = getOrders(await admin.firestore().collection(ORDERS_DB).get());
+  
   const pendingOrdersMissingFromOrders = pendingOrders.filter((pendingOrder) => {
     return !orders.some((order) => order.idempotencyKey === pendingOrder.idempotencyKey);
   });
+
+  console.log(pendingOrdersMissingFromOrders.length === 0 ? '\nNo pending orders missing from orders :)' : '\nPending orders missing from orders:\n');
   for (const order of pendingOrdersMissingFromOrders) {
     console.log(order.key, order.people[0].email);
   }
-  if (pendingOrdersMissingFromOrders.length === 0) {
-    console.log('\nNo pending orders missing from orders :)\n');
-  }
+  console.log('');
 
 } catch (error) {
   console.error(error);
@@ -47,10 +38,8 @@ try {
 
 function getOrders(snapshot) {
   const orders = [];
-  snapshot.forEach((childSnapshot) => {
-    const key = childSnapshot.key;
-    const childData = childSnapshot.val();
-    orders.push({ key, ...childData });
-  });
+  for (const doc of snapshot.docs) {
+    orders.push({ key: doc.id, ...doc.data() });
+  }
   return orders;
 }

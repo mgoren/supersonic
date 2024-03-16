@@ -7,9 +7,7 @@ import { cache, cached } from 'utils';
 import config from 'config';
 const { getOrderDefaults, PAYMENT_METHODS, EMAIL_CONTACT } = config;
 const functions = getFunctions();
-const savePendingOrder = httpsCallable(functions, 'savePendingOrder');
-const saveFinalOrder = httpsCallable(functions, 'saveFinalOrder');
-const sendEmailConfirmations = httpsCallable(functions, 'sendEmailConfirmations');
+const firebaseFunctionDispatcher = httpsCallable(functions, 'firebaseFunctionDispatcher');
 
 const OrderContext = createContext();
 
@@ -34,6 +32,7 @@ export const OrderProvider = ({ children }) => {
   const [paymentMethod, setPaymentMethod] = useState(PAYMENT_METHODS[0]);
   const [error, setError] = useState(null);
   const [lastUpdatedTotal, setLastUpdatedTotal] = useState(null);
+  const [warmedUp, setWarmedUp] = useState(false);
 
   useEffect(() => { cache('order', order) }, [order]);
   useEffect(() => { cache('currentPage', currentPage) }, [currentPage]);
@@ -63,7 +62,8 @@ export const OrderProvider = ({ children }) => {
     processingMessage, setProcessingMessage,
     error, setError,
     paymentMethod, setPaymentMethod,
-    lastUpdatedTotal, setLastUpdatedTotal
+    lastUpdatedTotal, setLastUpdatedTotal,
+    warmedUp, setWarmedUp
   };
   return <OrderContext.Provider value={value}>{children}</OrderContext.Provider>;
 };
@@ -84,15 +84,24 @@ export const useOrderOperations = () => {
     return { ...order, ...updates };
   };
 
+  // fire-and-forget; save bkup in case user closes browser halfway thru payment processing
   const savePendingOrderToFirebase = (order) => {
     setProcessingMessage('Saving registration...');
-    savePendingOrder(order); // fire-and-forget; save bkup in case user closes browser halfway thru payment processing
+    firebaseFunctionDispatcher({
+      action: 'savePendingOrder',
+      data: order
+    });
   };
 
   const saveFinalOrderToFirebase = async (order) => {
     setProcessingMessage(order.paymentId === 'check' ? 'Updating registration...' : 'Payment successful. Updating registration...');
     try {
-      await saveFinalOrder(order);
+      const startTime = new Date();
+      await firebaseFunctionDispatcher({
+        action: 'saveFinalOrder',
+        data: order
+      });
+      console.log('Final order saved in', new Date() - startTime, 'ms');
       return true
     } catch (err) {
       console.error(`error updating firebase record`, err);
@@ -101,10 +110,14 @@ export const useOrderOperations = () => {
     }
   };
 
+  // fire-and-forget
   const sendReceipts = (order) => {
     setProcessingMessage('Sending email confirmation...');
     const emailReceiptPairs = generateReceipts({ order, paymentMethod });
-    sendEmailConfirmations(emailReceiptPairs); // fire-and-forget
+    firebaseFunctionDispatcher({
+      action: 'sendEmailConfirmations',
+      data: emailReceiptPairs
+    });
   };
 
   return { prepOrderForFirebase, savePendingOrderToFirebase, saveFinalOrderToFirebase, sendReceipts };

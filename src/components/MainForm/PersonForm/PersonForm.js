@@ -5,9 +5,12 @@ import ContactInfo from '../ContactInfo';
 import MiscInfo from '../MiscInfo';
 import { getFirstInvalidFieldName, sanitizeObject } from 'utils';
 import countryMapping from 'countryMapping';
+import { getFunctions, httpsCallable } from 'firebase/functions';
+const functions = getFunctions();
+const firebaseFunctionDispatcher = httpsCallable(functions, 'firebaseFunctionDispatcher');
 
 export default function PersonForm({ editIndex, setEditIndex, isNewPerson, setIsNewPerson, resetForm }) {
-  const { order, updateOrder } = useOrder();
+  const { order, updateOrder, warmedUp, setWarmedUp } = useOrder();
   const formik = useFormikContext();
   const { values, setFieldValue } = formik;
 
@@ -42,6 +45,11 @@ export default function PersonForm({ editIndex, setEditIndex, isNewPerson, setIs
   async function handleSaveButton() {
     const isValid = await validatePersonForm();
     if (isValid) {
+      if (!warmedUp) {
+        console.log('warming up firebase functions');
+        firebaseFunctionDispatcher({ action: 'caffeinate' });
+        setWarmedUp(true);
+      }
       saveUpdatedOrder();
       setEditIndex(null);
       setIsNewPerson(false);

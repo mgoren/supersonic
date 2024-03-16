@@ -10,8 +10,7 @@ import { fullName } from 'utils';
 import config from 'config';
 const { SANDBOX_MODE, PAYMENT_METHODS, EMAIL_CONTACT } = config;
 const functions = getFunctions();
-const createStripePaymentIntent = httpsCallable(functions, 'createStripePaymentIntent');
-const updateStripePaymentIntent = httpsCallable(functions, 'updateStripePaymentIntent');
+const firebaseFunctionDispatcher = httpsCallable(functions, 'firebaseFunctionDispatcher');
 const stripePromise = PAYMENT_METHODS.includes('stripe') ? await loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY) : null;
 
 export default function StripeCheckoutWrapper({ total, processCheckout }) {
@@ -21,11 +20,14 @@ export default function StripeCheckoutWrapper({ total, processCheckout }) {
   const createPaymentIntent = useCallback(async () => {
     try {
       const startTime = new Date();
-      const { data } = await createStripePaymentIntent({
-        amount: total, // amount in dollars
-        name: fullName(order.people[0]),
-        email: order.people[0].email,
-        idempotencyKey: order.idempotencyKey
+      const { data } = await firebaseFunctionDispatcher({
+        action: 'createStripePaymentIntent',
+        data: {
+          amount: total, // amount in dollars
+          name: fullName(order.people[0]),
+          email: order.people[0].email,
+          idempotencyKey: order.idempotencyKey
+        }
       });
       console.log('Stripe payment intent created in', new Date() - startTime, 'ms');
       setClientSecret(data.clientSecret);
@@ -42,9 +44,12 @@ export default function StripeCheckoutWrapper({ total, processCheckout }) {
     if (!clientSecret) return;
     const paymentIntentId = clientSecret.split('_secret_')[0];
     try {
-      await updateStripePaymentIntent({
-        paymentIntentId,
-        amount: total, // amount in dollars
+      await firebaseFunctionDispatcher({
+        action: 'updateStripePaymentIntent',
+        data: {
+          paymentIntentId,
+          amount: total, // amount in dollars
+        }
       });
       console.log('Stripe payment intent updated in', new Date() - startTime, 'ms');
       setLastUpdatedTotal(total);

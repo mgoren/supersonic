@@ -13,7 +13,8 @@ const mailTransport = nodemailer.createTransport({
   }
 });
 
-export const sendEmailConfirmations = functions.runWith({ enforceAppCheck: true }).https.onCall(async (emailReceiptPairs) => {
+// errors are handled in the calling function
+export const sendEmailConfirmations = async (emailReceiptPairs) => {
   for (const {email, receipt}  of emailReceiptPairs) {
     const emailConfig = functions.config().email;
     let mailOptions = {
@@ -23,12 +24,7 @@ export const sendEmailConfirmations = functions.runWith({ enforceAppCheck: true 
       html: receipt,
       ...(emailConfig.reply_to && {replyTo: emailConfig.reply_to})
     };
-    try {
-      await mailTransport.sendMail(mailOptions);
-      functions.logger.log(`Receipt sent to:`, email);
-    } catch(error) {
-      functions.logger.error('There was an error while sending the email confirmation:', error);
-    }
+    await mailTransport.sendMail(mailOptions);
+    functions.logger.log(`Receipt sent to:`, email);
   }
-  return null;
-});
+};

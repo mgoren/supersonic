@@ -35,7 +35,6 @@ export default function MiscInfo({ index }) {
     <Box className='MiscInfo' sx={{ mt: 4 }}>
       {PERSON_MISC_FIELDS
         .map(field => ({ field, ...FIELD_CONFIG[field] }))
-        .sort((a, b) => a.order - b.order)
         .map((input) => {
           const { field, type, title, label, options, ...props } = input;
           return (

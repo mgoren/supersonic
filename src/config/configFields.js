@@ -15,7 +15,6 @@ export const FIELD_CONFIG = {
     label: 'First name',
     validation: NAME_VALIDATION.required('Please enter first name.'),
     defaultValue: '',
-    order: 1,
     width: 6,
     autoComplete: 'given-name'
   },
@@ -23,7 +22,6 @@ export const FIELD_CONFIG = {
     label: 'Last name',
     validation: NAME_VALIDATION.required('Please enter last name.'),
     defaultValue: '',
-    order: 2,
     width: 6,
     autoComplete: 'family-name'
   },
@@ -31,14 +29,12 @@ export const FIELD_CONFIG = {
     label: 'Pronouns (not shared)',
     validation: PRONOUNS_VALIDATION,
     defaultValue: '',
-    order: 4,
     width: 12
   },
   nametag: {
     label: 'Name for roster',
     validation: NAME_VALIDATION,
     defaultValue: '',
-    order: 3,
     width: 12
   },
   email: {
@@ -46,7 +42,6 @@ export const FIELD_CONFIG = {
     type: 'email',
     validation: EMAIL_VALIDATION.required('Please enter email address.'),
     defaultValue: '',
-    order: 5,
     width: 6,
     autoComplete: 'email'
   },
@@ -55,7 +50,6 @@ export const FIELD_CONFIG = {
     type: 'email',
     validation: EMAIL_VALIDATION.required('Please re-enter your email address.').oneOf([Yup.ref('email'), null], 'Email addresses must match.'),
     defaultValue: '',
-    order: 6,
     width: 6,
     autoComplete: 'email'
   },
@@ -66,7 +60,6 @@ export const FIELD_CONFIG = {
     placeholder: 'e.g. 555-555-5555',
     validation: PHONE_VALIDATION.required('Please enter phone number.'),
     defaultValue: '',
-    order: 7,
     width: 12,
     // width: 4,
     autoComplete: 'tel'
@@ -75,7 +68,6 @@ export const FIELD_CONFIG = {
     label: 'Street address',
     validation: Yup.string().required('Please enter street address.'),
     defaultValue: '',
-    order: 8,
     width: 9,
     autoComplete: 'street-address'
   },
@@ -83,7 +75,6 @@ export const FIELD_CONFIG = {
     label: 'Apt, Suite, etc.',
     validation: Yup.string(),
     defaultValue: '',
-    order: 9,
     width: 3,
     autoComplete: 'address-line2'
   },
@@ -91,7 +82,6 @@ export const FIELD_CONFIG = {
     label: 'City',
     validation: Yup.string().required('Please enter city.'),
     defaultValue: '',
-    order: 10,
     width: 6,
     // width: 5,
     autoComplete: 'city'
@@ -100,7 +90,6 @@ export const FIELD_CONFIG = {
     label: 'State / Province',
     validation: Yup.string().required('Please enter state or province.'),
     defaultValue: '',
-    order: 11,
     width: 3,
     autoComplete: 'state'
   },
@@ -108,7 +97,6 @@ export const FIELD_CONFIG = {
     label: 'Zip / Postal code',
     validation: Yup.string().required('Please enter zip/postal code.'),
     defaultValue: '',
-    order: 12,
     width: 3,
     autoComplete: 'postal-code'
   },
@@ -116,7 +104,6 @@ export const FIELD_CONFIG = {
     label: 'Country',
     validation: Yup.string(),
     defaultValue: '',
-    order: 13,
     width: 12,
     autoComplete: 'country',
     hidden: true
@@ -133,7 +120,6 @@ export const FIELD_CONFIG = {
     ],
     validation: Yup.array(),
     defaultValue: ['name', 'email', 'phone', 'address'],
-    order: 20,
   },
   carpool: {
     type: 'checkbox',
@@ -150,7 +136,6 @@ export const FIELD_CONFIG = {
     ],
     validation: Yup.array(),
     defaultValue: [],
-    order: 25,
   },
   volunteer: {
     type: 'checkbox',
@@ -164,7 +149,6 @@ export const FIELD_CONFIG = {
     ],
     validation: Yup.array(),
     defaultValue: [],
-    order: 40,
   },
   dietaryPreferences: {
     type: 'radio',
@@ -179,7 +163,6 @@ export const FIELD_CONFIG = {
     required: true,
     validation: Yup.string().required('Please select dietary preference.'),
     defaultValue: '',
-    order: 21,
   },
   dietaryRestrictions: {
     type: 'checkbox',
@@ -195,7 +178,6 @@ export const FIELD_CONFIG = {
     ],
     validation: Yup.array(),
     defaultValue: [],
-    order: 22,
   },
   allergies: {
     type: 'textarea',
@@ -203,7 +185,6 @@ export const FIELD_CONFIG = {
     label: "So there's \"I don't eat gluten\" and then there's \"if a single crumb of gluten cross-contaminates my food I will be sick all weekend.\" Please elaborate as much are you need to feel comfortable that we know your safety and allergy needs. This can include non-food things as well.",
     validation: Yup.string(),
     defaultValue: '',
-    order: 23,
     rows: 2
   },
   housing: {
@@ -212,7 +193,6 @@ export const FIELD_CONFIG = {
     label: "(e.g. accessibility needs, I plan on camping, etc.)",
     validation: Yup.string(),
     defaultValue: '',
-    order: 41,
     rows: 2
   },
   roommate: {
@@ -221,7 +201,6 @@ export const FIELD_CONFIG = {
     label: "We now pre-assign housing and try our best to meet everyone's needs and preferences. If there are people you would like to room with, list their names here.",
     validation: Yup.string(),
     defaultValue: '',
-    order: 42,
     rows: 2
   },
   scent: {
@@ -235,7 +214,6 @@ export const FIELD_CONFIG = {
     ],
     validation: Yup.string(),
     defaultValue: '',
-    order: 24,
   },
   photo: {
     type: 'radio',
@@ -250,7 +228,6 @@ export const FIELD_CONFIG = {
     required: true,
     validation: Yup.string().required('Please select photo consent preference.'),
     defaultValue: '',
-    order: 43,
   },
   bedding: {
     type: 'checkbox',
@@ -264,7 +241,6 @@ export const FIELD_CONFIG = {
     ],
     validation: Yup.array(),
     defaultValue: [],
-    order: 26,
   },
   hospitality: {
     type: 'checkbox',
@@ -276,7 +252,6 @@ export const FIELD_CONFIG = {
     ],
     validation: Yup.array(),
     defaultValue: [],
-    order: 23,
   },
   scholarship: {
     type: 'checkbox',
@@ -287,7 +262,6 @@ export const FIELD_CONFIG = {
     ],
     validation: Yup.array(),
     defaultValue: [],
-    order: 29,
   },
   comments: {
     type: 'textarea',
@@ -296,7 +270,6 @@ export const FIELD_CONFIG = {
     validation: Yup.string(),
     defaultValue: '',
     rows: 5,
-    order: 50,
   },
   admissionCost: {
     validation: Yup.number().min(DEPOSIT_MIN).max(ADMISSION_COST_RANGE[1]).required(),

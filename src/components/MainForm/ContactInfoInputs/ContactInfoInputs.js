@@ -6,8 +6,7 @@ const { FIELD_CONFIG } = config;
 export default function ContactInfoInputs({ fields, index }) {
   return (
     <Grid container spacing={2}>
-      {fields.sort((a, b) => FIELD_CONFIG[a].order - FIELD_CONFIG[b].order)
-      .map((field) => (
+      {fields.map((field) => (
         <Grid item xs={12} sm={FIELD_CONFIG[field].width} key={`${index}-${field}`}>
           <Input
             label={FIELD_CONFIG[field].label}

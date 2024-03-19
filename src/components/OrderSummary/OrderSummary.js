@@ -62,7 +62,7 @@ export default function OrderSummary({ order, currentPage }) {
   );
 }
 
-function PersonContainerDotted({ person }) {
+export function PersonContainerDotted({ person }) {
   return (
     <Box sx={{ border: 'dotted', p: 2, m: 2 }} style={{ marginTop: '1em' }}>
       <Typography variant='body' sx={{ fontWeight: 'bold' }}>{person.first} {person.last}</Typography>

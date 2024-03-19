@@ -113,7 +113,7 @@ export const useOrderOperations = () => {
   // fire-and-forget
   const sendReceipts = (order) => {
     setProcessingMessage('Sending email confirmation...');
-    const emailReceiptPairs = generateReceipts({ order, paymentMethod });
+    const emailReceiptPairs = generateReceipts({ order });
     firebaseFunctionDispatcher({
       action: 'sendEmailConfirmations',
       data: emailReceiptPairs
@@ -127,10 +127,12 @@ function updateApartment(person) {
   return (person.apartment && /^\d/.test(person.apartment)) ? { ...person, apartment: `#${person.apartment}` } : person;
 }
 
-function generateReceipts({ order, paymentMethod }) {
-  const purchaserReceipt = renderToStaticMarkup(<Receipt order={order} currentPage='confirmation' checkPayment={paymentMethod === 'check'} />);
-  const additionalPersonReceipt = renderToStaticMarkup(<AdditionalPersonReceipt order={order} checkPayment={paymentMethod === 'check'} />);
-  const emailReceiptPairs = [{ email: order.people[0].email, receipt: purchaserReceipt }];
-  order.people.slice(1).forEach(person => emailReceiptPairs.push({ email: person.email, receipt: additionalPersonReceipt }));
-  return emailReceiptPairs;
+function generateReceipts({ order }) {
+  return order.people.map((person, i) => {
+    const receipt = i === 0 ? <Receipt order={order} /> : <AdditionalPersonReceipt order={order} person={person} />;
+    return {
+      email: person.email,
+      receipt: renderToStaticMarkup(receipt)
+    };
+  });
 }

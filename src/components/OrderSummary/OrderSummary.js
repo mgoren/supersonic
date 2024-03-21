@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Box, Typography, Accordion, AccordionSummary, AccordionDetails, Button } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import config from 'config';
-const { ORDER_SUMMARY_OPTIONS, ADMISSION_COST_RANGE, PAYMENT_DUE_DATE, INCLUDE_PRONOUNS_ON_NAMETAG } = config;
+const { ORDER_SUMMARY_OPTIONS, ADMISSION_COST_RANGE, PAYMENT_DUE_DATE, INCLUDE_PRONOUNS_ON_NAMETAG, DEPOSIT_COST } = config;
 
 // order is passed as prop to be sure it is most up-to-date when coming from receipt
 export default function OrderSummary({ order, currentPage }) {
@@ -13,7 +13,6 @@ export default function OrderSummary({ order, currentPage }) {
   // console.log('typoeof admissionsTotal', typeof admissionsTotal);
   const total = admissionsTotal + order.donation;
   const splitPayment = order.people.some(person => person.admissionCost * order.people.length !== admissionsTotal);
-  const isPayingDeposit = order.people.some(person => person.admissionCost < ADMISSION_COST_RANGE[0]);
 
   return (
     <>
@@ -45,9 +44,9 @@ export default function OrderSummary({ order, currentPage }) {
             :
             <>
               Admissions: {order.people.length} x ${order.people[0].admissionCost} = ${admissionsTotal}
+              {order.deposit && <><br /><strong><font color='orange'>Paying ${order.people.length * DEPOSIT_COST} deposit now and the rest by {PAYMENT_DUE_DATE}.</font></strong></>}
             </>
           }
-          {isPayingDeposit && <><br /><strong><font color='orange'>The balance of the payment will be due by {PAYMENT_DUE_DATE}.</font></strong></>}
 
           {order.donation > 0 &&
             <>

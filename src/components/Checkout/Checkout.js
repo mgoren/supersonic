@@ -9,7 +9,7 @@ import NavButtons from 'components/NavButtons/index.js';
 import { StyledPaper, Title } from 'components/Layout/SharedStyles';
 import StripeCheckoutWrapper from "components/StripeCheckoutWrapper";
 import config from 'config';
-const { NUM_PAGES } = config;
+const { NUM_PAGES, DEPOSIT_COST } = config;
 
 export default function Checkout() {
   const { order, updateOrder, setCurrentPage, processing, setProcessing, processingMessage, setProcessingMessage, setError, paymentMethod } = useOrder();
@@ -27,13 +27,13 @@ export default function Checkout() {
   }, []);
 
   const admissionsTotal = order.people.reduce((total, person) => total + person.admissionCost, 0);
-  const total = admissionsTotal + order.donation;
+  const total = order.deposit ? order.people.length * DEPOSIT_COST + order.donation : admissionsTotal + order.donation;
 
   const handleClickBackButton = () => {
     setError(null);
     updateOrder({ status: '' });
     setCurrentPage(NUM_PAGES);
-  }
+  };
 
   // error handling is done within the called functions
   const processCheckout = async ({ paymentProcessorFn, paymentParams={} }) => {

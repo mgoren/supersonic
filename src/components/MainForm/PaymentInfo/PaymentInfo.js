@@ -3,20 +3,21 @@ import { useOrder } from 'components/OrderContext';
 import { scrollToTop, clamp } from 'utils';
 import { RightAlignedInput } from '../Input';
 import { StyledPaper, Title, Paragraph } from 'components/Layout/SharedStyles';
-import { InputAdornment, Typography, Link } from '@mui/material';
+import { InputAdornment, Typography, Link, Checkbox, FormControlLabel } from '@mui/material';
 import { useFormikContext } from 'formik';
 import { PaymentExplanation } from 'components/Static/PaymentExplanation';
 import config from 'config';
-const { DEPOSIT_MIN, ADMISSION_COST_RANGE, DONATION_OPTION, DONATION_RANGE, PAYMENT_DUE_DATE } = config;
+const { DEPOSIT_OPTION, DEPOSIT_COST, ADMISSION_COST_RANGE, DONATION_OPTION, DONATION_RANGE, PAYMENT_DUE_DATE } = config;
 
 export default function PaymentInfo() {
-  const { order } = useOrder();
-  const admissionsTotal = order.people.reduce((total, person) => total + person.admissionCost, 0);
-  const priceRange = [DEPOSIT_MIN, ADMISSION_COST_RANGE[1]];
-  const [splitPayment, setSplitPayment] = useState(order.people.some(person => person.admissionCost * order.people.length !== admissionsTotal));
-  const [payingDeposit, setPayingDeposit] = useState(order.people.some(person => person.admissionCost < ADMISSION_COST_RANGE[0]));
+  const { order, updateOrder } = useOrder();
+  // const admissionsTotal = order.people.reduce((total, person) => total + person.admissionCost, 0);
+  const isSlidingScale = ADMISSION_COST_RANGE[0] < ADMISSION_COST_RANGE[1];
+  const priceRange = [ADMISSION_COST_RANGE[0], ADMISSION_COST_RANGE[1]];
+  // const [splitPayment, setSplitPayment] = useState(order.people.some(person => person.admissionCost * order.people.length !== admissionsTotal));
+  const [splitPayment, setSplitPayment] = useState(true);
   const [payingMax, setPayingMax] = useState(order.people[0].admissionCost === ADMISSION_COST_RANGE[1]);
-  const { values, setFieldValue, handleBlur } = useFormikContext();
+  const { values, setFieldValue, handleBlur, handleChange } = useFormikContext();
   const [donate, setDonate] = useState(values.donation > 0);
 
   // const admissionCostLabel = <>How much are you able to pay{order.people.length > 1 && <em><strong> per person</strong></em>}? (${ADMISSION_COST_RANGE[0]}-{ADMISSION_COST_RANGE[1]})</>;
@@ -38,7 +39,6 @@ export default function PaymentInfo() {
 
   function updateAdmissionCostValue(event) {
     clampValue({ event: event, range: priceRange})
-    setPayingDeposit(values['people'].some(person => clamp(person.admissionCost, priceRange) < ADMISSION_COST_RANGE[0]) ? true : false)
     setPayingMax(clamp(values['people'][0]['admissionCost'], priceRange) === ADMISSION_COST_RANGE[1] ? true : false)
     handleBlur(event); // bubble up to formik
   }
@@ -49,9 +49,13 @@ export default function PaymentInfo() {
     order.people.forEach((_, index) => {
       setFieldValue(`people[${index}].admissionCost`, clampedValue);
     });
-    setPayingDeposit(clampedValue < ADMISSION_COST_RANGE[0] ? true : false);
     setPayingMax(clampedValue === ADMISSION_COST_RANGE[1] ? true : false)
     handleBlur(event); // bubble up to formik
+  }
+
+  function handleDepositToggle(e) {
+    updateOrder({ deposit: e.target.checked });
+    handleChange(e); // bubble up to formik
   }
 
   return (
@@ -62,69 +66,82 @@ export default function PaymentInfo() {
       <div className='admissions-section'>
         <StyledPaper className='admissions-cost'>
 
-        {DEPOSIT_MIN === ADMISSION_COST_RANGE[1] &&
-              <>
+          {!isSlidingScale &&
+            <>
               <Title>Admission cost</Title>
-                <p>
-                  Number of admissions: {order.people.length}<br />
-                  Price per admission: ${ADMISSION_COST_RANGE[0]}
-                </p>
-                <p>
-                  Admissions total: ${order.people.length * ADMISSION_COST_RANGE[0]}
-                </p>
-              </>
-            }
+              <Paragraph>
+                Number of admissions: {order.people.length}<br />
+                Price per admission: ${ADMISSION_COST_RANGE[0]}
+              </Paragraph>
+              <Paragraph>
+                Admissions total: ${order.people.length * ADMISSION_COST_RANGE[0]}
+              </Paragraph>
+            </>
+          }
 
-            { DEPOSIT_MIN < ADMISSION_COST_RANGE[1] &&
-              <>
-                <Title>Sliding scale</Title>
-                {/* {DEPOSIT_MIN < ADMISSION_COST_RANGE[0] &&
-                  <Paragraph>Deposit minimum: ${DEPOSIT_MIN}</Paragraph>
-                } */}
+          {isSlidingScale &&
+            <>
+              <Title>Sliding scale</Title>
+              <Typography>Please read the sliding scale and deposit explanations above.</Typography>
 
-                <Typography>Please read the sliding scale and deposit explanations above.</Typography>
-                {splitPayment ?
-                  <>
-                    <Paragraph>Specify the amount each person will pay:</Paragraph>
-                    {/* <SlidingScaleSummaryExplanation /> */}
-                    {order.people.map((person, index) =>
-                      <RightAlignedInput
-                        key={index}
-                        sx={{ width: '5em', mb: 1 }}
-                        label={`${person.first} ${person.last}`}
-                        name={`people[${index}].admissionCost`}
-                        pattern='###'
-                        range={priceRange}
-                        onBlur={(event) => updateAdmissionCostValue(event)}
-                        InputProps={{ startAdornment: <InputAdornment position='start'>$</InputAdornment> }}
-                      />
-                    )}
-                  </>
-                  :
-                  <>
+              {splitPayment &&
+                <>
+                  <Paragraph>Specify the amount each person will pay:</Paragraph>
+                  {order.people.map((person, index) =>
                     <RightAlignedInput
-                      sx={{ width: '5em' }}
-                      // label={`How much are you able to pay${order.people.length > 1 ? ' *per person*' : ''}? ($${ADMISSION_COST_RANGE[0]}-${ADMISSION_COST_RANGE[1]})`}
-                      label={admissionCostLabel}
-                      name='people[0].admissionCost'
+                      key={index}
+                      sx={{ width: '5em', mb: 1 }}
+                      label={`${person.first} ${person.last}`}
+                      name={`people[${index}].admissionCost`}
                       pattern='###'
                       range={priceRange}
-                      onBlur={(event) => updateAdmissionCostValues(event)}
+                      onBlur={(event) => updateAdmissionCostValue(event)}
                       InputProps={{ startAdornment: <InputAdornment position='start'>$</InputAdornment> }}
                     />
-                    {/* <SlidingScaleSummaryExplanation /> */}
-                  </>
-                }
+                  )}
+                </>
+              }
 
-                {!splitPayment && order.people.length > 1 &&
-                  <Typography variant="body2" sx={{ mt: 2 }}>(or click <Link component='span' sx={{cursor: 'pointer'}} onClick={showSplitPayments}>here</Link> to specify different amounts per person)</Typography>
-                }
+              {!splitPayment &&
+                <>
+                  <RightAlignedInput
+                    sx={{ width: '5em' }}
+                    label={admissionCostLabel}
+                    name='people[0].admissionCost'
+                    pattern='###'
+                    range={priceRange}
+                    onBlur={(event) => updateAdmissionCostValues(event)}
+                    InputProps={{ startAdornment: <InputAdornment position='start'>$</InputAdornment> }}
+                  />
+                  {order.people.length > 1 &&
+                    <Typography variant="body2" sx={{ mt: 2 }}>
+                      (or click <Link component='span' sx={{cursor: 'pointer'}} onClick={showSplitPayments}>here</Link> to specify different amounts per person)
+                    </Typography>
+                  }
+                </>
+              }
 
-                {payingDeposit &&
-                  <Paragraph sx={{ my: 2, color: 'orange', fontWeight: 'bold' }}>The balance of the payment will be due by {PAYMENT_DUE_DATE}.</Paragraph>
+            </>
+          }
+
+          {DEPOSIT_OPTION &&
+            <>
+              <FormControlLabel
+                label={<>Click here to pay a ${DEPOSIT_COST * order.people.length} deposit now and the rest later.</>}
+                control={
+                  <Checkbox
+                    name='deposit'
+                    color='secondary'
+                    checked={order.deposit}
+                    onChange={(e) => handleDepositToggle(e)}
+                  />
                 }
-              </>
-            }
+              />
+              {order.deposit &&
+                <Paragraph sx={{ my: 2, color: 'orange', fontWeight: 'bold' }}>The balance of the payment will be due by {PAYMENT_DUE_DATE}.</Paragraph>
+              }
+            </>
+          }
 
         </StyledPaper>
 

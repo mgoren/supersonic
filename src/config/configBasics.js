@@ -1,4 +1,5 @@
-export const DEPOSIT_MIN = 50;
+export const DEPOSIT_OPTION = true;
+export const DEPOSIT_COST = 50;
 export const ADMISSION_COST_RANGE = [125, 999];
 export const ADMISSION_COST_DEFAULT = 380;
 export const ADMISSION_QUANTITY_MAX = 4;

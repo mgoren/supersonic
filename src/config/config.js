@@ -7,7 +7,7 @@ import { PAYPAL_OPTIONS } from './configPaypal';
 import { FIELD_CONFIG, PERSON_INPUT_LABELS } from './configFields';
 import { ORDER_SUMMARY_OPTIONS } from './configOrderSummary';
 import { DANCES } from './configContent';
-import { DEPOSIT_MIN, ADMISSION_COST_RANGE, ADMISSION_COST_DEFAULT, ADMISSION_QUANTITY_MAX, DONATION_OPTION, DONATION_RANGE, INCLUDE_PRONOUNS_ON_NAMETAG, INCLUDE_LAST_ON_NAMETAG } from './configBasics';
+import { DEPOSIT_OPTION, DEPOSIT_COST, ADMISSION_COST_RANGE, ADMISSION_COST_DEFAULT, ADMISSION_QUANTITY_MAX, DONATION_OPTION, DONATION_RANGE, INCLUDE_PRONOUNS_ON_NAMETAG, INCLUDE_LAST_ON_NAMETAG } from './configBasics';
 
 // config for this particular registration instance; update this as needed!
 const PERSON_CONTACT_FIELDS = ['first', 'last', 'nametag', 'pronouns', 'email', 'emailConfirmation', 'phone', 'address', 'apartment', 'city', 'state', 'zip', 'country'];
@@ -15,7 +15,8 @@ const PERSON_MISC_FIELDS = ['share', 'dietaryPreferences', 'dietaryRestrictions'
 const PERSON_PAYMENT_FIELDS = ['admissionCost'];
 
 const ORDER_MISC_DEFAULTS = {
-  donation: DONATION_RANGE[0]
+  donation: DONATION_RANGE[0],
+  deposit: false
 };
 
 // don't change these
@@ -52,7 +53,8 @@ const config = {
   SAFETY_POLICY_URL: 'example.com/safety',
   CHECK_TO: 'Check To Example',
   CHECK_ADDRESS: <>Address line 1<br />Address line 2<br />Address line 3<br />Address line 4</>, // enclosed in <> </> to allow multiple lines
-  DEPOSIT_MIN,
+  DEPOSIT_OPTION,
+  DEPOSIT_COST,
   PAYMENT_DUE_DATE: 'Example Payment Due Date',
   ADMISSION_COST_RANGE,
   ADMISSION_COST_DEFAULT,

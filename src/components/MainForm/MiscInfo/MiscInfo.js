@@ -25,7 +25,7 @@ export default function MiscInfo({ index }) {
   function updateCheckboxOptions(e) {
     const { name, value, checked } = e.target;
     const field = name.split('.').pop();
-    if( field === 'share'  && value === 'name') {
+    if( field === 'share' && value === 'name') {
       setFieldValue(`people[${index}].share`, checked ? [value] : []);
     } else {
       handleChange(e); // let formik handle it

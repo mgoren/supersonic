@@ -5,7 +5,7 @@ import { sanitizeObject, warnBeforeUserLeavesSite } from 'utils';
 import FormContents from "./FormContents";
 import { validationSchema } from './validationSchema';
 import config from 'config';
-const { NUM_PAGES } = config;
+const { NUM_PAGES, DEPOSIT_COST } = config;
 
 export default function MainForm() {
   const { order, updateOrder, currentPage, setCurrentPage } = useOrder();
@@ -23,10 +23,14 @@ export default function MainForm() {
   function submitForm(values, actions) {
     const submittedOrder = Object.assign({}, values);
     const sanitizedOrder = sanitizeObject(submittedOrder);
+    const updatedOrder = {
+      ...sanitizedOrder,
+      deposit: sanitizedOrder.deposit ? sanitizedOrder.people.length * DEPOSIT_COST : 0
+    };
     if (currentPage === NUM_PAGES) {
-      updateOrder({ ...sanitizedOrder, status: 'checkout' });
+      updateOrder({ ...updatedOrder, status: 'checkout' });
     } else {
-      updateOrder(sanitizedOrder);
+      updateOrder(updatedOrder);
       setCurrentPage(currentPage + 1);
     }
   }

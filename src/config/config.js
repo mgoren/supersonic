@@ -7,16 +7,16 @@ import { PAYPAL_OPTIONS } from './configPaypal';
 import { FIELD_CONFIG, PERSON_INPUT_LABELS } from './configFields';
 import { ORDER_SUMMARY_OPTIONS } from './configOrderSummary';
 import { DANCES } from './configContent';
-import { DEPOSIT_OPTION, DEPOSIT_COST, ADMISSION_COST_RANGE, ADMISSION_COST_DEFAULT, ADMISSION_QUANTITY_MAX, DONATION_OPTION, DONATION_RANGE, INCLUDE_PRONOUNS_ON_NAMETAG, INCLUDE_LAST_ON_NAMETAG } from './configBasics';
+import { DEPOSIT_OPTION, DEPOSIT_COST, ADMISSION_COST_RANGE, ADMISSION_COST_DEFAULT, ADMISSION_QUANTITY_MAX, DONATION_OPTION, DONATION_MAX, INCLUDE_PRONOUNS_ON_NAMETAG, INCLUDE_LAST_ON_NAMETAG } from './configBasics';
 
 // config for this particular registration instance; update this as needed!
 const PERSON_CONTACT_FIELDS = ['first', 'last', 'nametag', 'pronouns', 'email', 'emailConfirmation', 'phone', 'address', 'apartment', 'city', 'state', 'zip', 'country'];
 const PERSON_MISC_FIELDS = ['share', 'dietaryPreferences', 'dietaryRestrictions', 'allergies', 'scent', 'carpool', 'bedding', 'volunteer', 'housing', 'roommate', 'photo', 'comments'];
-const PERSON_PAYMENT_FIELDS = ['admissionCost'];
+const PERSON_PAYMENT_FIELDS = ['admission'];
 
 const ORDER_MISC_DEFAULTS = {
-  donation: DONATION_RANGE[0],
-  deposit: false
+  donation: 0,
+  deposit: 0
 };
 
 // don't change these
@@ -60,7 +60,7 @@ const config = {
   ADMISSION_COST_DEFAULT,
   ADMISSION_QUANTITY_MAX,
   DONATION_OPTION,
-  DONATION_RANGE,
+  DONATION_MAX,
   PAYPAL_OPTIONS,
   FIELD_CONFIG,
   PERSON_CONTACT_FIELDS,

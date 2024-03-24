@@ -33,7 +33,7 @@ export const FIELD_CONFIG = {
   },
   nametag: {
     label: 'Name for roster',
-    validation: NAME_VALIDATION,
+    validation: NAME_VALIDATION.required('Please enter name for roster.'),
     defaultValue: '',
     width: 12
   },
@@ -271,9 +271,13 @@ export const FIELD_CONFIG = {
     defaultValue: '',
     rows: 5,
   },
-  admissionCost: {
+  admission: {
     validation: Yup.number().min(ADMISSION_COST_RANGE[0]).max(ADMISSION_COST_RANGE[1]).required(),
     defaultValue: ADMISSION_COST_DEFAULT,
+  },
+  deposit: {
+    validation: Yup.number().min(0),
+    defaultValue: 0,
   },
 }
 

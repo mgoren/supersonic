@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import config from 'config';
-const { FIELD_CONFIG, PERSON_FIELDS, DONATION_RANGE } = config;
+const { FIELD_CONFIG, PERSON_FIELDS, DONATION_MAX } = config;
 
 export function validationSchema({ currentPage }) {
 
@@ -14,7 +14,7 @@ export function validationSchema({ currentPage }) {
 
   const paymentSchema=Yup.object({
     people: Yup.array().of(personValidationSchema),
-    donation: Yup.number().min(DONATION_RANGE[0]).max(DONATION_RANGE[1])
+    donation: Yup.number().min(0).max(DONATION_MAX)
   });
 
   const validationSchemas = {

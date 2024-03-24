@@ -4,15 +4,12 @@ import { useState } from 'react';
 import { Box, Typography, Accordion, AccordionSummary, AccordionDetails, Button } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import config from 'config';
-const { ORDER_SUMMARY_OPTIONS, ADMISSION_COST_RANGE, PAYMENT_DUE_DATE, INCLUDE_PRONOUNS_ON_NAMETAG, DEPOSIT_COST } = config;
+const { ORDER_SUMMARY_OPTIONS, ADMISSION_COST_RANGE, PAYMENT_DUE_DATE, INCLUDE_PRONOUNS_ON_NAMETAG } = config;
 
 // order is passed as prop to be sure it is most up-to-date when coming from receipt
 export default function OrderSummary({ order, currentPage }) {
-  const admissions = order.people.map(person => person.admissionCost);
+  const admissions = order.people.map(person => person.admission);
   const admissionsTotal = admissions.reduce((total, admission) => total + admission, 0);
-  // console.log('typoeof admissionsTotal', typeof admissionsTotal);
-  const total = admissionsTotal + order.donation;
-  const splitPayment = order.people.some(person => person.admissionCost * order.people.length !== admissionsTotal);
 
   return (
     <>
@@ -28,31 +25,27 @@ export default function OrderSummary({ order, currentPage }) {
 
       <Box style={{ marginTop: '2em' }}>
         <Typography variant="body" gutterBottom>
-          <strong>{currentPage === 'confirmation' && order.paymentId !== 'check' ? 'Amount paid' : 'Amount due'}</strong>
+          <strong>Payment</strong>
         </Typography>
         <p>
-          {splitPayment ?
-            <>
-              Admissions:&nbsp;
-              {admissions.map((cost, index) => (
-                <span key={index}>
-                  ${cost} {index < admissions.length - 1 ? '+ ' : '= '}
-                </span>
-              ))}
-              ${admissionsTotal}
-            </>
-            :
-            <>
-              Admissions: {order.people.length} x ${order.people[0].admissionCost} = ${admissionsTotal}
-              {order.deposit && <><br /><strong><font color='orange'>Paying ${order.people.length * DEPOSIT_COST} deposit now and the rest by {PAYMENT_DUE_DATE}.</font></strong></>}
-            </>
-          }
+          Admissions:&nbsp;
+          {admissions.map((cost, index) => (
+            <span key={index}>
+              ${cost} {index < admissions.length - 1 ? '+ ' : '= '}
+            </span>
+          ))}
+          ${admissionsTotal}<br />
 
           {order.donation > 0 &&
             <>
-              <br />
               Additional donation: ${order.donation}<br />
-              Total: ${total}
+              Total: ${admissionsTotal + order.donation}<br />
+            </>
+          }
+
+          {order.deposit > 0 &&
+            <>
+              Deposit {currentPage === 'confirmation' && order.paymentId !== 'check' ? 'paid' : 'due now'}: ${order.deposit}<br />
             </>
           }
         </p>
@@ -103,7 +96,7 @@ function PersonSummary({ person, skipCost=false }) {
       {ORDER_SUMMARY_OPTIONS
         .map((option) => {
           const { property, label, mapping, defaultValue } = option;
-          if (skipCost && property === 'admissionCost') return null;
+          if (skipCost && property === 'admission') return null;
           return (
             <Box key={option.property}>
               {renderConditionalData({ person, property, label, mapping, defaultValue })}
@@ -120,9 +113,8 @@ function PersonSummary({ person, skipCost=false }) {
 function renderConditionalData ({ person, property, label, mapping, defaultValue }) {
   let data = person[property];
   let content;
-  if (property === 'admissionCost') {
+  if (property === 'admission') {
     content = formatCost(data);
-    label = data < ADMISSION_COST_RANGE[0] ? 'Deposit Amount' : label;
   } else if (property === 'nametag') {
     content = formatNametag(person);
   } else if (property === 'address') {
@@ -142,10 +134,9 @@ function formatCost(cost) {
 }
 
 function formatNametag(person) {
-  const { nametag, first, pronouns } = person;
-  const formattedName = nametag || first;
+  const { nametag, pronouns } = person;
   const formattedPronouns = pronouns ? `(${pronouns})` : '';
-  return INCLUDE_PRONOUNS_ON_NAMETAG ? `${formattedName} ${formattedPronouns}` : formattedName;
+  return INCLUDE_PRONOUNS_ON_NAMETAG ? `${nametag} ${formattedPronouns}` : nametag;
 }
 
 function formatAddress(person) {

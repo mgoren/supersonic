@@ -6,7 +6,6 @@ import admin from 'firebase-admin';
 import { fieldOrder } from './fields.js';
 import { handleError, joinArrays } from './helpers.js';
 
-const ADMISSION_MINIMUM = parseInt(functions.config().shared.admission_min);
 const SERVICE_ACCOUNT_KEYS = functions.config().sheets.googleapi_service_account;
 const SHEET_ID = functions.config().sheets.sheet_id;
 const CONFIG_DATA_COLLECTION = 'orders';
@@ -38,19 +37,20 @@ const mapOrderToSpreadsheetLines = (order) => {
   const { people, ...orderFields } = updatedOrder
   let isPurchaser = true;
   for (const person of people) {
-    const admissionCost = parseInt(person.admissionCost);
-    const admission = admissionCost >= ADMISSION_MINIMUM ? admissionCost : '';
-    const deposit = admissionCost < ADMISSION_MINIMUM ? admissionCost : '';
-    const total = isPurchaser ? admissionCost + order.donation : admissionCost;
+    const admission = parseInt(person.admission);
+    const total = isPurchaser ? admission + order.donation : admission;
+    const deposit = order.deposit / people.length;
     const address = person.apartment ? `${person.address} ${person.apartment}` : person.address;
     const updatedPerson = person.share ? joinArrays(person) : { ...joinArrays(person), share: 'do not share' };
-    const paid = order.paymentMethod === 'check' ? 0 : total;
-    let status = '';
+    let paid, status;
     if (order.paymentMethod === 'check') {
+      paid = 0;
       status = 'awaiting check';
-    } else if (admissionCost < ADMISSION_MINIMUM) {
+    } else if (deposit > 0) {
+      paid = isPurchaser ? deposit + order.donation : deposit;
       status = 'deposit';
     } else {
+      paid = total;
       status = 'paid';
     }
     const firstPersonPurchaserField = people.length > 1 ? `self (+${people.length - 1})` : 'self';
@@ -58,7 +58,7 @@ const mapOrderToSpreadsheetLines = (order) => {
       ...updatedPerson,
       createdAt,
       address,
-      admissionCost: admission,
+      admission,
       deposit,
       total,
       paid,

@@ -4,7 +4,7 @@ import OrderSummary, { PersonContainerDotted } from 'components/OrderSummary';
 import { Divider, Typography } from '@mui/material';
 import { StyledLink } from 'components/Layout/SharedStyles';
 import config from 'config';
-const { COVID_POLICY_URL, CHECK_TO, CHECK_ADDRESS, EVENT_TITLE, ADMISSION_COST_RANGE, PAYMENT_DUE_DATE } = config;
+const { COVID_POLICY_URL, CHECK_TO, CHECK_ADDRESS, EVENT_TITLE, PAYMENT_DUE_DATE } = config;
 
 // relies on passing order as prop to ensure is updated
 export default function Receipt({ order }) {
@@ -18,13 +18,13 @@ export default function Receipt({ order }) {
 }
 
 function CheckPaymentReceipt({ order }) {
-  const total = order.people.reduce((total, person) => total + person.admissionCost, 0) + order.donation;
+  const total = order.people.reduce((total, person) => total + person.admission, 0) + order.donation;
   return (
     <>
       <Typography component='p' color='error'>
         <strong>You are not yet registered!</strong><br />
         Paying on time can increase your chance of being accepted.<br />
-        Please send a check for ${total} to secure your spot.<br />
+        Please send a check for {order.deposit ? `at least $${order.deposit} of your $${total} balance to hold` : `$${total} to secure`} your spot.<br />
       </Typography>
 
       <Typography component='p' sx={{ mt: 2 }}>
@@ -49,20 +49,16 @@ function CheckPaymentReceipt({ order }) {
 }
 
 function ElectronicPaymentReceipt({ order }) {
-  const total = order.people.reduce((total, person) => total + person.admissionCost, 0) + order.donation;
-  const isPayingDeposit = order.people.some(person => person.admissionCost < ADMISSION_COST_RANGE[0]);
+  const total = order.people.reduce((total, person) => total + person.admission, 0) + order.donation;
   return (
     <>
       <Typography component='p' sx={{ mt: 2 }}>
         Thank you for registering for the {EVENT_TITLE}!<br />
-        Your payment for ${total} has been successfully processed.<br />
+        Your payment for ${order.deposit || total} has been successfully processed.<br />
+        {order.deposit > 0 &&
+          <strong><font color='darkorange'>The balance of your registration fee is due by {PAYMENT_DUE_DATE}.</font></strong>
+        }
       </Typography>
-
-      {isPayingDeposit &&
-        <Typography component='p' sx={{ mt: 2 }}>
-          <strong><font color='red'>The balance of your registration fee is due by {PAYMENT_DUE_DATE}.</font></strong><br />
-        </Typography>
-      }
 
       <SharedReceipt />
 
@@ -74,7 +70,6 @@ function ElectronicPaymentReceipt({ order }) {
 }
 
 export function AdditionalPersonReceipt({ order, person }) {
-  const isPayingDeposit = order.people.some(person => person.admissionCost < ADMISSION_COST_RANGE[0]);
   return (
     <>
       <Typography component='p' sx={{ mt: 2 }}>
@@ -87,7 +82,7 @@ export function AdditionalPersonReceipt({ order, person }) {
         </Typography>
       }
 
-      {isPayingDeposit && order.paymentId !== 'check' &&
+      {order.deposit > 0 && order.paymentId !== 'check' &&
         <Typography component='p' sx={{ mt: 2 }}>
           Your spot in camp is reserved. The balance of your registration fee is due by {PAYMENT_DUE_DATE}.
         </Typography>

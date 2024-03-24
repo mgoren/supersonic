@@ -16,9 +16,6 @@ const RETRY_DELAY_MS = 500;
 if (admin.apps.length === 0) admin.initializeApp();
 const client = new google.auth.JWT(SERVICE_ACCOUNT_KEYS.client_email, null, SERVICE_ACCOUNT_KEYS.private_key, ['https://www.googleapis.com/auth/spreadsheets']);
 
-
-// ******** ADD LINE(S) TO SPREADSHEET ********
-
 export const appendrecordtospreadsheet = functions.firestore.document(`${CONFIG_DATA_COLLECTION}/{ITEM}`).onCreate(async (snap) => {
   try {
     const order = { ...snap.data(), key: snap.id };
@@ -37,11 +34,15 @@ const mapOrderToSpreadsheetLines = (order) => {
   const { people, ...orderFields } = updatedOrder
   let isPurchaser = true;
   for (const person of people) {
-    const admission = parseInt(person.admission);
-    const total = isPurchaser ? admission + order.donation : admission;
-    const deposit = order.deposit / people.length;
     const address = person.apartment ? `${person.address} ${person.apartment}` : person.address;
+    let admission, total, deposit;
     const updatedPerson = person.share ? joinArrays(person) : { ...joinArrays(person), share: 'do not share' };
+    if (order.deposit) {
+      deposit = order.deposit / people.length;
+    } else {
+      admission = parseInt(person.admission);
+      total = isPurchaser ? admission + order.donation : admission;
+    }
     let paid, status;
     if (order.paymentMethod === 'check') {
       paid = 0;
@@ -59,8 +60,8 @@ const mapOrderToSpreadsheetLines = (order) => {
       createdAt,
       address,
       admission,
-      deposit,
       total,
+      deposit,
       paid,
       status,
       purchaser: isPurchaser ? firstPersonPurchaserField : `${people[0].first} ${people[0].last}`
@@ -95,9 +96,6 @@ async function appendPromise(orderLine, attempt = 0) {
     }
   }
 }
-
-
-// ******** GOOGLE SHEETS API ********
 
 async function googleSheetsOperation({ operation, params }) {
   try {

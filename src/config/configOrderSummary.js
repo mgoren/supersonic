@@ -17,5 +17,5 @@ export const ORDER_SUMMARY_OPTIONS = [
   { property: 'roommate', label: 'Roommate' },
   { property: 'photo', label: 'Photo Consent' },
   { property: 'comments', label: 'Comments' },
-  { property: 'admission', label: 'Admission Cost' },
+  // { property: 'admission', label: 'Admission Cost' },
 ];

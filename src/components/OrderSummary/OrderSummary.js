@@ -28,24 +28,29 @@ export default function OrderSummary({ order, currentPage }) {
           <strong>Payment</strong>
         </Typography>
         <p>
-          Admissions:&nbsp;
-          {admissions.map((cost, index) => (
-            <span key={index}>
-              ${cost} {index < admissions.length - 1 ? '+ ' : '= '}
-            </span>
-          ))}
-          ${admissionsTotal}<br />
-
-          {order.donation > 0 &&
+          {order.deposit === 0 &&
             <>
-              Additional donation: ${order.donation}<br />
-              Total: ${admissionsTotal + order.donation}<br />
+              Admissions:&nbsp;
+              {admissions.length > 1 && admissions.map((cost, index) => (
+                <span key={index}>
+                  ${cost} {index < admissions.length - 1 ? '+ ' : '= '}
+                </span>
+              ))}
+              ${admissionsTotal}<br />
             </>
           }
 
           {order.deposit > 0 &&
             <>
               Deposit {currentPage === 'confirmation' && order.paymentId !== 'check' ? 'paid' : 'due now'}: ${order.deposit}<br />
+              <strong><font color='orange'>The balance of your registration fee is due by {PAYMENT_DUE_DATE}.</font></strong><br />
+            </>
+          }
+
+          {order.donation > 0 &&
+            <>
+              Additional donation: ${order.donation}<br />
+              {/* Total: ${admissionsTotal + order.donation}<br /> */}
             </>
           }
         </p>

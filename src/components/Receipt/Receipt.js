@@ -24,7 +24,7 @@ function CheckPaymentReceipt({ order }) {
       <Typography component='p' color='error'>
         <strong>You are not yet registered!</strong><br />
         Paying on time can increase your chance of being accepted.<br />
-        Please send a check for {order.deposit ? `at least $${order.deposit} of your $${total} balance to hold` : `$${total} to secure`} your spot.<br />
+        Please send a check for {order.deposit ? `at least $${order.deposit} to hold` : `$${total} to secure`} your spot.<br />
       </Typography>
 
       <Typography component='p' sx={{ mt: 2 }}>

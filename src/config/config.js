@@ -51,6 +51,7 @@ const config = {
   EMAIL_CONTACT: 'contact@example.com',
   COVID_POLICY_URL: 'example.com/covid',
   SAFETY_POLICY_URL: 'example.com/safety',
+  DIRECT_PAYMENT_URL: 'example.com/directpayment',
   CHECK_TO: 'Check To Example',
   CHECK_ADDRESS: <>Address line 1<br />Address line 2<br />Address line 3<br />Address line 4</>, // enclosed in <> </> to allow multiple lines
   DEPOSIT_OPTION,

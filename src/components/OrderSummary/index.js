@@ -1,1 +1,1 @@
-export { PersonContainerAccordion, PersonContainerDotted, default } from './OrderSummary';
+export { default, PersonSummary } from './OrderSummary';

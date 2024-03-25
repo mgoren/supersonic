@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { useOrder } from 'components/OrderContext';
 import { useFormikContext } from 'formik';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Typography, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PersonForm from '../PersonForm';
 import NavButtons from 'components/NavButtons';
 import { StyledPaper } from 'components/Layout/SharedStyles';
 import config from 'config';
-import { PersonContainerAccordion } from 'components/OrderSummary';
+import { PersonSummary } from 'components/OrderSummary';
 const { ADMISSION_QUANTITY_MAX, PERSON_DEFAULTS } = config;
 
 export default function People() {
@@ -90,5 +91,32 @@ export default function People() {
         <NavButtons nextButtonProps = {{ text: 'Next' }} />
       }
     </>
+  );
+}
+
+function PersonContainerAccordion({ person, personIndex, showButtons, handleEdit, handleDelete }) {
+  const [expanded, setExpanded] = useState(false);
+  return (
+    <Box sx={{ mt: 2 }}>
+      <Accordion expanded={expanded} onChange={ () => setExpanded(!expanded) }>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+          <Typography><strong>{person.first} {person.last}</strong></Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <PersonSummary person={person} skipCost={true} skipFirstLastHeading={true} />
+          {showButtons &&
+            <Box sx={{ my: 4 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <div />
+                <Button onClick={() => handleDelete(personIndex)} variant='contained' color='error'>Delete</Button>
+                <div />
+                <Button onClick={() => handleEdit(personIndex)} variant='contained' color='info'>Edit</Button>
+                <div />
+              </Box>
+            </Box>
+          }
+        </AccordionDetails>
+      </Accordion>
+    </Box>
   );
 }

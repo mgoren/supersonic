@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { scrollToTop, websiteLink } from 'utils';
-import OrderSummary, { PersonContainerDotted } from 'components/OrderSummary';
+import OrderSummary, { PersonSummary } from 'components/OrderSummary';
 import { Divider, Typography } from '@mui/material';
 import { StyledLink } from 'components/Layout/SharedStyles';
 import config from 'config';
@@ -94,7 +94,11 @@ export default function Receipt({ order, person, isPurchaser }) {
         Registration Information:
       </Typography>
 
-      {isPurchaser ? <OrderSummary order={order} currentPage='confirmation' /> : <PersonContainerDotted person={person} />}
+      {isPurchaser ?
+        <OrderSummary order={order} currentPage='confirmation' />
+      :
+        <PersonSummary person={person} />
+      }
     </>
   );
 }

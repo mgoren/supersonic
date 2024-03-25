@@ -1,15 +1,15 @@
-// NOTE: this component uses some vanilla html becuase it's used in the confirmation email
-
-import { useState } from 'react';
-import { Box, Typography, Accordion, AccordionSummary, AccordionDetails, Button } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Box, Typography } from '@mui/material';
 import config from 'config';
 const { ORDER_SUMMARY_OPTIONS, ADMISSION_COST_RANGE, PAYMENT_DUE_DATE, INCLUDE_PRONOUNS_ON_NAMETAG } = config;
 
-// order is passed as prop to be sure it is most up-to-date when coming from receipt
-export default function OrderSummary({ order, currentPage }) {
+// NOTE: this component uses some vanilla html becuase it's used in the confirmation email
+// NOTE: order is passed as prop to be sure it is most up-to-date when this is used in receipt generation
+export default function OrderSummary({ order }) {
   const admissions = order.people.map(person => person.admission);
   const admissionsTotal = admissions.reduce((total, admission) => total + admission, 0);
+  const isDeposit = order.deposit > 0;
+  const isFullPayment = !isDeposit;
+  const isPaid = order.paymentId && order.paymentId !== 'PENDING' && order.paymentId !== 'check';
 
   return (
     <>
@@ -18,8 +18,8 @@ export default function OrderSummary({ order, currentPage }) {
       </Typography>
 
       {order.people.map((person, index) => person.email && (
-        <Box key={index}>
-          <PersonContainerDotted person={person} />
+        <Box sx={{ border: 'dotted', p: 2, m: 2 }} style={{ marginTop: '1em' }} key={index}>
+          <PersonSummary person={person} />
         </Box>
       ))}
 
@@ -27,8 +27,9 @@ export default function OrderSummary({ order, currentPage }) {
         <Typography variant="body" gutterBottom>
           <strong>Payment</strong>
         </Typography>
-        <p>
-          {order.deposit === 0 &&
+
+        <Typography component='p' style={{ marginTop: '1em' }}>
+          {isFullPayment &&
             <>
               Admissions:&nbsp;
               {admissions.length > 1 && admissions.map((cost, index) => (
@@ -40,64 +41,28 @@ export default function OrderSummary({ order, currentPage }) {
             </>
           }
 
-          {order.deposit > 0 &&
+          {isDeposit &&
             <>
-              Deposit {currentPage === 'confirmation' && order.paymentId !== 'check' ? 'paid' : 'due now'}: ${order.deposit}<br />
+              Deposit {isPaid ? 'paid' : 'due now'}: ${order.deposit}<br />
               <strong><font color='orange'>The balance of your registration fee is due by {PAYMENT_DUE_DATE}.</font></strong><br />
             </>
           }
 
           {order.donation > 0 &&
-            <>
-              Additional donation: ${order.donation}<br />
-              {/* Total: ${admissionsTotal + order.donation}<br /> */}
-            </>
+            <>Additional donation: ${order.donation}<br /></>
           }
-        </p>
+        </Typography>
       </Box>
     </>
   );
 }
 
-export function PersonContainerDotted({ person }) {
-  return (
-    <Box sx={{ border: 'dotted', p: 2, m: 2 }} style={{ marginTop: '1em' }}>
-      <Typography variant='body' sx={{ fontWeight: 'bold' }}>{person.first} {person.last}</Typography>
-      <PersonSummary person={person} />
-    </Box>
-  );
-}
-
-export function PersonContainerAccordion({ person, personIndex, showButtons, handleEdit, handleDelete }) {
-  const [expanded, setExpanded] = useState(false);
-  return (
-    <Box sx={{ mt: 2 }}>
-      <Accordion expanded={expanded} onChange={ () => setExpanded(!expanded) }>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-          <Typography><strong>{person.first} {person.last}</strong></Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <PersonSummary person={person} skipCost={true} />
-          {showButtons &&
-            <Box sx={{ my: 4 }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <div />
-                <Button onClick={() => handleDelete(personIndex)} variant='contained' color='error'>Delete</Button>
-                <div />
-                <Button onClick={() => handleEdit(personIndex)} variant='contained' color='info'>Edit</Button>
-                <div />
-              </Box>
-            </Box>
-          }
-        </AccordionDetails>
-      </Accordion>
-    </Box>
-  );
-}
-
-function PersonSummary({ person, skipCost=false }) {
+export function PersonSummary({ person, skipCost=false, skipFirstLastHeading=false }) {
   return (
     <>
+      {!skipFirstLastHeading &&
+        <Typography variant='body' sx={{ fontWeight: 'bold' }}>{person.first} {person.last}</Typography>
+      }
       {ORDER_SUMMARY_OPTIONS
         .map((option) => {
           const { property, label, mapping, defaultValue } = option;

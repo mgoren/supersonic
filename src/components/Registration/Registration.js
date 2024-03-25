@@ -41,11 +41,6 @@ const RealRegistration = () => {
 
   const content = (
     <>
-      {/* {SANDBOX_MODE &&
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '3rem', backgroundColor: 'var(--color-error)' }}>
-          TEST MODE ONLY - DO NOT USE FOR REAL REGISTRATION
-        </Box>
-      } */}
       {error && <Error />}
 
       <Header titleText={currentPage === 'confirmation' ? CONFIRMATION_TITLE : TITLE}>
@@ -53,17 +48,9 @@ const RealRegistration = () => {
         {currentPage === 'checkout' && <OrderSummary order={order} currentPage={currentPage} />}
       </Header>
 
-      {isFinite(currentPage) &&
-        <MainForm />
-      }
-
-      {currentPage === 'checkout' &&
-        <Checkout />
-      }
-
-      {currentPage === 'confirmation' &&
-        <Confirmation />
-      }
+      {isFinite(currentPage) && <MainForm />}
+      {currentPage === 'checkout' && <Checkout />}
+      {currentPage === 'confirmation' && <Confirmation />}
     </>
   )
 

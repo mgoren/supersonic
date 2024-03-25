@@ -1,1 +1,5 @@
-export const DANCES = [];
+const config = {
+  DANCES: []
+};
+
+export default config;

@@ -1,13 +1,19 @@
 import * as Yup from 'yup';
-import { ADMISSION_COST_DEFAULT, ADMISSION_COST_RANGE } from './configBasics';
+import configBasics from './configBasics';
+const { ADMISSION_COST_DEFAULT, ADMISSION_COST_RANGE } = configBasics;
 
 const NAME_REGEX = "^[^<>&@]+$";
 const PRONOUNS_REGEX = "^[^<>&@]+$";
 const PHONE_REGEX = "^[2-9][0-9-() ]*$";
-export const NAME_VALIDATION = Yup.string().matches(NAME_REGEX, 'Invalid characters :(');
-export const PRONOUNS_VALIDATION = Yup.string().matches(PRONOUNS_REGEX, 'Invalid characters :(');
-export const EMAIL_VALIDATION = Yup.string().email('Invalid email address');
-export const PHONE_VALIDATION = Yup.string().matches(PHONE_REGEX, 'Please enter a valid phone number.');
+const NAME_VALIDATION = Yup.string().matches(NAME_REGEX, 'Invalid characters :(');
+const PRONOUNS_VALIDATION = Yup.string().matches(PRONOUNS_REGEX, 'Invalid characters :(');
+const EMAIL_VALIDATION = Yup.string().email('Invalid email address');
+const PHONE_VALIDATION = Yup.string().matches(PHONE_REGEX, 'Please enter a valid phone number.');
+
+// config for this particular registration instance; update this as needed!
+export const PERSON_CONTACT_FIELDS = ['first', 'last', 'nametag', 'pronouns', 'email', 'emailConfirmation', 'phone', 'address', 'apartment', 'city', 'state', 'zip', 'country'];
+export const PERSON_MISC_FIELDS = ['share', 'dietaryPreferences', 'dietaryRestrictions', 'allergies', 'scent', 'carpool', 'bedding', 'volunteer', 'housing', 'roommate', 'photo', 'comments'];
+export const PERSON_PAYMENT_FIELDS = ['admission'];
 
 // this can include config for fields not used in this particular registration instance
 export const FIELD_CONFIG = {
@@ -280,5 +286,3 @@ export const FIELD_CONFIG = {
     defaultValue: 0,
   },
 }
-
-export const PERSON_INPUT_LABELS = [ 'Your contact information', 'Second admission', 'Third admission', 'Fourth admission' ];

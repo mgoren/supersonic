@@ -2,7 +2,7 @@ import 'firebase.js'; // initializes firebase
 import { createContext, useState, useReducer, useContext, useEffect } from 'react';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { renderToStaticMarkup } from 'react-dom/server';
-import Receipt, { AdditionalPersonReceipt } from 'components/Receipt';
+import Receipt from 'components/Receipt';
 import { cache, cached } from 'utils';
 import config from 'config';
 const { getOrderDefaults, PAYMENT_METHODS, EMAIL_CONTACT } = config;
@@ -130,7 +130,7 @@ function updateApartment(person) {
 
 function generateReceipts({ order }) {
   return order.people.map((person, i) => {
-    const receipt = i === 0 ? <Receipt order={order} /> : <AdditionalPersonReceipt order={order} person={person} />;
+    const receipt = <Receipt order={order} person={person} isPurchaser={i === 0} />;
     return {
       email: person.email,
       receipt: renderToStaticMarkup(receipt)

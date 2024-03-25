@@ -1,1 +1,1 @@
-export { default, AdditionalPersonReceipt } from './Receipt';
+export { default } from './Receipt';

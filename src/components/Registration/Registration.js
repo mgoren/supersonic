@@ -8,7 +8,6 @@ import Error from "components/Error";
 import Header from 'components/Header';
 import IntroHeader from 'components/Header/IntroHeader';
 import OrderSummary from "components/OrderSummary";
-import Receipt from "components/Receipt";
 import { Typography, Button } from "@mui/material";
 import { StyledPaper, Paragraph } from 'components/Layout/SharedStyles';
 import config from 'config';
@@ -52,7 +51,6 @@ const RealRegistration = () => {
       <Header titleText={currentPage === 'confirmation' ? CONFIRMATION_TITLE : TITLE}>
         {currentPage === 1 && <IntroHeader />}
         {currentPage === 'checkout' && <OrderSummary order={order} currentPage={currentPage} />}
-        {currentPage === 'confirmation' && <Receipt order={order} />}
       </Header>
 
       {isFinite(currentPage) &&

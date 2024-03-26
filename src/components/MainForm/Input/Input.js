@@ -8,35 +8,35 @@ import { useField } from 'formik';
 import config from 'config';
 const { INCLUDE_LAST_ON_NAMETAG } = config;
 
-export const Input = ({ pattern, buttonText, onClick, ...props }) => {
-  if (buttonText) {
-    return <ButtonInput buttonText={buttonText} onClick={onClick} {...props} />;
-  } else if (props.type === 'radio') {
-    return <RadioButtons {...props} />;
-  } else if (pattern) {
-    return <NumericInput pattern={pattern} {...props} />;
-  } else if (props.type === 'textarea') {
-    return <TextArea {...props} />;
-  } else if (props.name.includes('address')) {
-    return <AddressAutocompleteInput {...props} />;
-  } else {
-    return <TextInput {...props} />;
-  }
+export const Input = (props) => {
+  const inputComponentMapping = {
+    button: ButtonInput,
+    checkbox: CheckboxInput,
+    radio: RadioButtons,
+    pattern: NumericInput,
+    textarea: TextArea,
+    address: AddressAutocompleteInput,
+    email: TextInput,
+    text: TextInput,
+  };
+  const { type = 'text' } = props;
+  const Component = inputComponentMapping[type];
+  return <Component {...props} />;
 };
 
 export const RightAlignedInput = ({ label, ...props }) => {
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-      <Typography variant='body1' sx={{ marginRight: '.5rem' }}>{label}</Typography>
+      <Typography variant='body1' sx={{ mr: '.5rem' }}>{label}</Typography>
       <Input {...props} />
     </Box>
   );
 };
 
-const ButtonInput = ({ buttonText, onClick, ...props }) => {
+const ButtonInput = ({ buttonText, onClick }) => {
   return (
     <Button variant='contained' size='large' color='info' onClick={onClick}>
-      <Typography variant='body1' sx={{ marginRight: '.5rem' }}>{buttonText}</Typography>
+      <Typography variant='body1' sx={{ mr: '.5rem' }}>{buttonText}</Typography>
     </Button>
   );
 };
@@ -59,7 +59,6 @@ const TextInput = ({ label, name, type, hidden, ...props }) => {
       }
     }
   };
-
   return (
     <Field name={name}>
       {({ field }) => {
@@ -69,7 +68,7 @@ const TextInput = ({ label, name, type, hidden, ...props }) => {
           <Box >
             <TextField
               sx={{
-                marginBottom: '.3rem',
+                mb: '.3rem',
                 display: hidden ? 'none' : undefined,
                 ...(props.width && { width: props.width })
               }}
@@ -119,7 +118,24 @@ const NumericInput = ({ variant, label, name, type, pattern, range, ...props }) 
   );
 };
 
-export const CheckboxInput = ({ name, label, options, ...props }) => {
+const TextArea = ({ label, name, rows }) => {
+  return (
+    <>
+      <Typography gutterBottom sx={{ mb: 2 }} htmlFor={name}>
+        {label}
+      </Typography>
+      <Field
+        as={TextField}
+        name={name}
+        multiline
+        rows={rows}
+        sx={{ width: '100%' }}
+      />
+    </>
+  );
+};
+
+const CheckboxInput = ({ name, label, options, ...props }) => {
   return (
     <>
       {label && <Typography gutterBottom htmlFor={name}>{label}</Typography>}
@@ -148,24 +164,7 @@ export const CheckboxInput = ({ name, label, options, ...props }) => {
   );
 };
 
-export const TextArea = ({ label, name, rows, ...props }) => {
-  return (
-    <>
-      <Typography gutterBottom={true} sx={{ marginBottom: '1rem' }} htmlFor={name}>
-        {label}
-      </Typography>
-      <Field
-        as={TextField}
-        name={name}
-        multiline
-        rows={rows}
-        sx={{ width: '100%' }}
-      />
-    </>
-  );
-};
-
-export const RadioButtons = ({ name, label, options, field, index, required }) => {
+const RadioButtons = ({ name, label, options, field, index, required }) => {
   const { values, errors, touched, setFieldValue } = useFormikContext();
   const fieldError = getIn(errors, name);
   const isTouched = getIn(touched, name);

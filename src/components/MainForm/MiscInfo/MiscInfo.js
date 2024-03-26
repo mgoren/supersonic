@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useFormikContext } from 'formik';
 import { scrollToTop } from 'utils.js';
-import { Input, CheckboxInput, RadioButtons } from '../Input';
+import { Input } from '../Input';
 import { Title } from 'components/Layout/SharedStyles';
 import { Box } from '@mui/material';
 import config from 'config';
@@ -22,10 +22,9 @@ export default function MiscInfo({ index }) {
     }
   }, [values.people, index]);
 
-  function updateCheckboxOptions(e) {
-    const { name, value, checked } = e.target;
-    const field = name.split('.').pop();
-    if( field === 'share' && value === 'name') {
+  function updateShareCheckboxOptions(e) {
+    const { value, checked } = e.target;
+    if( value === 'name') {
       setFieldValue(`people[${index}].share`, checked ? [value] : []);
     } else {
       handleChange(e); // let formik handle it
@@ -37,47 +36,20 @@ export default function MiscInfo({ index }) {
         .map(field => ({ field, ...FIELD_CONFIG[field] }))
         .map((input) => {
           const { field, type, title, label, options, ...props } = input;
+          const updatedOptions = field === 'share' ? shareOptions : options;
           return (
             <Box sx={{ mb: 6 }} key={field}>
               <Title>{title}</Title>
-              {type === 'checkbox' &&
-                <CheckboxInput
-                  label={label}
-                  name={`people[${index}].${field}`}
-                  options={field === 'share' ? shareOptions : options}
-                  key={`${index}-${field}`}
-                  onChange={(e) => updateCheckboxOptions(e)}
-                />
-              }
-              {type === 'radio' &&
-                <RadioButtons
-                  label={label}
-                  name={`people[${index}].${field}`}
-                  options={options}
-                  key={`${index}-${field}`}
-                  field={field}
-                  index={index}
-                  {...props}
-                />
-              }
-              {type === 'text' &&
-                <Input
-                  type='text'
-                  name={`people[${index}].${field}`}
-                  label={label}
-                  key={`${index}-${field}`}
-                  width={props.width}
-                />
-              }
-              {type === 'textarea' &&
-                <Input
-                  type='textarea'
-                  name={`people[${index}].${field}`}
-                  label={label}
-                  key={`${index}-${field}`}
-                  rows={props.rows}
-                />
-              }
+              <Input
+                type={type}
+                label={label}
+                name={`people[${index}].${field}`}
+                field={field}
+                index={index}
+                options={type === 'checkbox' || type === 'radio' ? updatedOptions : undefined}
+                onChange={field === 'share' ? updateShareCheckboxOptions : undefined}
+                {...props}
+              />
             </Box>
           );
         })

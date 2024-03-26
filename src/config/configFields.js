@@ -61,7 +61,7 @@ export const FIELD_CONFIG = {
   },
   phone: {
     label: 'Phone',
-    type: 'tel',
+    type: 'pattern',
     pattern: '###-###-####',
     placeholder: 'e.g. 555-555-5555',
     validation: PHONE_VALIDATION.required('Please enter phone number.'),
@@ -72,6 +72,7 @@ export const FIELD_CONFIG = {
   },
   address: {
     label: 'Street address',
+    type: 'address',
     validation: Yup.string().required('Please enter street address.'),
     defaultValue: '',
     width: 9,

@@ -62,6 +62,7 @@ export default function PaymentInfo() {
           sx={{ width: '5em', mb: 1 }}
           label={isMultiplePeople ? `${person.first} ${person.last}` : 'How much are you able to pay?'}
           name={`people[${index}].admission`}
+          type='pattern'
           pattern='###'
           range={priceRange}
           onBlur={(event) => updateAdmissionCostValue(event)}
@@ -113,6 +114,7 @@ export default function PaymentInfo() {
             <Title>Additional contribution</Title>
             {!donate && 
               <RightAlignedInput
+                type='button'
                 label="Would you like to make an additional contribution?"
                 name="donate"
                 buttonText="Yes"
@@ -125,6 +127,7 @@ export default function PaymentInfo() {
                 sx={{ minWidth: '6rem', maxWidth: '6rem' }}
                 label="How much would you like to add as an additional contribution?"
                 name="donation" 
+                type='pattern'
                 pattern='###'
                 range={[0, DONATION_MAX]}
                 onBlur={(event) => clampValue({ event: event, range: [0, DONATION_MAX]})}

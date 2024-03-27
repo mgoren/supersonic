@@ -25,7 +25,7 @@ function orderReducer(state, action) {
 export const OrderProvider = ({ children }) => {
   const initialOrderState = cached('order') || getOrderDefaults();
   const [order, dispatch] = useReducer(orderReducer, initialOrderState);
-  const [clientSecret, setClientSecret] = useState(cached('clientSecret'));
+  const [paymentIntentId, setPaymentIntentId] = useState(cached('paymentIntentId'));
   const [currentPage, setCurrentPage] = useState(cached('currentPage') || 1);
   const [processing, setProcessing] = useState(null);
   const [processingMessage, setProcessingMessage] = useState(null);
@@ -35,7 +35,7 @@ export const OrderProvider = ({ children }) => {
   const [warmedUp, setWarmedUp] = useState(false);
 
   useEffect(() => { cache('order', order) }, [order]);
-  useEffect(() => { cache('clientSecret', clientSecret) }, [clientSecret]);
+  useEffect(() => { cache('paymentIntentId', paymentIntentId) }, [paymentIntentId]);
   useEffect(() => { cache('currentPage', currentPage) }, [currentPage]);
 
   // wait for order to be updated before moving on to checkout page
@@ -47,7 +47,7 @@ export const OrderProvider = ({ children }) => {
 
   const startOver = () => {
     dispatch({ type: 'RESET_ORDER' });
-    setClientSecret(null);
+    setPaymentIntentId(null);
     setPaymentMethod(PAYMENT_METHODS[0]);
     setProcessingMessage(null);
     setLastUpdatedTotal(null);
@@ -57,7 +57,7 @@ export const OrderProvider = ({ children }) => {
   const value = {
     startOver,
     order, updateOrder,
-    clientSecret, setClientSecret,
+    paymentIntentId, setPaymentIntentId,
     currentPage, setCurrentPage,
     processing, setProcessing,
     processingMessage, setProcessingMessage,

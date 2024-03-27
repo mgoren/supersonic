@@ -5,25 +5,28 @@ import stripeModule from "stripe";
 const stripe = stripeModule(functions.config().stripe.secret_key);
 const statement_descriptor_suffix = functions.config().stripe.statement_descriptor_suffix; // appended to statement descriptor set in Stripe dashboard
 
-export const createStripePaymentIntent = async ({ email, name, amount, idempotencyKey }) => {
-  const customer = await findOrCreateCustomer(email, name);
-  const paymentIntent = await stripe.paymentIntents.create(
-    {
-      amount: amount * 100, // amount in cents
-      currency: "usd",
-      customer,
-      statement_descriptor_suffix
-    },
-    { idempotencyKey }
-  );
-  return { clientSecret: paymentIntent.client_secret };
-};
-
-export const updateStripePaymentIntent = async ({ paymentIntentId, amount }) => {
-  await stripe.paymentIntents.update(paymentIntentId, {
-    amount: amount * 100 // amount in cents
-  });
-  return { result: 'Stripe Payment Intent updated successfully' };
+export const getStripePaymentIntent = async ({ email, name, amount, idempotencyKey, paymentIntentId }) => {
+  let paymentIntent;
+  if (paymentIntentId) {
+    paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+    if (paymentIntent.amount !== amount) {
+      paymentIntent = await stripe.paymentIntents.update(paymentIntentId, { amount });
+    }
+  } else {
+    paymentIntent = await stripe.paymentIntents.create(
+      {
+        amount,
+        currency: "usd",
+        customer: await findOrCreateCustomer(email, name),
+        statement_descriptor_suffix
+      },
+      { idempotencyKey }
+    );
+  }
+  return {
+    clientSecret: paymentIntent.client_secret,
+    paymentIntentId: paymentIntent.id
+  };
 };
 
 async function findOrCreateCustomer(email, name) {

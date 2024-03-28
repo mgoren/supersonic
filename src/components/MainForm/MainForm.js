@@ -40,7 +40,7 @@ export default function MainForm() {
       initialValues={order}
       validationSchema={validationSchema({ currentPage })}
       validateOnBlur={true}
-      validateOnChange={true}
+      validateOnChange={false}
       onSubmit={ (values, actions) => {submitForm(values, actions);} }
     >
       <FormContents />

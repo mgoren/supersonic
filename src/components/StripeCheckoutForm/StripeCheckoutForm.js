@@ -1,7 +1,6 @@
 import { useOrder } from 'components/OrderContext';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import {useStripe, useElements, PaymentElement} from '@stripe/react-stripe-js';
-import Loading from 'components/Loading';
 import { Box, Button } from '@mui/material';
 import { fullName } from 'utils';
 import config from 'config';
@@ -105,7 +104,10 @@ export default function StripeCheckoutForm({ processCheckout, amount }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!stripe || !elements) return;
+    if (!stripe || !elements) {
+      setError(`Stripe payment processing is not available. Please try again or contact ${EMAIL_CONTACT} with this error message.`);
+      return;
+    }
     setError(null);
     setProcessing(true);
     const {error: submitError} = await elements.submit();
@@ -117,18 +119,12 @@ export default function StripeCheckoutForm({ processCheckout, amount }) {
   };
 
   return (
-    <>
-      {stripe && elements ?
-        <form onSubmit={handleSubmit}>
-          <Box sx={{ visibility: processing ? 'hidden' : 'visible', height: processing ? 0 : 'auto' }}>
-            <PaymentElement />
-            <Button type='submit' variant='contained' color='success' disabled={!stripe || processing} sx={{ my: 2 }}>Register and submit payment</Button>
-          </Box>
-        </form>
-      :
-        <Loading isHeading={false} text='Loading payment options...' />
-      }
-    </>
+    <form onSubmit={handleSubmit}>
+      <Box sx={{ visibility: processing ? 'hidden' : 'visible', height: processing ? 0 : 'auto' }}>
+        <PaymentElement />
+        <Button type='submit' variant='contained' color='success' disabled={!stripe || processing} sx={{ my: 2 }}>Register and submit payment</Button>
+      </Box>
+    </form>
   );
 }
 

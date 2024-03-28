@@ -4,7 +4,7 @@ import StripeCheckoutForm from 'components/StripeCheckoutForm';
 import { Box } from '@mui/material';
 import config from 'config';
 const { SANDBOX_MODE, PAYMENT_METHODS } = config;
-const stripePromise = PAYMENT_METHODS.includes('stripe') ? await loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY) : null;
+const stripePromise = PAYMENT_METHODS.includes('stripe') ? loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY) : null;
 
 export default function StripeCheckoutWrapper({ total, processCheckout }) {
   const options = {
@@ -22,10 +22,7 @@ export default function StripeCheckoutWrapper({ total, processCheckout }) {
       }
 
       <Elements stripe={stripePromise} options={options}>
-        <StripeCheckoutForm
-          processCheckout={processCheckout}
-          amount={total * 100}
-        />
+        <StripeCheckoutForm processCheckout={processCheckout} amount={options.amount} />
       </Elements>
     </>
   );

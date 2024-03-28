@@ -96,7 +96,7 @@ export default function PaymentInfo() {
               </TabPanel>
               <TabPanel value="deposit" sx={{ pl: 1, pr: 0 }}>
                 <Paragraph>A deposit of ${DEPOSIT_COST} per person is required to reserve your spot.</Paragraph>
-                <Paragraph sx={{ my: 2, color: 'orange', fontWeight: 'bold' }}>The balance of the payment will be due by {PAYMENT_DUE_DATE}.</Paragraph>
+                <Paragraph color='warning.main' sx={{ my: 2, fontWeight: 'bold' }}>The balance of the payment will be due by {PAYMENT_DUE_DATE}.</Paragraph>
               </TabPanel>
             </TabContext>
           }

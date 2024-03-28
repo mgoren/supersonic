@@ -21,7 +21,9 @@ export default function Receipt({ order, person, isPurchaser }) {
   const purchaserCheckPaymentContent = (
     <>
       <Typography component='p' color='error' sx={{ mt: 2 }}>
-        <strong>You are not yet registered!</strong><br />
+        <strong>You are not yet registered!</strong>
+      </Typography>
+      <Typography component='p'>
         Paying on time can increase your chance of being accepted.<br />
         Please send a check for {isDeposit ? `at least $${order.deposit} to hold` : `$${total} to secure`} your spot.<br />
         (Or you can still pay electronically <StyledLink to={websiteLink(DIRECT_PAYMENT_URL)}>here</StyledLink>.)

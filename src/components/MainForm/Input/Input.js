@@ -173,7 +173,7 @@ const RadioButtons = ({ name, label, options, field, index, required }) => {
     <FormControl error={Boolean(fieldError)}>
       {label && <Typography gutterBottom htmlFor={name}>
         {label}
-        {required && <Box component="span" sx={{ color: 'red' }}> *</Box>}
+        {required && <Typography component="span" color='error'> *</Typography>}
       </Typography>}
       <RadioGroup
         name={name}

@@ -1,5 +1,5 @@
 import { createTheme } from '@mui/material';
-import { cyan, red, grey } from '@mui/material/colors';
+import { cyan, grey } from '@mui/material/colors';
 import { responsiveFontSizes } from '@mui/material/styles';
 
 const breakpoints = {
@@ -11,7 +11,8 @@ let lightTheme = createTheme({
   palette: {
     mode: 'light',
     background: { default: '#ffffff', paper: '#f5f5f5' },
-    error: { main: red[800] },
+    // error: { main: red[800] },
+    // warning: { main: orange[800] },
     greyButton: { main: grey[800], hover: grey[900], active: grey[900], background: grey[200] },
   },
 });
@@ -24,7 +25,8 @@ let darkTheme = createTheme({
     primary: cyan,
     secondary: cyan,
     background: { default: '#000000', paper: '#424242' },
-    error: { main: red[200] },
+    // error: { main: red[200] },
+    // warning: { main: orange[200] },
     greyButton: { main: grey[300], hover: grey[200], active: grey[200], background: grey[800] },
   },
 });

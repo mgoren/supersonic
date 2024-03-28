@@ -84,7 +84,7 @@ const PaypalCheckoutButton = ({ paypalButtonsLoaded, setPaypalButtonsLoaded, tot
 			{isResolved && (
 				<Box sx={ processing ? { display: 'none' } : {} }>
 					{SANDBOX_MODE && paypalButtonsLoaded && !processing &&
-						<Typography sx={{ mb: 1, color: 'red' }}>Test card: 4012000077777777</Typography>
+						<Typography color='error' sx={{ mb: 1 }}>Test card: 4012000077777777</Typography>
 					}
 					<PayPalButtons className={processing ? 'd-none' : ''}
 						style={{ height: 48, tagline: false, shape: "pill" }}

@@ -1,7 +1,7 @@
-import * as functions from "firebase-functions";
+import { logger } from 'firebase-functions/v2';
 
 export function handleError(message, err) {
-  functions.logger.error(message, err);
+  logger.error(message, err);
   throw new Error(message);
 }
 

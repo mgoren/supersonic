@@ -10,15 +10,18 @@
 // Usage: npm run pending
 
 import serviceAccount from '../firebase-service-key.json' assert { type: 'json' };
-import admin from 'firebase-admin';
-admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
+import { initializeApp, cert, deleteApp, getApp } from 'firebase-admin/app';
+import { getFirestore } from 'firebase-admin/firestore';
+
+initializeApp({ credential: cert(serviceAccount) });
+const firestore = getFirestore();
 
 const PENDING_ORDERS_DB = 'pendingOrders';
 const ORDERS_DB = 'orders';
 
 try {
-  const pendingOrders = getOrders(await admin.firestore().collection(PENDING_ORDERS_DB).get());
-  const orders = getOrders(await admin.firestore().collection(ORDERS_DB).get());
+  const pendingOrders = getOrders(await firestore.collection(PENDING_ORDERS_DB).get());
+  const orders = getOrders(await firestore.collection(ORDERS_DB).get());
   
   const pendingOrdersMissingFromOrders = pendingOrders.filter((pendingOrder) => {
     return !orders.some((order) => order.idempotencyKey === pendingOrder.idempotencyKey);
@@ -33,7 +36,7 @@ try {
 } catch (error) {
   console.error(error);
 } finally {
-  admin.app().delete();
+  deleteApp(getApp());
 }
 
 function getOrders(snapshot) {

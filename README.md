@@ -18,7 +18,7 @@ React app that uses Firebase for database, hosting, and serverless functions bac
 
 ## Copy template project
 
-- ME: `cp -R [TEMPLATE_DIR] [DESTINATION_DIR] && cd [DESTINATION_DIR] && gh repo create [NAME] --private --source=. --remote=upstream`
+- ME: `cp -R [TEMPLATE_DIR] [DESTINATION_DIR] && cd [DESTINATION_DIR] && gh repo create [NAME] [--private] --source=. --remote=origin`
 - ANYONE ELSE: Fork [template project](https://github.com/mgoren/registration-template) and clone it to a local directory
 
 ## Erase settings from old project:
@@ -91,6 +91,8 @@ PayPal configuration:
 
 - Update allowed-referrers list in `google-places-api-flags.yaml` file.
 
+Enable google places and maps javascript APIs. (Theoretically can use gcloud services enable via CLI, but may actually need to do from google cloud console.)
+
 ```sh
 gcloud services enable places-backend.googleapis.com --project [PROJECT_ID]
 gcloud services enable maps-backend.googleapis.com --project [PROJECT_ID]
@@ -136,28 +138,32 @@ Setup spreadsheet for recording orders:
 - Update fields/columns as needed in spreadsheet _and_ in `functions/fields.js`.
 - Determine your spreadsheet ID - the long string of characters (likely between `/d/` and `/edit`)
 
-Enable Sheets API, create Google Cloud service account, save keys to firebase function config:
+Enable Sheets API, create Google Cloud service account, update values in `functions/.env`:
 
 ```sh
 gcloud services enable sheets.googleapis.com --project [PROJECT_ID]
 gcloud iam service-accounts create sheets --project [PROJECT_ID]
 gcloud iam service-accounts keys create tmp.json --iam-account sheets@[PROJECT_ID].iam.gserviceaccount.com
-firebase functions:config:set sheets.googleapi_service_account="$(cat tmp.json)"
-firebase functions:config:set sheets.sheet_id="YOUR_SPREADSHEET_ID"
+cat tmp.json
+```
+
+- Copy `client_email` from tmp.json into `functions/.env` as `SHEETS_SERVICE_ACCOUNT_CLIENT_EMAIL`
+- Copy `private_key` from tmp.json into `functions/.env` as `SHEETS_SERVICE_ACCOUNT_PRIVATE_KEY`
+- Copy spreadsheet ID (as retrieved earlier) into `functions/.env` as `SHEETS_SHEET_ID`
+- Give spreadsheet edit permissions to the service account email: `sheets@[PROJECT_ID].iam.gserviceaccount.com`
+
+```sh
 rm tmp.json
 ```
 
-- Give spreadsheet edit permissions to the service account email: `sheets@[PROJECT_ID].iam.gserviceaccount.com`
-
 ## Setup Email Confirmation:
 
-Create a Sendgrid API key, configure firebase functions with that and from/reply/subject settings:
+Create a Sendgrid API key, update values in `functions/.env`:
 
-```sh
-firebase functions:config:set email.sendgrid_api_key="SENDGRID_API_KEY"
-firebase functions:config:set email.from='"Example" <example@example.com>' email.subject='Example Contra Dance Registration'
-firebase functions:config:set email.reply_to='example@example.com' # only if needed
-```
+- `EMAIL_SENDGRID_API_KEY`
+- `EMAIL_FROM`
+- `EMAIL_SUBJECT`
+- `EMAIL_REPLY_TO` (if needed)
 
 ## Deploy Firebase Functions:
 

@@ -47,7 +47,7 @@ export default function MiscInfo({ index }) {
                 field={field}
                 index={index}
                 options={type === 'checkbox' || type === 'radio' ? updatedOptions : undefined}
-                onChange={field === 'share' ? updateShareCheckboxOptions : undefined}
+                onChange={field === 'share' ? updateShareCheckboxOptions : handleChange} // handleChange is formik handler
                 {...props}
               />
             </Box>

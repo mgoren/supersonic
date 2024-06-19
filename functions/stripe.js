@@ -1,9 +1,8 @@
 // errors are handled in the calling function
-import * as functions from "firebase-functions";
 import stripeModule from "stripe";
 
-const stripe = stripeModule(functions.config().stripe.secret_key);
-const statement_descriptor_suffix = functions.config().stripe.statement_descriptor_suffix; // appended to statement descriptor set in Stripe dashboard
+const stripe = stripeModule(process.env.STRIPE_SECRET_KEY);
+const statement_descriptor_suffix = process.env.STRIPE_STATEMENT_DESCRIPTOR_SUFFIX; // appended to statement descriptor set in Stripe dashboard
 
 export const getStripePaymentIntent = async ({ email, name, amount, idempotencyKey, paymentIntentId }) => {
   let paymentIntent;

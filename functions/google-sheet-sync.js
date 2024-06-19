@@ -1,22 +1,23 @@
 'use strict';
 
-import * as functions from 'firebase-functions';
+import { initializeApp, getApps } from 'firebase-admin/app';
+import { onDocumentCreated } from 'firebase-functions/v2/firestore';
 import { google } from 'googleapis';
-import admin from 'firebase-admin';
 import { fieldOrder } from './fields.js';
 import { handleError, joinArrays } from './helpers.js';
 
-const SERVICE_ACCOUNT_KEYS = functions.config().sheets.googleapi_service_account;
-const SHEET_ID = functions.config().sheets.sheet_id;
+const SHEET_ID = process.env.SHEETS_SHEET_ID;
 const CONFIG_DATA_COLLECTION = 'orders';
 const RANGE = 'A:AP';
 const MAX_RETRIES = 3;
 const RETRY_DELAY_MS = 500;
 
-if (admin.apps.length === 0) admin.initializeApp();
-const client = new google.auth.JWT(SERVICE_ACCOUNT_KEYS.client_email, null, SERVICE_ACCOUNT_KEYS.private_key, ['https://www.googleapis.com/auth/spreadsheets']);
+if (!getApps().length) initializeApp();
 
-export const appendrecordtospreadsheet = functions.firestore.document(`${CONFIG_DATA_COLLECTION}/{ITEM}`).onCreate(async (snap) => {
+const client = new google.auth.JWT(process.env.SHEETS_SERVICE_ACCOUNT_CLIENT_EMAIL, null, process.env.SHEETS_SERVICE_ACCOUNT_PRIVATE_KEY, ['https://www.googleapis.com/auth/spreadsheets']);
+
+export const appendrecordtospreadsheet = onDocumentCreated(`${CONFIG_DATA_COLLECTION}/{ITEM}`, async (event) => {
+  const snap = event.data;
   try {
     const order = { ...snap.data(), key: snap.id };
     const orders = mapOrderToSpreadsheetLines(order);

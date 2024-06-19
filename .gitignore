@@ -19,6 +19,7 @@ tmp.json
 .env.development.local
 .env.test.local
 .env.production.local
+functions/.env
 *service-key*
 
 *debug.log*

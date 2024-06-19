@@ -1,12 +1,13 @@
 // errors are handled in the calling function
-import admin from 'firebase-admin';
+import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import { validFields } from './fields.js';
+const firestore = getFirestore();
 
 // client does not await execution, so not returning anything
 export const savePendingOrder = async (order) => {
   const filteredOrder = filterObject(order, validFields);
-  const orderWithTimestamp = { ...filteredOrder, createdAt: admin.firestore.FieldValue.serverTimestamp() };
-  const pendingCollection = admin.firestore().collection('pendingOrders');
+  const orderWithTimestamp = { ...filteredOrder, createdAt: FieldValue.serverTimestamp() };
+  const pendingCollection = firestore.collection('pendingOrders');
   const existingOrder = await pendingCollection.where('idempotencyKey', '==', order.idempotencyKey).get();
   if (existingOrder.empty) {
     await pendingCollection.add(orderWithTimestamp);
@@ -17,8 +18,8 @@ export const savePendingOrder = async (order) => {
 
 export const saveFinalOrder = async (order) => {
   const filteredOrder = filterObject(order, validFields);
-  const orderWithTimestamp = { ...filteredOrder, createdAt: admin.firestore.FieldValue.serverTimestamp() };
-  const ordersCollection = admin.firestore().collection('orders');
+  const orderWithTimestamp = { ...filteredOrder, createdAt: FieldValue.serverTimestamp() };
+  const ordersCollection = firestore.collection('orders');
   await ordersCollection.add(orderWithTimestamp);
   return { status: 'success' };
 };

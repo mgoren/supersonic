@@ -1,6 +1,6 @@
 'use strict';
 
-import * as functions from 'firebase-functions';
+import { logger } from 'firebase-functions/v2';
 import nodemailer from 'nodemailer';
 
 // Configure the email transport using Sendgrid with SMTP
@@ -9,22 +9,21 @@ const mailTransport = nodemailer.createTransport({
   port: 587,
   auth: {
       user: "apikey",
-      pass: functions.config().email.sendgrid_api_key
+      pass: process.env.EMAIL_SENDGRID_API_KEY
   }
 });
 
 // errors are handled in the calling function
 export const sendEmailConfirmations = async (emailReceiptPairs) => {
   for (const {email, receipt}  of emailReceiptPairs) {
-    const emailConfig = functions.config().email;
     let mailOptions = {
-      from: emailConfig.from,
+      from: process.env.EMAIL_FROM,
       to: email,
-      subject: emailConfig.subject,
+      subject: process.env.EMAIL_SUBJECT,
       html: receipt,
-      ...(emailConfig.reply_to && {replyTo: emailConfig.reply_to})
+      ...(process.env.EMAIL_REPLY_TO && {replyTo: process.env.EMAIL_REPLY_TO})
     };
     await mailTransport.sendMail(mailOptions);
-    functions.logger.log(`Receipt sent to:`, email);
+    logger.info(`Receipt sent to:`, email);
   }
 };

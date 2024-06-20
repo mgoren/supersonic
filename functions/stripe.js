@@ -17,7 +17,7 @@ export const getStripePaymentIntent = async ({ email, name, amount, idempotencyK
         amount,
         currency: "usd",
         customer: await findOrCreateCustomer(email, name),
-        statement_descriptor_suffix
+        ...(statement_descriptor_suffix && { statement_descriptor_suffix })
       },
       { idempotencyKey }
     );

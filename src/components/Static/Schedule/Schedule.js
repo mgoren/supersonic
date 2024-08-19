@@ -1,5 +1,5 @@
 import { Box, List, ListItem } from '@mui/material';
-import { StyledPaper, StyledLink, PageTitle, Header } from 'components/Layout/SharedStyles';
+import { StyledPaper, PageTitle, Header } from 'components/Layout/SharedStyles';
 
 export default function Schedule() {
 
@@ -10,20 +10,22 @@ export default function Schedule() {
       </PageTitle>
 
       <Box mt={-5} mb={4}>
-        <img src={process.env.PUBLIC_URL + '/some_event/instruments.jpg'} alt='' style={{ width: "100%", height: "auto" }} />
+        <img src={process.env.PUBLIC_URL + '/supsersonic/instruments.jpg'} alt='' style={{ width: "100%", height: "auto" }} />
       </Box>
 
       <Header>
-        some_event Contra Dance Wekeend Itinerary
+        Supersonic Contra Dance Wekeend Itinerary
       </Header>
       <List>
-        <ListItem>2024 &mdash; <StyledLink to={process.env.PUBLIC_URL + '/some_event/some_event-schedule-2024.pdf'}>some_event Contra Dance Weekend Schedule</StyledLink></ListItem>
+        Coming soon...
+        {/* <ListItem>2024 &mdash; <StyledLink to={process.env.PUBLIC_URL + '/supsersonic/supsersonic-schedule-2025.pdf'}>Supersonic Contra Dance Weekend Schedule</StyledLink></ListItem> */}
       </List>
 
       <Header>
         Past Flights
       </Header>
       <List>
+        <ListItem>2024 &mdash; Notorious and Playing with Fyre with Seth Tepfer and Will Mentor</ListItem>
         <ListItem>2023 &mdash; No dance weekend</ListItem>
         <ListItem>2022 &mdash; No dance weekend</ListItem>
         <ListItem>2021 &mdash; No dance weekend</ListItem>

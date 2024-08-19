@@ -1,8 +1,8 @@
-import { Typography, Box, } from '@mui/material';
+import { Typography, Box } from '@mui/material';
 import { StyledLink, StyledPaper, PageTitle, SectionDivider, Paragraph } from 'components/Layout/SharedStyles';
-import { mailtoLink} from 'utils';
+// import { mailtoLink} from 'utils';
 import config from 'config';
-const { EMAIL_CONTACT, EVENT_TITLE, EVENT_LOCATION, EVENT_DATE } = config;
+const { EVENT_TITLE, EVENT_LOCATION, EVENT_LOCATION_2, EVENT_DATE } = config;
 
 export default function Home() {
 
@@ -10,44 +10,44 @@ export default function Home() {
     <StyledPaper extraStyles={{ maxWidth: 750 }} align="center">
       <PageTitle>
         {EVENT_TITLE}<br />
-        {EVENT_LOCATION}<br />
+        {EVENT_LOCATION}, {EVENT_LOCATION_2}<br />
         {EVENT_DATE}
       </PageTitle>
 
       <Box mt={-5} mb={4}>
-        <img src={process.env.PUBLIC_URL + '/some_event/dancer.jpg'} alt='' style={{ width: "100%", height: "auto" }} />
+        <img src={process.env.PUBLIC_URL + '/supersonic/dancer.jpg'} alt='' style={{ width: "100%", height: "auto" }} />
       </Box>
 
       <Typography variant="h6" sx={{ mb: 2 }}>
         We are a zesty, high-energy dance weekend for experienced dancers.<br />
       </Typography>
 
-      <Paragraph>
-        Music by <StyledLink internal={true} to="/staff#band1">Notorious</StyledLink> and <StyledLink internal={true} to="/staff#band2">Playing with Fyre</StyledLink>
-      </Paragraph>
+      <Typography variant="h6" sx={{ mb: 2 }}>
+        Music by <StyledLink internal={true} to="/staff#band1">Gallimaufry</StyledLink> and <StyledLink internal={true} to="/staff#band2">Joyride</StyledLink>
+      </Typography>
 
-      <Paragraph>
-        Calling by <StyledLink internal={true} to="/staff#caller1">Seth Tepfer</StyledLink> and <StyledLink internal={true} to="/staff#caller2">Will Mentor</StyledLink><br />
+      <Typography variant="h6" sx={{ mb: 2 }}>
+        Calling by <StyledLink internal={true} to="/staff#caller1">Seth Tepfer</StyledLink> and <StyledLink internal={true} to="/staff#caller2">Cis Hinkle</StyledLink><br />
         Role terms will be Larks and Robins.
-      </Paragraph>
+      </Typography>
 
       <Paragraph>
         Registration: $120-240 sliding scale ($180 break-even)
       </Paragraph>
 
-      <Paragraph sx={{ mb: 2 }}>
-        some_event will follow mask guidelines of the weekly Seattle contras.<br />
+      {/* <Paragraph sx={{ mb: 2 }}>
+        Supersonic will follow mask guidelines of the weekly Seattle contras.<br />
         As of November 1, well-fitting face masks are required.<br />
         Please do not attend if you are feeling unwell.<br />
         See <StyledLink internal={true} to='/about#covid'>here</StyledLink> for the full Covid policy.<br />
-      </Paragraph>
+      </Paragraph> */}
+
+      {/* <Paragraph>
+        You will need to sign a <StyledLink to={process.env.PUBLIC_URL + '/supersonic/waiver.pdf'}>waiver</StyledLink> and email it to <StyledLink to={mailtoLink(EMAIL_CONTACT)}>{EMAIL_CONTACT}</StyledLink>.<br />
+      </Paragraph> */}
 
       <Paragraph>
-        You will need to sign a <StyledLink to={process.env.PUBLIC_URL + '/some_event/waiver.pdf'}>waiver</StyledLink> and email it to <StyledLink to={mailtoLink(EMAIL_CONTACT)}>{EMAIL_CONTACT}</StyledLink>.<br />
-      </Paragraph>
-
-      <Paragraph>
-        some_event is a fragrance-free event. Please use only fragrance-free products.
+        Supersonic is a fragrance-free event. Please use only fragrance-free products.
       </Paragraph>
 
       <SectionDivider/>
@@ -58,7 +58,7 @@ export default function Home() {
       </Paragraph>
 
       <Paragraph>
-        some_event Contra Dance Weekend gives experienced dancers the opportunity to explore ways in which to challenge themselves and improve their skills as dance partners while experiencing complex dances and immense joy.
+        Supersonic Contra Dance Weekend gives experienced dancers the opportunity to explore ways in which to challenge themselves and improve their skills as dance partners while experiencing complex dances and immense joy.
       </Paragraph>
 
       <Paragraph>
@@ -67,9 +67,10 @@ export default function Home() {
 
       <SectionDivider/>
 
-      <Typography variant="h4" fontStyle="italic" gutterBottom>
-      <StyledLink internal={true} to="/registration">Registration open</StyledLink>
-      {/* Registration opening in early November */}
+      <Typography variant="h5" fontStyle="italic" gutterBottom>
+      {/* <StyledLink internal={true} to="/registration">Registration open</StyledLink> */}
+      Registration opening in early November <br />
+      ~ More info coming soon ~
       </Typography>
     </StyledPaper>
   );

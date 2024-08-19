@@ -11,8 +11,8 @@ const EMAIL_VALIDATION = Yup.string().email('Invalid email address');
 const PHONE_VALIDATION = Yup.string().matches(PHONE_REGEX, 'Please enter a valid phone number.');
 
 // config for this particular registration instance; update this as needed!
-export const PERSON_CONTACT_FIELDS = ['first', 'last', 'nametag', 'pronouns', 'email', 'emailConfirmation', 'phone', 'address', 'apartment', 'city', 'state', 'zip', 'country'];
-export const PERSON_MISC_FIELDS = ['share', 'dietaryPreferences', 'dietaryRestrictions', 'allergies', 'scent', 'carpool', 'bedding', 'volunteer', 'housing', 'roommate', 'photo', 'comments'];
+export const PERSON_CONTACT_FIELDS = ['first', 'last', 'nametag', 'pronouns', 'email', 'emailConfirmation', 'phone', 'city', 'state', 'zip', 'country'];
+export const PERSON_MISC_FIELDS = ['hospitality', 'share', 'volunteer', 'comments'];
 export const PERSON_PAYMENT_FIELDS = ['admission'];
 
 // this can include config for fields not used in this particular registration instance

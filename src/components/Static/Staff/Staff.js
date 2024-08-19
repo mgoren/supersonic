@@ -17,51 +17,45 @@ export default function Staff() {
       <Box>
         <Header id="caller1">Calling by <em>Seth Tepfer</em></Header>
         <Box sx={{ mt: 2, pr: 4, float: { xs: 'none', sm: 'left' } }}>
-          <img src={process.env.PUBLIC_URL + '/some_event/SethTepfer.jpg'} alt="Seth Tepfer" />
+          <img src={process.env.PUBLIC_URL + '/supersonic/SethTepfer.jpg'} alt="Seth Tepfer" />
         </Box>
         <Paragraph sx={{ pt: 1, mb: 0 }}>
-          Seth Tepfer is "Atlanta's Dance Magician," calling dances for adults and children like you've never seen before. 
-          Known for his infectious energy, his short walk-thrus, and his 'hash-contras', 
-          Seth's warm enthusiasm is contagious, and gets everyone moving, smiling, and having a great time. 
-          Whether squares, contras, or other folk dances, you can be certain that all involved - 
-          novices and experienced dancers alike - will amble away happy and eager to dance more!
+          Seth Tepfer returns to Supersonic, bringing his joy, hash calling, and complex contras to send us into orbit. 
         </Paragraph>
       </Box>
       <Box sx={{ clear: 'both' }} />
 
       <Box sx={{ mt: 6 }}>
-        <Header id="caller2">Calling by <em>Will Mentor</em></Header>
+        <Header id="caller2">Calling by <em>Cis Hinkle</em></Header>
         <Box sx={{ mt: 2, pl: { xs: 'none', sm: 4 }, float: { xs: 'none', sm: 'right' } }}>
-          <img src={process.env.PUBLIC_URL + '/some_event/WillMentor.jpg'} alt="Will Mentor" />
+          <img src={process.env.PUBLIC_URL + '/supersonic/CisHinkle.jpg'} alt="Cis Hinkle" />
         </Box>
         <Paragraph sx={{ pt: 1, mb: 0 }}>
-          Will Mentor is a contra and square dance caller from Northern Vermont known for his clear teaching, upbeat wit, and relaxed stage presence. 
-          He loves to choreograph evenings with a variety of dances and tempos that at times surprise and always delight, 
-          all the while keeping intact his guiding principle as a caller: "It's about the dancers!"
+          We welcome Cis Hinkle back to Supersonic! Cis has delighted contra dancers with her skilled teaching, welcoming manner, playful enthusiasm, and masterful selection of dances.
         </Paragraph>
       </Box>
       <Box sx={{ clear: 'both' }} />
 
       <SectionDivider />
 
-      <Header id="band1">Music by <em>Notorious</em></Header>
+      <Header id="band1">Music by <em>Gallimaufry</em></Header>
       <Box>
         <Box sx={{ mt: 2, pl: { xs: 'none', sm: 4 }, float: { xs: 'none', sm: 'right' } }}>
-          <img src={process.env.PUBLIC_URL + '/some_event/notorious.jpeg'} alt="Notorious"  style={{ width: 300 }} />
+          <img src={process.env.PUBLIC_URL + '/supersonic/Gallimaufry.png'} alt="Gallimaufry" style={{ width: 300 }} />
         </Box>
         <Paragraph sx={{ pt: 1, mb: 0 }}>
-          Lauded as "sparkling" and "exhilarating” Notorious Folk musicians Eden MacAdam-Somer, Larry Unger, Sam Bartlett, Mark "Pokey" Hellenberg, and Mark Murphy present a thrilling musical experience in genres that span many continents, lighting up the dance hall with rhythm and sonority. Notorious has been a featured ensemble in various configurations at dance weekends, festivals, and concert halls spanning the contiguous US, Alaska, Hawaii, Europe, India, and Afghanistan. We are psyched to be back in the dance hall together, playing for you!!!
+          Gallimaufry was founded in 2010 at Oberlin College by Brian Lindsay and Alex Sturbaum. Joining forces with Ness Smith-Savedoff (drums), Donal Sheets (cello, guitar), and Arthur Davis (piano, banjo, trumpet, vocals), this quintet spent four years as Oberlin's house band and has delighted dancers throughout the Midwest and New England with their high-energy dance tunes, eclectic variety, and soaring harmonies. Incorporating elements of funk, rock, and traditional music of all stripes, Gallimaufry is a band not to be missed.
         </Paragraph>
       </Box>
       <Box sx={{ clear: 'both' }} />
 
-      <Header id="band2">Music by <em>Playing with Fyre</em></Header>
+      <Header id="band2">Music by <em>Joyride</em></Header>
       <Box>
         <Box sx={{ mt: 2, pr: { xs: 'none', sm: 4 }, float: { xs: 'none', sm: 'left' } }}>
-          <img src={process.env.PUBLIC_URL + '/some_event/playing-with-fyre.png'} alt="Playing with Fyre"  style={{ width: 300 }} />
+          <img src={process.env.PUBLIC_URL + '/supersonic/Joyride.png'} alt="Joyride"  style={{ width: 300 }} />
         </Box>
         <Paragraph sx={{ pt: 1, mb: 0 }}>
-          Playing With Fyre is a very unique, dynamic contra dance band that plays within the unparalleled passion of the moment. They bring a unique blend of trad, jazz, old time, funk, and blues and will take you on an emotionally driven dance journey!  Love the music, Live the moment,  Dance from your heart! George Paul on Keys, Rob Zisette on Fiddle, Dave Bartley on Stringed Instruments.
+          Joyride is a Portland, Oregon contra dance band known for fun, skilled play, tunes fit to dance figures, and ringing, rocking, gorgeous melodies that make you want to move. George Penk’s fiddle, Erik Weberg’s flute, harmonica, and bombarde, Sue Songer’s piano and fiddle, and Jeff Kerssen-Griep’s guitar and percussion breathe big life into modern and traditional tunes for dances, weekends, and festivals.
         </Paragraph>
       </Box>
       <Box sx={{ clear: 'both' }} />

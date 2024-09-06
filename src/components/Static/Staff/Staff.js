@@ -20,7 +20,8 @@ export default function Staff() {
           <img src={process.env.PUBLIC_URL + '/supersonic/SethTepfer.jpg'} alt="Seth Tepfer" />
         </Box>
         <Paragraph sx={{ pt: 1, mb: 0 }}>
-          Seth Tepfer returns to Supersonic, bringing his joy, hash calling, and complex contras to send us into orbit. 
+          Seth returns to Supersonic with his infectious energy, joyful calling of hash contras, and complex dances to keep you on your toes all weekend long.
+          {/* Seth Tepfer returns to Supersonic, bringing his joy, hash calling, and complex contras to send us into orbit.  */}
         </Paragraph>
       </Box>
       <Box sx={{ clear: 'both' }} />
@@ -31,7 +32,8 @@ export default function Staff() {
           <img src={process.env.PUBLIC_URL + '/supersonic/CisHinkle.jpg'} alt="Cis Hinkle" />
         </Box>
         <Paragraph sx={{ pt: 1, mb: 0 }}>
-          We welcome Cis Hinkle back to Supersonic! Cis has delighted contra dancers with her skilled teaching, welcoming manner, playful enthusiasm, and masterful selection of dances.
+          We are thrilled that Cis will be bringing her playful enthusiasm and masterful selection of complex dances back to Supersonic!
+          {/* We welcome Cis Hinkle back to Supersonic! Cis has delighted contra dancers with her skilled teaching, welcoming manner, playful enthusiasm, and masterful selection of dances. */}
         </Paragraph>
       </Box>
       <Box sx={{ clear: 'both' }} />
@@ -44,7 +46,8 @@ export default function Staff() {
           <img src={process.env.PUBLIC_URL + '/supersonic/Gallimaufry.png'} alt="Gallimaufry" style={{ width: 300 }} />
         </Box>
         <Paragraph sx={{ pt: 1, mb: 0 }}>
-          Gallimaufry was founded in 2010 at Oberlin College by Brian Lindsay and Alex Sturbaum. Joining forces with Ness Smith-Savedoff (drums), Donal Sheets (cello, guitar), and Arthur Davis (piano, banjo, trumpet, vocals), this quintet spent four years as Oberlin's house band and has delighted dancers throughout the Midwest and New England with their high-energy dance tunes, eclectic variety, and soaring harmonies. Incorporating elements of funk, rock, and traditional music of all stripes, Gallimaufry is a band not to be missed.
+          Gallimaufry reunites in Seattle! Gallimaufry is Brian Lindsay, Alex Sturbaum, Ness Smith-Savedoff, Donal Sheets, and Arthur Davis, a self-proclaimed hedge-podge of folk musicians seasoned lightly in cuisines ranging from Irish to classical to jazz, funk, and beyond, and then stewed in the melting pot of Oberlin College a few years ago. Their scrumptious rhythms and the complexity of their musical flavors will whet dancers' appetites and leave them craving more.
+          {/* Gallimaufry was founded in 2010 at Oberlin College by Brian Lindsay and Alex Sturbaum. Joining forces with Ness Smith-Savedoff (drums), Donal Sheets (cello, guitar), and Arthur Davis (piano, banjo, trumpet, vocals), this quintet spent four years as Oberlin's house band and has delighted dancers throughout the Midwest and New England with their high-energy dance tunes, eclectic variety, and soaring harmonies. Incorporating elements of funk, rock, and traditional music of all stripes, Gallimaufry is a band not to be missed. */}
         </Paragraph>
       </Box>
       <Box sx={{ clear: 'both' }} />
@@ -55,7 +58,8 @@ export default function Staff() {
           <img src={process.env.PUBLIC_URL + '/supersonic/Joyride.png'} alt="Joyride"  style={{ width: 300 }} />
         </Box>
         <Paragraph sx={{ pt: 1, mb: 0 }}>
-          Joyride is a Portland, Oregon contra dance band known for fun, skilled play, tunes fit to dance figures, and ringing, rocking, gorgeous melodies that make you want to move. George Penk’s fiddle, Erik Weberg’s flute, harmonica, and bombarde, Sue Songer’s piano and fiddle, and Jeff Kerssen-Griep’s guitar and percussion breathe big life into modern and traditional tunes for dances, weekends, and festivals.
+          Joyride is a beloved Portland, Oregon, contra dance band known for fun, skilled play, tunes fit to dance figures, and ringing, rocking, gorgeous melodies that make you want to move. George Penk’s fiddle, Erik Weberg’s flute, harmonica, and bombarde, Sue Songer’s piano and fiddle, Jeff Kerssen-Griep’s guitar and percussion breathe big life into modern and traditional tunes.
+          {/* Joyride is a Portland, Oregon contra dance band known for fun, skilled play, tunes fit to dance figures, and ringing, rocking, gorgeous melodies that make you want to move. George Penk’s fiddle, Erik Weberg’s flute, harmonica, and bombarde, Sue Songer’s piano and fiddle, and Jeff Kerssen-Griep’s guitar and percussion breathe big life into modern and traditional tunes for dances, weekends, and festivals. */}
         </Paragraph>
       </Box>
       <Box sx={{ clear: 'both' }} />

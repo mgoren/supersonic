@@ -1,8 +1,8 @@
 import { Typography, Box } from '@mui/material';
 import { StyledLink, StyledPaper, PageTitle, SectionDivider, Paragraph } from 'components/Layout/SharedStyles';
-// import { mailtoLink} from 'utils';
+import { mailtoLink} from 'utils';
 import config from 'config';
-const { EVENT_TITLE, EVENT_LOCATION, EVENT_LOCATION_2, EVENT_DATE } = config;
+const { EVENT_TITLE, EVENT_LOCATION, EVENT_LOCATION_2, EVENT_DATE, EMAIL_CONTACT } = config;
 
 export default function Home() {
 
@@ -19,7 +19,7 @@ export default function Home() {
       </Box>
 
       <Typography variant="h6" sx={{ mb: 2 }}>
-        We are a zesty, high-energy dance weekend for experienced dancers.<br />
+        <strong>We are a zesty, high-energy dance weekend for experienced dancers.</strong><br />
       </Typography>
 
       <Typography variant="h6" sx={{ mb: 2 }}>
@@ -35,16 +35,16 @@ export default function Home() {
         Registration: $120-240 sliding scale ($180 break-even)
       </Paragraph>
 
-      {/* <Paragraph sx={{ mb: 2 }}>
+      <Paragraph sx={{ mb: 2 }}>
         Supersonic will follow mask guidelines of the weekly Seattle contras.<br />
-        As of November 1, well-fitting face masks are required.<br />
+        Currently, masks are encouraged but not required.<br />
         Please do not attend if you are feeling unwell.<br />
         See <StyledLink internal={true} to='/about#covid'>here</StyledLink> for the full Covid policy.<br />
-      </Paragraph> */}
+      </Paragraph>
 
-      {/* <Paragraph>
-        You will need to sign a <StyledLink to={process.env.PUBLIC_URL + '/supersonic/waiver.pdf'}>waiver</StyledLink> and email it to <StyledLink to={mailtoLink(EMAIL_CONTACT)}>{EMAIL_CONTACT}</StyledLink>.<br />
-      </Paragraph> */}
+      <Paragraph>
+        You will need to sign a <StyledLink to={process.env.PUBLIC_URL + '/supersonic/waiver.pdf'}>waiver</StyledLink> and email it to <StyledLink to={mailtoLink(EMAIL_CONTACT)}>{EMAIL_CONTACT}</StyledLink>. (If you attended Supersonic last year and already signed the waiver, you do not need to do so again.)<br />
+      </Paragraph>
 
       <Paragraph>
         Supersonic is a fragrance-free event. Please use only fragrance-free products.
@@ -53,7 +53,7 @@ export default function Home() {
       <SectionDivider/>
 
       <Paragraph>
-        We will be dancing primarily complex contras with limited or no walkthroughs.<br />
+        <strong>We will be dancing primarily complex contras with limited or no walkthroughs.</strong><br />
         Many participants easily dance both roles and role switching is common.
       </Paragraph>
 

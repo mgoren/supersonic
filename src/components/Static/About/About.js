@@ -34,22 +34,20 @@ export default function About() {
         Covid Policy for attendees
       </Header>
       <Paragraph sx={{ mb: 2 }}>
-        Info coming soon
-        {/* Supersonic Contra Dance Weekend will follow the mask guidelines of the weekly Seattle contra dances.
-        As of November 1, masks are encouraged but not required. 
-        No proof of vaccination or testing will be required.
+        Supersonic Contra Dance Weekend will follow the mask guidelines of the weekly Seattle contra dances.
+        Currently, masks are encouraged but not required. This is subject to change.
         Any updates to this policy will be announced in email and on the website.
         If you feel unwell, please do not attend. 
         If you feel unwell during the weekend, please notify the organizers immediately, leave the dance as soon as possible, and then send a follow-up email within 24 hours if you wish to receive a refund. 
-        Full refunds will be given minus any transaction fees incurred.  */}
+        Full refunds will be given minus any transaction fees incurred. 
       </Paragraph>
 
       <Header id='waiver'>
         Waiver
       </Header>
       <Paragraph>
-        Info coming soon
-        {/* You will need to sign a <StyledLink to={process.env.PUBLIC_URL + '/supersonic/supersonic-waiver.pdf'}>waiver</StyledLink> and email it to <StyledLink to={mailtoLink(EMAIL_CONTACT)}>{EMAIL_CONTACT}</StyledLink>.<br /> */}
+        {/* Info coming soon */}
+        You will need to sign a <StyledLink to={process.env.PUBLIC_URL + '/supersonic/supersonic-waiver.pdf'}>waiver</StyledLink> and email it to <StyledLink to={mailtoLink(EMAIL_CONTACT)}>{EMAIL_CONTACT}</StyledLink>. (If you attended Supersonic last year and already signed the waiver, you do not need to do so again.)<br />
       </Paragraph>
 
       <Header id='refund'>

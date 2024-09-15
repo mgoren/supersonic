@@ -37,9 +37,10 @@ export default function Home() {
 
       <Paragraph sx={{ mb: 2 }}>
         Supersonic will follow mask guidelines of the weekly Seattle contras.<br />
-        Currently, masks are encouraged but not required.<br />
+        Currently, masks are encouraged but not required. This is subject to change.<br />
+        Dancers are <strong>strongly encouraged</strong> to take a COVID test before arriving.<br />
         Please do not attend if you are feeling unwell.<br />
-        See <StyledLink internal={true} to='/about#covid'>here</StyledLink> for the full Covid policy.<br />
+        See <StyledLink internal={true} to='/about#wellness'>here</StyledLink> for the full wellness policy.<br />
       </Paragraph>
 
       <Paragraph>

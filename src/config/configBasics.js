@@ -19,7 +19,7 @@ const config = {
   CONFIRMATION_PAYPAL_TITLE: 'Supersonic Confirmation',
   CONFIRMATION_CHECK_TITLE: 'Supersonic Registration',
   EMAIL_CONTACT: 'info@supersoniccontra.com',
-  COVID_POLICY_URL: 'www.supersoniccontra.com/about#covid',
+  COVID_POLICY_URL: 'www.supersoniccontra.com/about#wellness',
   // SAFETY_POLICY_URL: 'example.com/safety',
   // DIRECT_PAYMENT_URL: 'example.com/directpayment',
   CHECK_TO: 'Supersonic Contra Dance Weekend',

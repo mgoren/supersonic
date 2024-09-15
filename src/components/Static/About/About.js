@@ -37,7 +37,11 @@ export default function About() {
         Supersonic Contra Dance Weekend will follow the mask guidelines of the weekly Seattle contra dances.
         Currently, masks are encouraged but not required. This is subject to change.
         Any updates to this policy will be announced in email and on the website.
-        Dancers are <strong>strongly encouraged</strong> to take a COVID test on Friday before arriving at the hall. 
+      </Paragraph>
+      <Paragraph sx={{ mb: 2 }}>
+        Dancers are <strong>strongly encouraged</strong> to take a COVID test on Friday before arriving at the hall. <br />
+      </Paragraph>
+      <Paragraph sx={{ mb: 2 }}>
         If you feel unwell, please do not attend. 
         If you feel unwell during the weekend, please notify the organizers immediately, leave the dance as soon as possible, and then send a follow-up email within 24 hours if you wish to receive a refund. 
         Full refunds will be given minus any transaction fees incurred. 

@@ -78,8 +78,8 @@ firebase apps:sdkconfig web
 
 Stripe configuration:
 - On Stripe console, disable all payment methods except Cards, Apple Pay, Google Pay
-- Copy the _publishable key_ to the `.env` file. (Use test key until ready to launch.)
-- set Stripe secret key in `functions/.env`
+- Copy the (test) _publishable key_ to `/.env`.
+- Copy the (test) _secret key_ to `functions/.env`
 - set Stripe statement_descriptor_suffix in `functions/.env` (optional)
 
 PayPal configuration:

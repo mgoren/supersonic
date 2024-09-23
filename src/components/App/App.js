@@ -5,7 +5,7 @@ import Staff from 'components/Static/Staff';
 import Seattle from 'components/Static/Seattle';
 import Contact from 'components/Static/Contact';
 import Schedule from 'components/Static/Schedule';
-// import Registration from 'components/Registration';
+import Registration from 'components/Registration';
 import MaterialLayout from 'components/Layout/';
 import Error from 'components/Error';
 import { PaymentExplanation } from 'components/Static/PaymentExplanation';
@@ -29,7 +29,7 @@ export default function App() {
               <Route exact path="/seattle" element=<Seattle /> />
               <Route exact path="/contact" element=<Contact /> />
               <Route exact path="/paymentinfo" element=<PaymentExplanation /> />
-              {/* <Route path="/registration" element=<Registration /> /> */}
+              <Route path="/registration" element=<Registration /> />
               <Route exact path="/error-contact-support" element=<Error error={`Unexpected payment processing error. Please email ${EMAIL_CONTACT}`} /> />
               <Route path="*" element={<Navigate to="/" />} />
             </Routes>

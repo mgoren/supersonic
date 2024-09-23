@@ -1,6 +1,8 @@
 import * as Yup from 'yup';
 import configBasics from './configBasics';
-const { ADMISSION_COST_DEFAULT, ADMISSION_COST_RANGE } = configBasics;
+import { StyledLink } from 'components/Layout/SharedStyles';
+import { mailtoLink } from 'utils';
+const { ADMISSION_COST_DEFAULT, ADMISSION_COST_RANGE, EMAIL_CONTACT } = configBasics;
 
 const NAME_REGEX = "^[^<>&@]+$";
 const PRONOUNS_REGEX = "^[^<>&@]+$";
@@ -11,7 +13,7 @@ const EMAIL_VALIDATION = Yup.string().email('Invalid email address');
 const PHONE_VALIDATION = Yup.string().matches(PHONE_REGEX, 'Please enter a valid phone number.');
 
 // config for this particular registration instance; update this as needed!
-export const PERSON_CONTACT_FIELDS = ['first', 'last', 'nametag', 'pronouns', 'email', 'emailConfirmation', 'phone', 'city', 'state', 'zip', 'country'];
+export const PERSON_CONTACT_FIELDS = ['first', 'last', 'pronouns', 'nametag', 'email', 'emailConfirmation', 'phone', 'city', 'state'];
 export const PERSON_MISC_FIELDS = ['hospitality', 'share', 'volunteer', 'comments'];
 export const PERSON_PAYMENT_FIELDS = ['admission'];
 
@@ -32,14 +34,14 @@ export const FIELD_CONFIG = {
     autoComplete: 'family-name'
   },
   pronouns: {
-    label: 'Pronouns (not shared)',
+    label: 'Pronouns (optional, for button - e.g. she/her)',
     validation: PRONOUNS_VALIDATION,
     defaultValue: '',
     width: 12
   },
   nametag: {
-    label: 'Name for roster',
-    validation: NAME_VALIDATION.required('Please enter name for roster.'),
+    label: 'Name button (typically first name + pronouns)',
+    validation: NAME_VALIDATION.required('Please enter name for button.'),
     defaultValue: '',
     width: 12
   },
@@ -66,8 +68,7 @@ export const FIELD_CONFIG = {
     placeholder: 'e.g. 555-555-5555',
     validation: PHONE_VALIDATION.required('Please enter phone number.'),
     defaultValue: '',
-    width: 12,
-    // width: 4,
+    width: 4,
     autoComplete: 'tel'
   },
   address: {
@@ -89,15 +90,14 @@ export const FIELD_CONFIG = {
     label: 'City',
     validation: Yup.string().required('Please enter city.'),
     defaultValue: '',
-    width: 6,
-    // width: 5,
+    width: 4,
     autoComplete: 'city'
   },
   state: {
     label: 'State / Province',
     validation: Yup.string().required('Please enter state or province.'),
     defaultValue: '',
-    width: 3,
+    width: 4,
     autoComplete: 'state'
   },
   zip: {
@@ -123,7 +123,7 @@ export const FIELD_CONFIG = {
       { label: 'Include my name in the roster', value: 'name' },
       { label: 'Include my email in the roster', value: 'email' },
       { label: 'Include my phone number in the roster', value: 'phone' },
-      { label: 'Include my address in the roster', value: 'address' },
+      { label: 'Include my city and state in the roster', value: 'address' },
     ],
     validation: Yup.array(),
     defaultValue: ['name', 'email', 'phone', 'address'],
@@ -147,12 +147,12 @@ export const FIELD_CONFIG = {
   volunteer: {
     type: 'checkbox',
     title: "Volunteering",
-    label: "Everyone will be asked to help with camp, but we need a few people who can commit in advance or in larger ways.",
+    label: <>To volunteer, please contact <StyledLink to={mailtoLink(EMAIL_CONTACT)}>{EMAIL_CONTACT}</StyledLink>.</>,
     options: [
-      { label: "I can come early to help with camp set up", value: 'before' },
-      { label: "I can stay late to help with camp take down", value: 'after' },
-      { label: "I can take on a lead volunteer role during camp (e.g. button maker or snack coordinator)", value: 'lead' },
-      { label: "I can help coordinate in the months before camp (e.g. bedding)", value: 'bedding' },
+      // { label: "I can come early to help with camp set up", value: 'before' },
+      // { label: "I can stay late to help with camp take down", value: 'after' },
+      // { label: "I can take on a lead volunteer role during camp (e.g. button maker or snack coordinator)", value: 'lead' },
+      // { label: "I can help coordinate in the months before camp (e.g. bedding)", value: 'bedding' },
     ],
     validation: Yup.array(),
     defaultValue: [],
@@ -273,7 +273,7 @@ export const FIELD_CONFIG = {
   comments: {
     type: 'textarea',
     title: "Anything else?",
-    label: "Tell us anything else you'd like us to know. We want to be sure we don't miss anything that could make the weekend welcoming and enjoyable.",
+    label: "Please elaborate on any of the above questions or add any additional comments about your registration. Let us know if we missed anything or if there is something else we should know.",
     validation: Yup.string(),
     defaultValue: '',
     rows: 5,

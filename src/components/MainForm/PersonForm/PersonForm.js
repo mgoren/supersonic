@@ -4,7 +4,7 @@ import { Box, Button } from '@mui/material';
 import ContactInfo from '../ContactInfo';
 import MiscInfo from '../MiscInfo';
 import { getFirstInvalidFieldName, sanitizeObject } from 'utils';
-import countryMapping from 'countryMapping';
+// import countryMapping from 'countryMapping';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 const functions = getFunctions();
 const firebaseFunctionDispatcher = httpsCallable(functions, 'firebaseFunctionDispatcher');
@@ -34,11 +34,11 @@ export default function PersonForm({ editIndex, setEditIndex, isNewPerson, setIs
   function saveUpdatedOrder() {
     const submittedOrder = Object.assign({}, values);
     const sanitizedOrder = sanitizeObject(submittedOrder);
-    const orderWithCountry = {
-      ...sanitizedOrder,
-      people: sanitizedOrder.people.map(updateCountry)
-    };
-    updateOrder(orderWithCountry);
+    // const orderWithCountry = {
+    //   ...sanitizedOrder,
+    //   people: sanitizedOrder.people.map(updateCountry)
+    // };
+    updateOrder(sanitizedOrder);
   }
 
   // saves updated order, which includes the new or edited person
@@ -93,14 +93,14 @@ export default function PersonForm({ editIndex, setEditIndex, isNewPerson, setIs
   );
 }
 
-function updateCountry(person) {
-  if (person.country === 'United States') {
-    return { ...person, country: 'USA' };
-  } else if (person.state) {
-    const region = person.state.toLowerCase().replace(/\s/g, '').trim();
-    const country = countryMapping[region] || person.country;
-    return { ...person, country };
-  } else {
-    return person;
-  }
-}
+// function updateCountry(person) {
+//   if (person.country === 'United States') {
+//     return { ...person, country: 'USA' };
+//   } else if (person.state) {
+//     const region = person.state.toLowerCase().replace(/\s/g, '').trim();
+//     const country = countryMapping[region] || person.country;
+//     return { ...person, country };
+//   } else {
+//     return person;
+//   }
+// }

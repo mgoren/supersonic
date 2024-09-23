@@ -45,17 +45,19 @@ const TextInput = ({ label, name, type, hidden, ...props }) => {
   const { touched, errors, values, setFieldValue, handleBlur } = useFormikContext();
   const handleBlurAndSetNametag = (e) => {
     handleBlur(e);  // bubble up to default Formik onBlur handler
-    const triggerField = INCLUDE_LAST_ON_NAMETAG ? 'last' : 'first';
+    const triggerField = 'pronouns'
     if (name.includes(triggerField)) {
       const personIndex = name.split('[')[1].split(']')[0];
       const existingNametag = getIn(values, `people[${personIndex}].nametag`);
       if (existingNametag) return;
       const first = getIn(values, `people[${personIndex}].first`);
       const last = getIn(values, `people[${personIndex}].last`);
+      const pronouns = getIn(values, `people[${personIndex}].pronouns`);
       const fieldsFilled = INCLUDE_LAST_ON_NAMETAG ? first && last : first;
       const newNametag = INCLUDE_LAST_ON_NAMETAG ? `${first} ${last}` : first;
+      const newNametagWithPronouns = pronouns ? `${newNametag} (${pronouns})` : newNametag;
       if (fieldsFilled) {
-        setFieldValue(`people[${personIndex}].nametag`, newNametag);
+        setFieldValue(`people[${personIndex}].nametag`, newNametagWithPronouns);
       }
     }
   };

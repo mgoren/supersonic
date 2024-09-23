@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material';
 import config from 'config';
-const { ORDER_SUMMARY_OPTIONS, ADMISSION_COST_RANGE, PAYMENT_DUE_DATE, INCLUDE_PRONOUNS_ON_NAMETAG } = config;
+const { ORDER_SUMMARY_OPTIONS, ADMISSION_COST_RANGE, PAYMENT_DUE_DATE } = config;
 
 // NOTE: this component uses some vanilla html becuase it's used in the confirmation email
 // NOTE: order is passed as prop to be sure it is most up-to-date when this is used in receipt generation
@@ -104,22 +104,24 @@ function formatCost(cost) {
 }
 
 function formatNametag(person) {
-  const { nametag, pronouns } = person;
-  const formattedPronouns = pronouns ? `(${pronouns})` : '';
-  return INCLUDE_PRONOUNS_ON_NAMETAG ? `${nametag} ${formattedPronouns}` : nametag;
+  const { nametag } = person;
+  // const formattedPronouns = pronouns ? `(${pronouns})` : '';
+  // return INCLUDE_PRONOUNS_ON_NAMETAG ? `${nametag} ${formattedPronouns}` : nametag;
+  return nametag;
 }
 
 function formatAddress(person) {
-  const { address, apartment, city, state, zip, country } = person;
-  if (!address && !city && !state && !zip) return null;
+  const { address, apartment, city, state } = person;
+  if (!address && !city && !state) return null;
   let streetAddress;
   if (address) {
     const displayApartment = apartment?.length > 0 && isFinite(apartment.slice(0,1)) ? `#${apartment}` : apartment;
     streetAddress = apartment ? `${address} ${displayApartment}` : address;
   }
-  const cityStateZip = city ? `${city}, ${state} ${zip}` : `${state} ${zip}`;
-  const cityStateZipWithCountry = country === 'USA' || country === 'United States' ? cityStateZip : `${cityStateZip}, ${country}`;
-  return <>{streetAddress && <>{streetAddress}, </>}{cityStateZipWithCountry}</>
+  const cityState = city ? `${city}, ${state}` : state;
+  // const cityStateZip = city ? `${city}, ${state} ${zip}` : `${state} ${zip}`;
+  // const cityStateZipWithCountry = country === 'USA' || country === 'United States' ? cityStateZip : `${cityStateZip}, ${country}`;
+  return <>{streetAddress && <>{streetAddress}, </>}{cityState}</>
 }
 
 function formatArray(data, defaultValue, mapping) {

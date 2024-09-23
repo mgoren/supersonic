@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material';
 import config from 'config';
-const { ORDER_SUMMARY_OPTIONS, ADMISSION_COST_RANGE, PAYMENT_DUE_DATE } = config;
+const { ORDER_SUMMARY_OPTIONS, ADMISSION_COST_RANGE, PAYMENT_DUE_DATE, INCLUDE_PRONOUNS_ON_NAMETAG } = config;
 
 // NOTE: this component uses some vanilla html becuase it's used in the confirmation email
 // NOTE: order is passed as prop to be sure it is most up-to-date when this is used in receipt generation
@@ -104,10 +104,9 @@ function formatCost(cost) {
 }
 
 function formatNametag(person) {
-  const { nametag } = person;
-  // const formattedPronouns = pronouns ? `(${pronouns})` : '';
-  // return INCLUDE_PRONOUNS_ON_NAMETAG ? `${nametag} ${formattedPronouns}` : nametag;
-  return nametag;
+  const { nametag, pronouns } = person;
+  const formattedPronouns = pronouns ? `(${pronouns})` : '';
+  return INCLUDE_PRONOUNS_ON_NAMETAG ? `${nametag} ${formattedPronouns}` : nametag;
 }
 
 function formatAddress(person) {

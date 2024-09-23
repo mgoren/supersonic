@@ -13,7 +13,7 @@ const EMAIL_VALIDATION = Yup.string().email('Invalid email address');
 const PHONE_VALIDATION = Yup.string().matches(PHONE_REGEX, 'Please enter a valid phone number.');
 
 // config for this particular registration instance; update this as needed!
-export const PERSON_CONTACT_FIELDS = ['first', 'last', 'pronouns', 'nametag', 'email', 'emailConfirmation', 'phone', 'city', 'state'];
+export const PERSON_CONTACT_FIELDS = ['first', 'last', 'nametag', 'pronouns', 'email', 'emailConfirmation', 'phone', 'city', 'state'];
 export const PERSON_MISC_FIELDS = ['hospitality', 'share', 'volunteer', 'comments'];
 export const PERSON_PAYMENT_FIELDS = ['admission'];
 
@@ -34,16 +34,16 @@ export const FIELD_CONFIG = {
     autoComplete: 'family-name'
   },
   pronouns: {
-    label: 'Pronouns (optional, for button - e.g. she/her)',
+    label: 'Pronouns for button (e.g. she/her)',
     validation: PRONOUNS_VALIDATION,
     defaultValue: '',
-    width: 12
+    width: 6
   },
   nametag: {
-    label: 'Name button (typically first name + pronouns)',
+    label: 'Name for button',
     validation: NAME_VALIDATION.required('Please enter name for button.'),
     defaultValue: '',
-    width: 12
+    width: 6
   },
   email: {
     label: 'Email',

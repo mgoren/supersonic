@@ -78,7 +78,7 @@ export default function Receipt({ order, person, isPurchaser }) {
       <Divider component="hr" sx={{borderBottomWidth: 4, my: 4}}/>
 
       <Typography component='p' sx={{ mt: 2 }}>
-        See <StyledLink to={websiteLink(COVID_POLICY_URL)}>here</StyledLink> for the full Covid policy.<br />
+        See <StyledLink to={websiteLink(COVID_POLICY_URL)}>here</StyledLink> for the full wellness policy.<br />
       </Typography>
 
       <Typography component='p' sx={{ mt: 2 }}>

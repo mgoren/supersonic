@@ -174,13 +174,12 @@ firebase deploy --only functions
 
 ## Add error logging for Firebase functions:
 
-Setup logs for appendrecordtospreadsheet Firebase function to notify on `severity=(ERROR OR INFO)`:
+Setup logs for Firebase functions to notify on error:
 
-- Do this two-line query:
+- Do this query:
 
 ```
-(resource.type="cloud_function" resource.labels.function_name=("appendrecordtospreadsheet") resource.labels.region="us-central1") OR (resource.type="cloud_run_revision" resource.labels.service_name=("appendrecordtospreadsheet") resource.labels.location="us-central1")
-severity=(ERROR OR INFO)
+resource.type="cloud_run_revision" severity="ERROR"
 ```
 
 - then click on "Create alert"

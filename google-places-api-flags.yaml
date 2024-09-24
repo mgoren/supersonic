@@ -7,6 +7,6 @@
       - "maps_backend"
 - --allowed-referrers:
     - "localhost:3000/*"
-    - "[PROJECT_ID].web.app/*"
-    - "example.com/*"
-    - "www.example.com/*"
+    - "supersonic-contra.web.app/*"
+    - "supersoniccontra.com/*"
+    - "www.supersoniccontra.com/*"

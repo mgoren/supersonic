@@ -202,5 +202,6 @@ npm start
 # When switching to live mode
 
 - Set sandbox mode to false in `configBasics`
-- Update Stripe/PayPal API key to production mode *ON GITHUB*
+- Update Stripe Publishable Key to production mode *ON GITHUB* and redeploy to Firebase
+- Update Stripe Secret Key to production mode in `functions/.env` and redeploy Firebase Functions
 - Make registration link live on homepage & navbar

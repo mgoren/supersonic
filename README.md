@@ -198,3 +198,8 @@ npm start
 - Ensure all environment variables are set as repo [secrets](https://github.com/[GITHUB_USER]/[GITHUB_REPO]/settings/secrets/actions)
 - Ensure all environment variables are listed in `.github/workflows/firebase-hosting-merge.yml`, including firebaseServiceAccount
 - If update Github secrets, must redeploy
+
+# When switching to live mode
+
+- Update Stripe/PayPal API key to production mode *ON GITHUB*
+- Set sandbox mode to false in `configBasics`

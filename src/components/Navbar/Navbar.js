@@ -14,7 +14,7 @@ const pages = [
   { title: 'Seattle', path: '/seattle' },
   { title: 'Contact', path: '/contact' },
   { title: 'Payment info', path: '/paymentinfo' },
-  // { title: 'Registration', path: '/registration' }
+  { title: 'Registration', path: '/registration' }
 ];
 
 const row1 = pages.slice(0, 5);

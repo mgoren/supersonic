@@ -69,9 +69,7 @@ export default function Home() {
       <SectionDivider/>
 
       <Typography variant="h5" fontStyle="italic" gutterBottom>
-      {/* <StyledLink internal={true} to="/registration">Registration open</StyledLink> */}
-      Registration opening in early November <br />
-      ~ More info coming soon ~
+        <StyledLink internal={true} to="/registration">Registration open</StyledLink>
       </Typography>
     </StyledPaper>
   );

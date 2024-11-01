@@ -61,6 +61,11 @@ export const FIELD_CONFIG = {
     width: 6,
     autoComplete: 'email'
   },
+  // countryCode: {
+  //   defaultValue: '',
+  //   autoComplete: 'tel-country-code',
+  //   hidden: true
+  // },
   phone: {
     label: 'Phone',
     type: 'pattern',
@@ -69,7 +74,7 @@ export const FIELD_CONFIG = {
     validation: PHONE_VALIDATION.required('Please enter phone number.'),
     defaultValue: '',
     width: 4,
-    autoComplete: 'tel'
+    autoComplete: 'tel-national'
   },
   address: {
     label: 'Street address',

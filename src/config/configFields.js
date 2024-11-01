@@ -40,10 +40,11 @@ export const FIELD_CONFIG = {
     width: 6
   },
   nametag: {
-    label: 'Name for button',
+    label: 'First name for button',
     validation: NAME_VALIDATION.required('Please enter name for button.'),
     defaultValue: '',
-    width: 6
+    width: 6,
+    autoComplete: 'off'
   },
   email: {
     label: 'Email',
@@ -96,14 +97,14 @@ export const FIELD_CONFIG = {
     validation: Yup.string().required('Please enter city.'),
     defaultValue: '',
     width: 4,
-    autoComplete: 'city'
+    autoComplete: 'address-level2'
   },
   state: {
     label: 'State / Province',
     validation: Yup.string().required('Please enter state or province.'),
     defaultValue: '',
     width: 4,
-    autoComplete: 'state'
+    autoComplete: 'address-level1'
   },
   zip: {
     label: 'Zip / Postal code',
